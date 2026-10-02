@@ -1,0 +1,7 @@
+{
+  "_note": "Mission scenarios for ranking. Edit freely. 34% O2 at 0.56 atm (8.2 psia) is NASA's proposed 'exploration atmosphere' for Moon/Mars vehicles and habitats; actual vehicle atmospheres vary.",
+  "iss":            {"label": "ISS-like cabin (microgravity, normal air)",        "o2_pct": 21, "pressure_atm": 1.00, "gravity_g": 0.0},
+  "exploration_ug": {"label": "Exploration atmosphere in transit (microgravity)", "o2_pct": 34, "pressure_atm": 0.56, "gravity_g": 0.0},
+  "moon":           {"label": "Lunar surface habitat",                            "o2_pct": 34, "pressure_atm": 0.56, "gravity_g": 0.17},
+  "mars":           {"label": "Mars surface habitat",                             "o2_pct": 34, "pressure_atm": 0.56, "gravity_g": 0.38}
+}

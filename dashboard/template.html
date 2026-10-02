@@ -1,0 +1,627 @@
+<title>Flame in Freefall</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Semi+Condensed:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: mission console. Header with mission picker, then evidence column (ranked findings) beside an analyst column (ask + weights), then the key-evidence charts. */
+:root {
+  --bg: #f2f4f7; --surface: #ffffff; --surface-2: #eceff4; --ink: #121826; --ink-2: #485266; --muted: #6f798c;
+  --line: #dbe0e8; --axis: #b4bcc9; --accent: #3a49c9; --accent-ink: #ffffff; --accent-soft: #e5e8fa;
+  --flame-a: #ffb347; --flame-b: #e2402b;
+  --s1: #2a78d6; --s2: #eb6834;
+  --crit: #d03b3b; --crit-soft: #fbe8e8; --crit-ink: #9d2222;
+  --warn: #fab219; --warn-soft: #fdf2d8; --warn-ink: #7a5300;
+  --ctx-soft: #eceff4; --ctx-ink: #586176;
+  --shadow: 0 1px 2px rgba(18,24,38,.06), 0 4px 16px rgba(18,24,38,.05);
+  --f-display: "Saira Semi Condensed", "Arial Narrow", system-ui, sans-serif;
+  --f-body: "Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0b0e14; --surface: #131821; --surface-2: #1a202b; --ink: #edf0f5; --ink-2: #b3bbca; --muted: #8590a3;
+  --line: #262d3a; --axis: #3b4352; --accent: #8e98ff; --accent-ink: #0b0e14; --accent-soft: #222a4c;
+  --s1: #3987e5; --s2: #d95926;
+  --crit-soft: #3a1c1e; --crit-ink: #ff9b9b; --warn-soft: #3a2e12; --warn-ink: #ffd27a; --ctx-soft: #1a202b; --ctx-ink: #a9b2c2;
+  --shadow: 0 1px 2px rgba(0,0,0,.4); color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #0b0e14; --surface: #131821; --surface-2: #1a202b; --ink: #edf0f5; --ink-2: #b3bbca; --muted: #8590a3;
+  --line: #262d3a; --axis: #3b4352; --accent: #8e98ff; --accent-ink: #0b0e14; --accent-soft: #222a4c;
+  --s1: #3987e5; --s2: #d95926;
+  --crit-soft: #3a1c1e; --crit-ink: #ff9b9b; --warn-soft: #3a2e12; --warn-ink: #ffd27a; --ctx-soft: #1a202b; --ctx-ink: #a9b2c2;
+  --shadow: 0 1px 2px rgba(0,0,0,.4); color-scheme: dark; }
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 16px/1.5 var(--f-body); margin: 0; }
+.wrap { max-width: 1200px; margin: 0 auto; padding-inline: 20px; padding-block: 0 48px; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; letter-spacing: .01em; }
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.mono { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+.eyebrow { font: 600 12px/1.2 var(--f-body); text-transform: uppercase; letter-spacing: .09em; color: var(--muted); }
+
+/* header */
+header.top { padding-block: 28px 20px; display: grid; gap: 18px; }
+.brand { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.mark { width: 40px; height: 40px; flex: none; }
+.brand h1 { font-size: clamp(28px, 4vw, 40px); font-weight: 700; line-height: 1; }
+.brand p { margin: 2px 0 0; color: var(--ink-2); max-width: 62ch; }
+.mission { display: grid; gap: 10px; }
+.seg { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg button { border: 1px solid var(--line); background: var(--surface); padding: 8px 14px; border-radius: 999px; cursor: pointer; font-weight: 600; font-size: 15px; }
+.seg button:hover { border-color: var(--accent); }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.readout { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: baseline; color: var(--ink-2); font-size: 14px; }
+.readout b { font-family: var(--f-mono); font-weight: 500; color: var(--ink); font-size: 15px; }
+
+/* gap banner */
+.gaps { border: 1px solid color-mix(in srgb, var(--warn) 55%, transparent); background: var(--warn-soft); color: var(--ink); border-radius: 10px; padding: 12px 16px; display: grid; gap: 4px; margin-bottom: 22px; }
+.gaps strong { color: var(--warn-ink); display: flex; gap: 8px; align-items: center; font-weight: 700; }
+.gaps ul { margin: 0; padding-left: 26px; color: var(--ink-2); font-size: 15px; }
+
+/* layout */
+.grid { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 22px; align-items: start; }
+@media (max-width: 960px) { .grid { grid-template-columns: minmax(0, 1fr); } }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); min-width: 0; }
+.panel-h { padding: 16px 18px 10px; display: grid; gap: 4px; }
+.panel-h h2 { font-size: 22px; font-weight: 600; }
+.panel-h p { margin: 0; color: var(--ink-2); font-size: 15px; }
+
+/* top risks */
+.top5 { list-style: none; margin: 0; padding: 0 10px 12px; display: grid; gap: 2px; }
+.top5 li { display: grid; grid-template-columns: 34px minmax(0,1fr) auto; gap: 10px; align-items: start; padding: 10px 8px; border-radius: 8px; cursor: pointer; }
+.top5 li:hover { background: var(--surface-2); }
+.rank { font: 600 20px/1.1 var(--f-display); color: var(--muted); text-align: right; }
+.top5 .txt { min-width: 0; }
+.top5 .txt span { display: block; color: var(--ink-2); font-size: 14px; }
+
+/* tabs + finding list */
+.tabs { display: flex; gap: 2px; padding: 0 12px; border-bottom: 1px solid var(--line); overflow-x: auto; }
+.tabs button { border: 0; background: none; padding: 10px 12px 9px; cursor: pointer; font-weight: 600; color: var(--ink-2); border-bottom: 2px solid transparent; white-space: nowrap; }
+.tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+.tabs .count { font: 500 12px var(--f-mono); color: var(--muted); margin-left: 4px; }
+.qline { padding: 12px 18px 4px; color: var(--ink-2); font-size: 15px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: space-between; align-items: center; }
+.qline input { border: 1px solid var(--line); background: var(--surface-2); border-radius: 8px; padding: 6px 10px; min-width: 0; width: 220px; max-width: 100%; }
+.flist { list-style: none; margin: 0; padding: 6px 10px 14px; display: grid; gap: 8px; }
+.f { border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 12px; background: var(--surface); }
+.f.hl { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
+.score { display: grid; justify-items: center; align-content: start; gap: 6px; }
+.score .v { font: 600 22px/1 var(--f-display); }
+.meter { width: 44px; height: 4px; border-radius: 4px; background: var(--surface-2); overflow: hidden; }
+.meter i { display: block; height: 100%; background: var(--accent); border-radius: 4px; }
+.f .body { min-width: 0; display: grid; gap: 6px; }
+.f .head { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.f h3 { font: 600 17px/1.35 var(--f-body); letter-spacing: 0; }
+.f .impl { color: var(--ink-2); font-size: 15px; margin: 0; }
+.f .impl::before { content: "Safety meaning: "; font-weight: 600; color: var(--ink); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: 500 12px/1 var(--f-mono); padding: 5px 7px; border-radius: 6px; background: var(--surface-2); color: var(--ink-2); white-space: nowrap; }
+.chip.off { background: transparent; border: 1px dashed var(--axis); color: var(--muted); }
+.more { margin: 0 18px 16px; }
+.pill { display: inline-flex; align-items: center; gap: 5px; font: 700 11px/1 var(--f-body); text-transform: uppercase; letter-spacing: .07em; padding: 4px 7px 4px 6px; border-radius: 999px; }
+.pill svg { width: 12px; height: 12px; }
+.pill.s3 { background: var(--crit-soft); color: var(--crit-ink); }
+.pill.s2 { background: var(--warn-soft); color: var(--warn-ink); }
+.pill.s1 { background: var(--ctx-soft); color: var(--ctx-ink); }
+.kind { font: 600 12px var(--f-body); color: var(--muted); }
+details.src { font-size: 14px; color: var(--ink-2); }
+details.src summary { cursor: pointer; color: var(--accent); font-weight: 600; width: fit-content; }
+details.src blockquote { margin: 8px 0 4px; padding: 6px 12px; border-left: 3px solid var(--line); color: var(--ink); font-style: italic; }
+details.src a { color: var(--accent); }
+.empty { padding: 18px; color: var(--muted); }
+
+/* right column */
+.side { display: grid; gap: 22px; min-width: 0; }
+.ask { padding: 0 18px 18px; display: grid; gap: 10px; }
+.ask textarea { width: 100%; min-height: 76px; resize: vertical; border: 1px solid var(--line); background: var(--surface-2); border-radius: 8px; padding: 10px; font: 15px/1.45 var(--f-body); color: var(--ink); }
+.ask .row { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn { border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); padding: 8px 14px; border-radius: 8px; cursor: pointer; font-weight: 700; }
+.btn.ghost { background: transparent; color: var(--accent); }
+.btn:disabled { opacity: .55; cursor: default; }
+.sugg { display: flex; flex-wrap: wrap; gap: 6px; }
+.sugg button { border: 1px dashed var(--axis); background: none; border-radius: 999px; padding: 4px 10px; font-size: 13px; cursor: pointer; color: var(--ink-2); }
+.answer { font-size: 15px; display: grid; gap: 8px; }
+.answer p { margin: 0; }
+.answer ul { margin: 0; padding-left: 20px; }
+.cite { font: 500 11px var(--f-mono); border: 1px solid var(--line); background: var(--surface-2); border-radius: 5px; padding: 1px 5px; cursor: pointer; color: var(--accent); vertical-align: 1px; }
+.note { font-size: 13px; color: var(--muted); margin: 0; }
+.weights { padding: 0 18px 18px; display: grid; gap: 12px; }
+.weights label { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; font-size: 14px; font-weight: 600; }
+.weights label small { grid-column: 1 / -1; font-weight: 400; color: var(--muted); }
+.weights input[type=range] { grid-column: 1 / -1; width: 100%; accent-color: var(--accent); }
+.formula { font: 13px/1.5 var(--f-mono); background: var(--surface-2); border-radius: 8px; padding: 8px 10px; color: var(--ink-2); overflow-x: auto; }
+
+/* charts */
+section.evidence { margin-top: 30px; display: grid; gap: 14px; }
+section.evidence > h2 { font-size: 26px; font-weight: 600; }
+.charts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
+@media (max-width: 860px) { .charts { grid-template-columns: minmax(0, 1fr); } }
+.chart { padding-bottom: 14px; }
+.chart .panel-h h3 { font-size: 19px; font-weight: 600; }
+.chart svg { display: block; width: 100%; height: auto; }
+.chart svg text { fill: var(--muted); font: 12px var(--f-body); }
+.chart svg .lbl { fill: var(--ink-2); font-weight: 600; }
+.chart svg .ink { fill: var(--ink); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; padding: 4px 18px 0; font-size: 13px; color: var(--ink-2); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+.legend i.line { height: 2px; border-radius: 0; }
+.legend i.dot { border-radius: 50%; width: 9px; height: 9px; }
+.chart .takeaway { margin: 8px 18px 0; font-size: 14px; color: var(--ink-2); }
+.chart .takeaway a { color: var(--accent); cursor: pointer; text-decoration: underline; }
+.tip { position: fixed; pointer-events: none; z-index: 10; background: var(--ink); color: var(--bg); font-size: 13px; padding: 7px 9px; border-radius: 6px; max-width: 260px; box-shadow: var(--shadow); line-height: 1.35; }
+footer { margin-top: 36px; color: var(--muted); font-size: 14px; display: grid; gap: 6px; }
+footer a { color: var(--accent); }
+@media (max-width: 520px) { .f { grid-template-columns: 1fr; } .score { justify-items: start; grid-auto-flow: column; align-items: center; } }
+@media (prefers-reduced-motion: no-preference) { .f, .top5 li { transition: background .15s, border-color .15s; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 40 40" aria-hidden="true">
+        <defs><radialGradient id="fl" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="var(--flame-a)"/><stop offset="1" stop-color="var(--flame-b)"/></radialGradient></defs>
+        <circle cx="20" cy="20" r="19" fill="none" stroke="var(--line)" stroke-width="2"/>
+        <circle cx="20" cy="20" r="11" fill="url(#fl)" opacity=".25"/>
+        <circle cx="20" cy="20" r="7" fill="url(#fl)"/>
+        <circle cx="20" cy="20" r="2.4" fill="var(--surface)"/>
+      </svg>
+      <div>
+        <h1>Flame in Freefall</h1>
+        <p>NASA microgravity combustion results, ranked for the mission you pick. In orbit a flame has no "up", so it burns as a sphere, like the mark here.</p>
+      </div>
+    </div>
+    <div class="mission">
+      <span class="eyebrow" id="mission-lbl">Mission</span>
+      <div class="seg" id="seg" role="group" aria-labelledby="mission-lbl"></div>
+      <div class="readout" id="readout"></div>
+    </div>
+  </header>
+
+  <div class="gaps" id="gaps" hidden></div>
+
+  <div class="grid">
+    <main style="display:grid;gap:22px;min-width:0">
+      <section class="panel" aria-labelledby="top-h">
+        <div class="panel-h">
+          <span class="eyebrow">Highest-ranked for this mission</span>
+          <h2 id="top-h">Top five things to design around</h2>
+        </div>
+        <ol class="top5" id="top5"></ol>
+      </section>
+
+      <section class="panel" aria-labelledby="all-h">
+        <div class="panel-h">
+          <span class="eyebrow" id="nfind"></span>
+          <h2 id="all-h">Ranked findings by question</h2>
+        </div>
+        <div class="tabs" role="tablist" id="tabs"></div>
+        <div class="qline"><span><span id="qtext"></span><span class="note" style="display:block">Dashed tags mark test conditions far from this mission.</span></span><input id="filter" type="search" placeholder="Filter, e.g. Nomex, CO, smoke" aria-label="Filter findings"></div>
+        <ol class="flist" id="flist"></ol>
+        <button class="btn ghost more" id="more" hidden></button>
+      </section>
+    </main>
+
+    <aside class="side">
+      <section class="panel" aria-labelledby="ask-h">
+        <div class="panel-h">
+          <span class="eyebrow">AI analyst</span>
+          <h2 id="ask-h">Ask the evidence</h2>
+          <p>Answers use only the findings on this page and cite them.</p>
+        </div>
+        <div class="ask">
+          <label class="eyebrow" for="q">Your question</label>
+          <textarea id="q" placeholder="Is Nomex safe in a 34% oxygen habitat?"></textarea>
+          <div class="sugg" id="sugg"></div>
+          <div class="row"><button class="btn" id="askbtn">Ask</button><button class="btn ghost" id="stopbtn" hidden>Stop</button></div>
+          <div class="answer" id="answer" aria-live="polite"></div>
+          <p class="note" id="asknote"></p>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="w-h">
+        <div class="panel-h">
+          <span class="eyebrow">Ranking</span>
+          <h2 id="w-h">How the score works</h2>
+          <p>Each finding scores 0-100 for the selected mission. Move the sliders to change the weights.</p>
+        </div>
+        <div class="weights">
+          <div class="formula" id="formula"></div>
+          <label for="wR">Relevance <span class="mono" id="wRv"></span><small>How close the test's oxygen, pressure and gravity are to the mission</small><input type="range" id="wR" min="0" max="100" value="45"></label>
+          <label for="wS">Severity <span class="mono" id="wSv"></span><small>Critical, important or context for crew safety</small><input type="range" id="wS" min="0" max="100" value="35"></label>
+          <label for="wE">Evidence <span class="mono" id="wEv"></span><small>Confidence and whether it is a measured result</small><input type="range" id="wE" min="0" max="100" value="20"></label>
+          <button class="btn ghost" id="wreset" style="justify-self:start">Reset weights</button>
+        </div>
+      </section>
+    </aside>
+  </div>
+
+  <section class="evidence" aria-labelledby="ev-h">
+    <span class="eyebrow">Key evidence</span>
+    <h2 id="ev-h">What the experiments measured</h2>
+    <div class="charts">
+      <div class="panel chart">
+        <div class="panel-h"><h3>Do liquid-fuel flames put themselves out?</h3><p>Share of FLEX droplet flames that went out before the fuel was used up, by oxygen level (ISS, nitrogen-diluted air)</p></div>
+        <div class="legend" id="lg-flex"></div>
+        <svg id="c-flex" role="img" aria-label="Line chart: self-extinguishing share falls as oxygen rises, for heptane and methanol"></svg>
+        <p class="takeaway" id="tk-flex"></p>
+      </div>
+      <div class="panel chart">
+        <div class="panel-h"><h3>Materials burn at lower oxygen in orbit</h3><p>Lowest oxygen at which acrylic rods still burned, BASS-II on ISS vs the same test on Earth</p></div>
+        <div class="legend" id="lg-o2"></div>
+        <svg id="c-o2" role="img" aria-label="Dumbbell chart comparing minimum oxygen for burning in orbit and on Earth"></svg>
+        <p class="takeaway" id="tk-o2"></p>
+      </div>
+      <div class="panel chart">
+        <div class="panel-h"><h3>How long until the smoke alarm?</h3><p>Saffire IV-VI cabin-scale fires on Cygnus: time for a detector across the cabin to reach 2 mg/m³ of smoke</p></div>
+        <div class="legend" id="lg-alarm"></div>
+        <svg id="c-alarm" role="img" aria-label="Bar chart of time to smoke alarm for seven Saffire fires"></svg>
+        <p class="takeaway" id="tk-alarm"></p>
+      </div>
+      <div class="panel chart">
+        <div class="panel-h"><h3>Carbon monoxide in the cabin</h3><p>Same seven fires: peak rise in cabin-wide CO, and the CO already present when the alarm sounded, against NASA crew limits</p></div>
+        <div class="legend" id="lg-co"></div>
+        <svg id="c-co" role="img" aria-label="Bar chart of cabin CO increase for seven Saffire fires against NASA limits"></svg>
+        <p class="takeaway" id="tk-co"></p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span id="foot"></span>
+    <span>Sources: NASA Physical Sciences Informatics (psi.nasa.gov) test tables and NASA Technical Reports Server (ntrs.nasa.gov). Every finding links to its source and page. Severity ratings and the ranking formula are the team's own judgement.</span>
+  </footer>
+</div>
+<div class="tip" id="tip" hidden></div>
+
+<script>
+const DATA = /*__DATA__*/null;
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const SEVLBL = { 3: "Critical", 2: "Important", 1: "Context" };
+const SEVICON = {
+  3: '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M6 1 11 10.5H1Z" fill="currentColor"/><rect x="5.4" y="4.2" width="1.2" height="3.4" fill="var(--surface)"/><rect x="5.4" y="8.3" width="1.2" height="1.2" fill="var(--surface)"/></svg>',
+  2: '<svg viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="5" fill="currentColor"/><rect x="5.4" y="3" width="1.2" height="4" fill="var(--surface)"/><rect x="5.4" y="7.9" width="1.2" height="1.2" fill="var(--surface)"/></svg>',
+  1: '<svg viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="5" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="5.4" y="5.2" width="1.2" height="3.6" fill="currentColor"/><rect x="5.4" y="3.2" width="1.2" height="1.2" fill="currentColor"/></svg>',
+};
+const KIND = { report_extracted: "NASA report finding", measured_outcome: "Measured in test table", test_coverage: "What was tested" };
+const CONF = { high: 1, medium: 0.7, low: 0.4 };
+const TYPE = { measured_outcome: 1, report_extracted: 1, test_coverage: 0.4 };
+const DEFAULT_W = { wR: 45, wS: 35, wE: 20 };
+
+const store = { get(k) { try { return localStorage.getItem(k); } catch { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch {} } };
+const state = { mission: store.get("fif-mission") || "moon", tab: "Q1", filter: "", w: { ...DEFAULT_W }, highlight: null, all: false };
+const LIMIT = 8;
+if (!DATA.scenarios[state.mission]) state.mission = "iss";
+
+/* ---------- scoring: same formula as findings/rank_findings.py ---------- */
+function rangeMatch(lo, hi, t, pen) {
+  if (lo == null && hi == null) return 0.6;
+  lo = lo ?? hi; hi = hi ?? lo;
+  const d = Math.max(0, lo - t, t - hi);
+  return Math.max(0, 1 - d * pen);
+}
+function gLevels(text) {
+  const t = (text || "").toLowerCase(), g = [];
+  if (["microgravity", "drop tower", "low-g", "low gravity"].some((k) => t.includes(k))) g.push(0);
+  if (t.includes("1-g") || t.includes("1g")) g.push(1);
+  if (t.includes("partial")) g.push(0.3);
+  return g;
+}
+function scoreOf(f, sc) {
+  const o2 = rangeMatch(f.o2min, f.o2max, sc.o2_pct, 0.1);
+  const pr = rangeMatch(f.pmin, f.pmax, sc.pressure_atm, 2.0);
+  const gl = gLevels(f.g);
+  const gr = gl.length ? Math.max(...gl.map((x) => 1 - Math.abs(sc.gravity_g - x))) : 0.6;
+  const rel = 0.4 * o2 + 0.25 * pr + 0.35 * gr;
+  const sev = f.sev / 3;
+  const evi = (CONF[f.conf] ?? 0.4) * (TYPE[f.type] ?? 0.4);
+  const { wR, wS, wE } = state.w, tot = wR + wS + wE || 1;
+  return { s: (100 * (wR * rel + wS * sev + wE * evi)) / tot, o2, pr, gr };
+}
+function ranked() {
+  const sc = DATA.scenarios[state.mission];
+  return DATA.findings.filter((f) => f.type !== "evidence_gap")
+    .map((f) => ({ f, ...scoreOf(f, sc) }))
+    .sort((a, b) => b.s - a.s);
+}
+function gapsFor(sc) {
+  return DATA.findings.filter((f) => f.type === "evidence_gap" && (
+    f.id === "GAP-PARTIAL-G" ? sc.gravity_g > 0 :
+    f.id === "GAP-EXPLORATION-SOLIDS" ? (sc.o2_pct > 25 || sc.pressure_atm < 0.8) : true));
+}
+
+/* ---------- rendering ---------- */
+const fmtP = (atm) => `${atm.toFixed(2)} atm (${(atm * 14.696).toFixed(1)} psia)`;
+function condChips(x) {
+  const f = x.f, c = [];
+  const rng = (a, b, u, dp = 0) => a == null ? null : (a === b || b == null ? `${(+a).toFixed(dp)}${u}` : `${(+a).toFixed(dp)}-${(+b).toFixed(dp)}${u}`);
+  const o2 = rng(f.o2min, f.o2max, "% O₂", f.o2min % 1 ? 1 : 0);
+  if (o2) c.push([o2, x.o2 < 0.5]);
+  const p = rng(f.pmin, f.pmax, " atm", 2);
+  if (p) c.push([p, x.pr < 0.5]);
+  if (f.g) c.push([f.g, x.gr < 0.5]);
+  if (f.n) c.push([`n = ${f.n}`, false]);
+  c.push([`${f.conf} confidence`, false]);
+  return c.map(([t, off]) => `<span class="chip${off ? " off" : ""}" title="${off ? "Tested far from this mission's conditions" : ""}">${esc(t)}</span>`).join("");
+}
+function sevPill(s) { return `<span class="pill s${s}">${SEVICON[s]}${SEVLBL[s]}</span>`; }
+function srcBlock(f) {
+  const where = f.page ? `, page ${esc(f.page)}` : "";
+  const link = f.link ? `<a href="${esc(f.link)}" target="_blank" rel="noopener">${esc(f.src)}</a>` : esc(f.src);
+  return `<details class="src"><summary>Source</summary>
+    <div>${link}${where}${f.srcTitle ? ` · ${esc(f.srcTitle)}` : ""}</div>
+    ${f.quote ? `<blockquote>"${esc(f.quote)}"</blockquote>` : ""}
+    ${f.caveat ? `<div class="note">${esc(f.caveat)}</div>` : ""}</details>`;
+}
+function card(x) {
+  const f = x.f, s = Math.round(x.s);
+  return `<li class="f${state.highlight === f.id ? " hl" : ""}" id="f-${esc(f.id)}">
+    <div class="score"><span class="v mono" title="Score for this mission">${s}</span><span class="meter"><i style="width:${s}%"></i></span></div>
+    <div class="body">
+      <div class="head">${sevPill(f.sev)}<span class="kind">${KIND[f.type] || ""} · ${esc(f.exp)}</span></div>
+      <h3>${esc(f.finding)}</h3>
+      <p class="impl">${esc(f.impl)}</p>
+      <div class="chips">${condChips(x)}</div>
+      ${srcBlock(f)}
+    </div></li>`;
+}
+
+function renderMission() {
+  const sc = DATA.scenarios[state.mission];
+  $("#seg").innerHTML = Object.entries(DATA.scenarios).map(([k, v]) =>
+    `<button data-m="${k}" aria-pressed="${k === state.mission}">${esc({ iss: "ISS", exploration_ug: "Deep-space transit", moon: "Moon base", mars: "Mars base" }[k] || v.label)}</button>`).join("");
+  $("#readout").innerHTML = `<span>${esc(sc.label)}</span><span>Oxygen <b>${sc.o2_pct}%</b></span><span>Pressure <b>${fmtP(sc.pressure_atm)}</b></span><span>Gravity <b>${sc.gravity_g === 0 ? "0 g (microgravity)" : sc.gravity_g + " g"}</b></span>`;
+  const gaps = gapsFor(sc);
+  $("#gaps").hidden = !gaps.length;
+  $("#gaps").innerHTML = `<strong>${SEVICON[2].replace('aria-hidden="true"', 'aria-hidden="true" width="16" height="16"')} Evidence gap${gaps.length > 1 ? "s" : ""} for this mission</strong>
+    <ul>${gaps.map((g) => `<li>${esc(g.finding)}</li>`).join("")}</ul>
+    ${sc.gravity_g > 0 ? `<span class="note" style="color:var(--ink-2)">Every ${sc.gravity_g === 0.17 ? "Moon" : "Mars"} score below is extrapolated from microgravity and Earth tests, so scores run lower than for missions in orbit.</span>` : ""}`;
+  $("#formula").innerHTML = `score = 100 × (${state.w.wR}·Relevance + ${state.w.wS}·Severity + ${state.w.wE}·Evidence) / ${state.w.wR + state.w.wS + state.w.wE}`;
+  ["wR", "wS", "wE"].forEach((k) => { $("#" + k).value = state.w[k]; $("#" + k + "v").textContent = state.w[k]; });
+}
+function renderLists() {
+  const R = ranked();
+  $("#top5").innerHTML = R.slice(0, 5).map((x, i) => `<li data-id="${esc(x.f.id)}" tabindex="0">
+      <span class="rank">${i + 1}</span>
+      <span class="txt">${esc(x.f.finding)}<span>${esc(x.f.impl)}</span></span>
+      <span style="display:grid;justify-items:end;gap:6px">${sevPill(x.f.sev)}<span class="mono" style="font-size:13px;color:var(--muted)">${Math.round(x.s)}</span></span></li>`).join("");
+  const counts = {}; R.forEach((x) => counts[x.f.q] = (counts[x.f.q] || 0) + 1);
+  $("#tabs").innerHTML = Object.entries(DATA.questions).map(([k, [short]]) =>
+    `<button role="tab" data-q="${k}" aria-selected="${k === state.tab}">${esc(short)}<span class="count">${counts[k] || 0}</span></button>`).join("");
+  $("#qtext").textContent = DATA.questions[state.tab][1];
+  const term = state.filter.trim().toLowerCase();
+  const list = R.filter((x) => x.f.q === state.tab).filter((x) => !term ||
+    [x.f.finding, x.f.impl, x.f.mat, x.f.exp, x.f.cond, x.f.theme].join(" ").toLowerCase().includes(term));
+  const hlIdx = list.findIndex((x) => x.f.id === state.highlight);
+  const shown = state.all || term || hlIdx >= LIMIT ? list : list.slice(0, LIMIT);
+  $("#flist").innerHTML = list.length ? shown.map(card).join("") : `<li class="empty">No findings match "${esc(state.filter)}" in this question.</li>`;
+  $("#more").hidden = list.length <= LIMIT || !!term;
+  $("#more").textContent = shown.length < list.length ? `Show all ${list.length} findings` : `Show top ${LIMIT} only`;
+  $("#nfind").textContent = `${R.length} findings · ${DATA.meta.reports} NASA reports · ${DATA.meta.tables} ISS test tables`;
+}
+function render() { renderMission(); renderLists(); drawCharts(); }
+
+function jumpTo(id) {
+  const f = DATA.findings.find((x) => x.id === id);
+  if (!f) return;
+  state.tab = f.q; state.filter = ""; $("#filter").value = ""; state.highlight = id;
+  renderLists();
+  const el = document.getElementById("f-" + id);
+  if (el) { el.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center" }); const d = el.querySelector("details"); if (d) d.open = true; }
+}
+
+/* ---------- events ---------- */
+$("#seg").addEventListener("click", (e) => { const b = e.target.closest("button[data-m]"); if (!b) return; state.mission = b.dataset.m; store.set("fif-mission", state.mission); render(); });
+$("#tabs").addEventListener("click", (e) => { const b = e.target.closest("button[data-q]"); if (!b) return; state.tab = b.dataset.q; state.highlight = null; state.all = false; renderLists(); });
+$("#more").addEventListener("click", () => { state.all = !state.all; renderLists(); });
+$("#filter").addEventListener("input", (e) => { state.filter = e.target.value; renderLists(); });
+$("#top5").addEventListener("click", (e) => { const li = e.target.closest("li[data-id]"); if (li) jumpTo(li.dataset.id); });
+$("#top5").addEventListener("keydown", (e) => { if (e.key === "Enter") { const li = e.target.closest("li[data-id]"); if (li) jumpTo(li.dataset.id); } });
+["wR", "wS", "wE"].forEach((k) => $("#" + k).addEventListener("input", (e) => { state.w[k] = +e.target.value; renderMission(); renderLists(); }));
+$("#wreset").addEventListener("click", () => { state.w = { ...DEFAULT_W }; render(); });
+
+/* ---------- charts (hand-drawn SVG) ---------- */
+const NS = "http://www.w3.org/2000/svg";
+const tip = $("#tip");
+function showTip(e, html) { tip.innerHTML = html; tip.hidden = false; const pad = 14; let x = e.clientX + pad, y = e.clientY + pad; const r = tip.getBoundingClientRect(); if (x + r.width > innerWidth - 8) x = e.clientX - r.width - pad; if (y + r.height > innerHeight - 8) y = e.clientY - r.height - pad; tip.style.left = x + "px"; tip.style.top = y + "px"; }
+function hideTip() { tip.hidden = true; }
+function el(tag, attrs, parent, text) { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); if (text != null) n.textContent = text; if (parent) parent.appendChild(n); return n; }
+function hover(node, html) { node.addEventListener("mousemove", (e) => showTip(e, html)); node.addEventListener("mouseleave", hideTip); node.setAttribute("tabindex", "0"); node.addEventListener("focus", (e) => { const r = node.getBoundingClientRect(); showTip({ clientX: r.right, clientY: r.top }, html); }); node.addEventListener("blur", hideTip); }
+function legend(id, items) { $(id).innerHTML = items.map(([c, t, kind]) => `<span><i class="${kind || ""}" style="background:${c}"></i>${esc(t)}</span>`).join(""); }
+function cite(id, text) { return `<a data-cite="${esc(id)}">${esc(text)}</a>`; }
+document.addEventListener("click", (e) => { const a = e.target.closest("[data-cite]"); if (a) { e.preventDefault(); jumpTo(a.dataset.cite); } });
+
+function drawFlex() {
+  const svg = $("#c-flex"); svg.innerHTML = "";
+  const W = 560, H = 300, m = { l: 46, r: 84, t: 18, b: 40 };
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  const x0 = 10, x1 = 36, X = (v) => m.l + ((v - x0) / (x1 - x0)) * (W - m.l - m.r), Y = (v) => m.t + (1 - v / 100) * (H - m.t - m.b);
+  for (let v = 0; v <= 100; v += 25) { el("line", { x1: m.l, x2: W - m.r, y1: Y(v), y2: Y(v), stroke: "var(--line)", "stroke-width": 1 }, svg); el("text", { x: m.l - 8, y: Y(v) + 4, "text-anchor": "end", class: "mono" }, svg, v + "%"); }
+  for (let v = 10; v <= 35; v += 5) el("text", { x: X(v), y: H - m.b + 18, "text-anchor": "middle", class: "mono" }, svg, v + "%");
+  el("text", { x: (m.l + W - m.r) / 2, y: H - 6, "text-anchor": "middle" }, svg, "Oxygen in the surrounding air");
+  el("line", { x1: m.l, x2: W - m.r, y1: Y(0), y2: Y(0), stroke: "var(--axis)", "stroke-width": 1 }, svg);
+  const sc = DATA.scenarios[state.mission];
+  [[21, "ISS air"], [sc.o2_pct, "This mission"]].forEach(([v, t], i) => {
+    if (i === 1 && v === 21) return;
+    el("line", { x1: X(v), x2: X(v), y1: m.t, y2: Y(0), stroke: i ? "var(--accent)" : "var(--axis)", "stroke-width": i ? 2 : 1, "stroke-dasharray": "4 4" }, svg);
+    el("text", { x: X(v) + 5, y: m.t + 10 + i * 14, class: i ? "lbl" : "" }, svg, i ? `${t}: ${v}%` : t);
+  });
+  const ser = [["Heptane", "var(--s1)", "Heptane (fuel-like)"], ["Methanol", "var(--s2)", "Methanol (alcohol)"]];
+  ser.forEach(([k, c]) => {
+    const pts = DATA.charts.flex[k];
+    el("polyline", { points: pts.map((p) => `${X(p.x)},${Y(p.y)}`).join(" "), fill: "none", stroke: c, "stroke-width": 2, "stroke-linejoin": "round" }, svg);
+    pts.forEach((p) => {
+      el("circle", { cx: X(p.x), cy: Y(p.y), r: 5, fill: c, stroke: "var(--surface)", "stroke-width": 2 }, svg);
+      const hit = el("circle", { cx: X(p.x), cy: Y(p.y), r: 14, fill: "transparent", style: "cursor:pointer" }, svg);
+      hover(hit, `<b>${k}</b>, ${p.lo === p.hi ? p.lo : p.lo + "-" + p.hi}% O₂<br>${p.y}% went out on their own (${Math.round(p.y * p.n / 100)} of ${p.n} tests)`);
+      hit.addEventListener("click", () => jumpTo(p.id));
+    });
+    const last = pts[pts.length - 1];
+    el("text", { x: X(last.x) + 9, y: Y(last.y) + (k === "Heptane" ? 4 : -2), class: "lbl" }, svg, k);
+  });
+  legend("#lg-flex", ser.map(([, c, t]) => [c, t, "line"]));
+  $("#tk-flex").innerHTML = `At 30-34% oxygen almost no droplet flames went out on their own (0 of 11 heptane, 2 of 13 methanol). ${cite("FLEX-O2-HEPT-30", "See finding")}`;
+}
+
+function drawO2() {
+  const svg = $("#c-o2"); svg.innerHTML = "";
+  const rows = DATA.charts.minO2, W = 560, H = 210, m = { l: 16, r: 24, t: 30, b: 40 }, rowH = 58;
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  const x0 = 12, x1 = 36, X = (v) => m.l + ((v - x0) / (x1 - x0)) * (W - m.l - m.r);
+  for (let v = 12; v <= 36; v += 4) { el("line", { x1: X(v), x2: X(v), y1: m.t - 6, y2: H - m.b, stroke: "var(--line)" }, svg); el("text", { x: X(v), y: H - m.b + 18, "text-anchor": "middle", class: "mono" }, svg, v + "%"); }
+  el("text", { x: (m.l + W - m.r) / 2, y: H - 6, "text-anchor": "middle" }, svg, "Oxygen in the surrounding air");
+  const sc = DATA.scenarios[state.mission];
+  [[21, "ISS air"], [sc.o2_pct, "This mission"]].forEach(([v, t], i) => {
+    if (i === 1 && v === 21) return;
+    el("line", { x1: X(v), x2: X(v), y1: m.t - 14, y2: H - m.b, stroke: i ? "var(--accent)" : "var(--axis)", "stroke-width": i ? 2 : 1, "stroke-dasharray": "4 4" }, svg);
+    el("text", { x: X(v) + (i ? -5 : 5), y: m.t - 18 + 0, "text-anchor": i ? "end" : "start", class: i ? "lbl" : "" }, svg, i ? `${t}: ${v}%` : t);
+  });
+  rows.forEach((r, i) => {
+    const y = m.t + 18 + i * rowH;
+    el("text", { x: X(x0), y: y - 14, class: "ink", style: "font-weight:600" }, svg, r.label);
+    el("line", { x1: X(r.orbit), x2: X(r.earth), y1: y, y2: y, stroke: "var(--axis)", "stroke-width": 3, "stroke-linecap": "round" }, svg);
+    [["orbit", "var(--s1)", "In orbit (ISS)"], ["earth", "var(--s2)", "On Earth"]].forEach(([k, c, t]) => {
+      el("circle", { cx: X(r[k]), cy: y, r: 7, fill: c, stroke: "var(--surface)", "stroke-width": 2 }, svg);
+      el("text", { x: X(r[k]) + (k === "orbit" ? -11 : 11), y: y + 4, "text-anchor": k === "orbit" ? "end" : "start", class: "mono lbl" }, svg, r[k] + "%");
+      const hit = el("circle", { cx: X(r[k]), cy: y, r: 16, fill: "transparent", style: "cursor:pointer" }, svg);
+      hover(hit, `<b>${esc(r.label)}</b><br>${t}: lowest oxygen ${r[k]}%`);
+      hit.addEventListener("click", () => jumpTo(r.id));
+    });
+  });
+  legend("#lg-o2", [["var(--s1)", "In orbit (ISS)", "dot"], ["var(--s2)", "On Earth", "dot"]]);
+  $("#tk-o2").innerHTML = `Weak spacecraft airflow lets acrylic burn down to 13.5% oxygen, below the 15.4% Earth tests suggest, so ground screening is not always conservative. ${cite("RPT-20210011385-1", "See finding")}`;
+}
+
+function saffireRows() { return DATA.charts.saffire; }
+function rowLabel(svg, r, y, xR) {
+  el("text", { x: xR, y: y - 1, "text-anchor": "end", class: "ink", style: "font-weight:600" }, svg, `${r.test} ${r.desc}`);
+  el("text", { x: xR, y: y + 13, "text-anchor": "end", class: "mono", style: "font-size:11px" }, svg, `${r.o2}% O₂ · ${r.kpa} kPa`);
+}
+function drawAlarm() {
+  const svg = $("#c-alarm"); svg.innerHTML = "";
+  const rows = saffireRows(), W = 560, rowH = 34, m = { l: 168, r: 54, t: 8, b: 40 }, H = m.t + rows.length * rowH + m.b;
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  const xmax = 30, X = (min) => m.l + (min / xmax) * (W - m.l - m.r);
+  for (let v = 0; v <= 30; v += 5) { el("line", { x1: X(v), x2: X(v), y1: m.t, y2: H - m.b, stroke: "var(--line)" }, svg); el("text", { x: X(v), y: H - m.b + 16, "text-anchor": "middle", class: "mono" }, svg, v); }
+  el("text", { x: (m.l + W - m.r) / 2, y: H - 6, "text-anchor": "middle" }, svg, "Minutes from ignition to alarm");
+  rows.forEach((r, i) => {
+    const y = m.t + i * rowH + rowH / 2, min = r.alarm / 60, c = r.mat === "PMMA" ? "var(--s2)" : "var(--s1)";
+    rowLabel(svg, r, y, m.l - 10);
+    const w = Math.max(4, X(min) - X(0));
+    el("path", { d: `M${X(0)},${y - 9} h${w - 4} a4,4 0 0 1 4,4 v10 a4,4 0 0 1 -4,4 h${-(w - 4)} z`, fill: c }, svg);
+    el("text", { x: X(min) + 6, y: y + 4, class: "mono lbl" }, svg, min.toFixed(1));
+    const hit = el("rect", { x: m.l - 160, y: y - rowH / 2, width: W - m.l + 160 - m.r + 40, height: rowH, fill: "transparent" }, svg);
+    hover(hit, `<b>Saffire ${r.test}</b>, ${esc(r.desc)}<br>${r.o2}% O₂, ${r.kpa} kPa<br>Alarm after ${r.alarm} s (${min.toFixed(1)} min)`);
+  });
+  el("line", { x1: X(0), x2: X(0), y1: m.t, y2: H - m.b, stroke: "var(--axis)" }, svg);
+  legend("#lg-alarm", [["var(--s1)", "Fabric"], ["var(--s2)", "Acrylic plastic (PMMA)"]]);
+  $("#tk-alarm").innerHTML = `Fabric fires were detected in 1.5-3.5 minutes; acrylic fires took 17-27 minutes. ${cite("RPT-20260001992-4", "See finding")}`;
+}
+function drawCO() {
+  const svg = $("#c-co"); svg.innerHTML = "";
+  const rows = saffireRows(), W = 560, rowH = 34, m = { l: 168, r: 30, t: 26, b: 40 }, H = m.t + rows.length * rowH + m.b;
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  const xmax = 450, X = (v) => m.l + (v / xmax) * (W - m.l - m.r);
+  for (let v = 0; v <= 400; v += 100) { el("line", { x1: X(v), x2: X(v), y1: m.t, y2: H - m.b, stroke: "var(--line)" }, svg); el("text", { x: X(v), y: H - m.b + 16, "text-anchor": "middle", class: "mono" }, svg, v); }
+  el("text", { x: (m.l + W - m.r) / 2, y: H - 6, "text-anchor": "middle" }, svg, "Rise in cabin carbon monoxide (ppm)");
+  rows.forEach((r, i) => {
+    const y = m.t + i * rowH + rowH / 2, c = r.mat === "PMMA" ? "var(--s2)" : "var(--s1)";
+    rowLabel(svg, r, y, m.l - 10);
+    const w = Math.max(4, X(r.co) - X(0));
+    el("path", { d: `M${X(0)},${y - 9} h${w - 4} a4,4 0 0 1 4,4 v10 a4,4 0 0 1 -4,4 h${-(w - 4)} z`, fill: c, opacity: 0.85 }, svg);
+    el("circle", { cx: X(r.coAlarm), cy: y, r: 5, fill: "var(--ink)", stroke: "var(--surface)", "stroke-width": 2 }, svg);
+    const hit = el("rect", { x: m.l - 160, y: y - rowH / 2, width: W - m.l + 160 - m.r, height: rowH, fill: "transparent" }, svg);
+    hover(hit, `<b>Saffire ${r.test}</b>, ${esc(r.desc)}<br>Peak CO rise: ${r.co} ppm<br>CO when alarm sounded: ${r.coAlarm} ppm`);
+  });
+  [[100, "24-hour limit"], [425, "1-hour limit"]].forEach(([v, t]) => {
+    el("line", { x1: X(v), x2: X(v), y1: m.t - 8, y2: H - m.b, stroke: "var(--crit)", "stroke-width": 1.5, "stroke-dasharray": "5 4" }, svg);
+    el("text", { x: X(v) + (v > 400 ? -4 : 4), y: m.t - 12, "text-anchor": v > 400 ? "end" : "start", class: "lbl" }, svg, `${t} ${v} ppm`);
+  });
+  el("line", { x1: X(0), x2: X(0), y1: m.t, y2: H - m.b, stroke: "var(--axis)" }, svg);
+  legend("#lg-co", [["var(--s1)", "Fabric, peak"], ["var(--s2)", "Acrylic, peak"], ["var(--ink)", "CO when alarm sounded", "dot"], ["var(--crit)", "NASA crew limit (SMAC)", "line"]]);
+  $("#tk-co").innerHTML = `Three fires pushed cabin CO past the 24-hour limit; in test VI-4 it was already 283 ppm when the alarm went off. ${cite("RPT-20260001992-5", "See finding")}`;
+}
+function drawCharts() { drawFlex(); drawO2(); drawAlarm(); drawCO(); }
+
+/* ---------- Ask the evidence ---------- */
+const SUGG = ["Is Nomex safe in a 34% oxygen habitat?", "Will turning off the fans put a fire out?", "Why are plastic fires hard to detect?", "What changes on the Moon versus the ISS?"];
+$("#sugg").innerHTML = SUGG.map((s) => `<button type="button">${esc(s)}</button>`).join("");
+$("#sugg").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) { $("#q").value = b.textContent; ask(); } });
+
+function evidenceText(R) {
+  return R.map((x) => { const f = x.f;
+    return `[${f.id}] (${f.q}; score ${Math.round(x.s)}; ${SEVLBL[f.sev]}; ${f.conf} confidence; ${f.o2min ?? "?"}-${f.o2max ?? "?"}% O2; ${f.pmin ?? "?"}-${f.pmax ?? "?"} atm; ${f.g || "?"}) ${f.finding} Safety meaning: ${f.impl} Source: ${f.src}${f.page ? " p." + f.page : ""}.`;
+  }).join("\n");
+}
+function renderAnswer(text) {
+  const ids = new Set(DATA.findings.map((f) => f.id));
+  const lines = esc(text).split(/\n+/).filter((l) => l.trim());
+  let html = "", inList = false;
+  for (const l of lines) {
+    const t = l.replace(/\[([A-Z0-9][A-Z0-9.\-]+)\]/g, (m, id) => ids.has(id) ? `<button class="cite" data-cite="${id}">${id}</button>` : m)
+      .replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
+    if (/^\s*[-•*]\s+/.test(l)) { if (!inList) { html += "<ul>"; inList = true; } html += `<li>${t.replace(/^\s*[-•*]\s+/, "")}</li>`; }
+    else { if (inList) { html += "</ul>"; inList = false; } html += `<p>${t}</p>`; }
+  }
+  if (inList) html += "</ul>";
+  $("#answer").innerHTML = html;
+}
+function searchFallback(q) {
+  const words = q.toLowerCase().match(/[a-z0-9₂%]{3,}/g) || [];
+  const stop = new Set(["the", "and", "for", "are", "what", "does", "will", "with", "why", "how", "this", "that", "from", "safe", "fire", "fires"]);
+  const terms = words.filter((w) => !stop.has(w));
+  const R = ranked().map((x) => { const hay = [x.f.finding, x.f.impl, x.f.mat, x.f.exp, x.f.theme, x.f.cond].join(" ").toLowerCase();
+    const hits = terms.filter((t) => hay.includes(t)).length; return { ...x, hits }; }).filter((x) => x.hits).sort((a, b) => b.hits - a.hits || b.s - a.s).slice(0, 4);
+  if (!R.length) { $("#answer").innerHTML = "<p>No findings mention those words. Try naming a material, gas or experiment.</p>"; return; }
+  $("#answer").innerHTML = `<p><b>Closest findings for this mission:</b></p><ul>${R.map((x) => `<li>${esc(x.f.finding)} <button class="cite" data-cite="${esc(x.f.id)}">${esc(x.f.id)}</button></li>`).join("")}</ul>`;
+}
+
+let samplePromise = (window.claude && typeof window.claude.use === "function") ? window.claude.use("sample").catch(() => null) : Promise.resolve(null);
+let aiOff = false, ctl = null;
+samplePromise.then((s) => { if (!s) { aiOff = true; $("#asknote").textContent = "AI answers work when this page is opened in Claude. Here, Ask shows the closest matching findings instead."; } });
+
+async function ask() {
+  const q = $("#q").value.trim();
+  if (!q) { $("#q").focus(); return; }
+  const sample = aiOff ? null : await samplePromise;
+  if (!sample) { searchFallback(q); return; }
+  const sc = DATA.scenarios[state.mission];
+  const R = ranked();
+  const prompt = `You are a spacecraft fire-safety analyst helping a mission designer.
+Mission selected: ${sc.label} - ${sc.o2_pct}% oxygen, ${sc.pressure_atm} atm, ${sc.gravity_g} g.
+Known evidence gaps for this mission: ${gapsFor(sc).map((g) => g.finding).join(" ") || "none"}
+
+Answer the question using ONLY the NASA findings listed below (ranked by relevance to this mission). Rules:
+- Cite every claim with the finding ID in square brackets, e.g. [RPT-20210011385-1].
+- If the findings do not answer it, say so plainly and name the closest evidence.
+- Point out when evidence was gathered under conditions far from this mission (oxygen, pressure, gravity).
+- At most 170 words. Plain sentences or "- " bullets. No headings, no markdown tables.
+
+Question: ${q}
+
+Findings:
+${evidenceText(R)}`;
+  ctl = new AbortController();
+  $("#askbtn").disabled = true; $("#stopbtn").hidden = false; $("#asknote").textContent = "";
+  $("#answer").innerHTML = "<p>Thinking...</p>";
+  try {
+    const { truncated } = await sample(prompt, { signal: ctl.signal, onText: ({ text }) => renderAnswer(text) });
+    if (truncated) $("#asknote").textContent = "The answer was cut short. Try a narrower question.";
+  } catch (e) {
+    if (e && e.text) renderAnswer(e.text); else if (!e || e.code !== "cancelled") $("#answer").innerHTML = "";
+    const code = e && e.code;
+    if (["not_granted", "sampling_disabled", "not_declared", "capability_disabled", "capability_removed"].includes(code)) {
+      aiOff = true; $("#asknote").textContent = "AI answers are off for this view, so Ask now shows the closest matching findings."; searchFallback(q);
+    } else if (code === "rate_limited") $("#asknote").textContent = "Too many questions in a short time. Wait a minute, then ask again.";
+    else if (code === "session_expired") $("#asknote").textContent = "Your Claude session expired. Sign in again to ask.";
+    else if (code === "refused") $("#asknote").textContent = "Claude would not answer that one. Try rephrasing it.";
+    else if (code && code !== "cancelled") $("#asknote").textContent = "The answer was interrupted. Ask again to retry.";
+  } finally { $("#askbtn").disabled = false; $("#stopbtn").hidden = true; }
+}
+$("#askbtn").addEventListener("click", ask);
+$("#stopbtn").addEventListener("click", () => ctl && ctl.abort());
+$("#q").addEventListener("keydown", (e) => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) ask(); });
+
+$("#foot").textContent = `${DATA.meta.n} findings: ${DATA.findings.filter((f) => f.type === "report_extracted").length} from NASA reports (each with page and quote), ${DATA.findings.filter((f) => f.type === "measured_outcome").length} computed from ISS test tables, ${DATA.findings.filter((f) => f.type === "test_coverage").length} test-coverage notes, ${DATA.findings.filter((f) => f.type === "evidence_gap").length} evidence gaps.`;
+render();
+</script>
