@@ -34,3 +34,11 @@ The Saffire II source contains `037 mm` for sample 2-5 thickness, preserved as a
 Click **Start guided demo**. The five steps move through the question, scenario, 3D setup, ranked evidence with source trace, and a qualified comparison. Reset restores the starting state. The **Measured media** tab explicitly shows that no video is bundled, rather than presenting the animation as NASA footage.
 
 See [AUDIT.md](AUDIT.md) for the completed audit, fixes, and remaining limitations.
+
+## Flame Lab (3D chamber)
+
+The `/` page opens with a full-width 3D room — a Saffire-style flow duct inside a spacecraft lab module — next to a minimal panel holding the ten controlled parameters from the parameter catalogue: material, sample geometry, gravity, oxygen, pressure, forced airflow, flow direction, ignition, initial temperature and suppression. Drag a field to change it, or click it to type a value.
+
+**Recording the video:** open `http://localhost:5173/#studio` (room fills the window), press **F** for full screen, start your screen recorder, then click **Simulate**. A 92-second sequence steps through all ten parameters with camera moves and subtitles; the field being changed is highlighted in green. **Space** pauses, **N** hides the parameter panel, **H** hides the status label, **R** re-fires the igniter.
+
+The flame, airflow, soot and suppression spray respond with qualitative, illustrative curves (`src/labModel.js`). They show the expected *direction* of change only — they are not fitted to NASA data and are labelled as illustrative on screen.

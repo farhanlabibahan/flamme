@@ -1,177 +1,238 @@
-import React, {useEffect, useRef, useState} from 'react';
-import * as THREE from 'three';
-import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {ArrowDownToLine, ArrowUpFromLine, BookOpen, Box, Camera, ChevronDown, ChevronRight, Circle, Eye, EyeOff, Fan, Flame, Globe, Layers, Maximize2, Minimize2, Orbit, Pause, Play, RectangleHorizontal, RotateCcw, Scan, ShieldAlert, SkipBack, SkipForward, StepBack, StepForward, Thermometer, Video, Wind, Zap} from 'lucide-react';
+import {createLab} from './labScene.js';
+import {AGENTS, CAM_TRACK, CAPTIONS, DEFAULT_PARAMS, DIRECTIONS, END, EVENTS, FIELDS, FPS, GRAVITY, MATERIALS, SIBAL, TRACKS, captionAt, keyState, level, paramsAt} from './labModel.js';
 
-// A responsive, evidence-adjacent illustration, NOT a combustion model.
-// No displayed flame shape or animation is derived from measured NASA footage.
-export default function Lab({scenario, mode, reduced}) {
-  const mount = useRef(null);
-  const [error, setError] = useState(false);
+/* Blender-style workspace around an ILLUSTRATIVE chamber visualization.
+   Inputs are the ten controlled parameters of the evidence catalogue; the
+   flame's response is qualitative and never a measured or simulated result. */
 
-  useEffect(() => {
-    const host = mount.current;
-    if (!host) return;
-    let renderer, controls, observer, frame;
-    const owned = [];
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
-    camera.position.set(4.6, 2.7, 5.3);
-    const color = scenario.material === 'Silicone' ? 0x9caab3 : scenario.material === 'PMMA' ? 0xb6d6df : 0xdfbd82;
+const PANELS = [
+  {n: 1, id: 'material', title: 'Material / fuel', icon: Layers, keys: ['material']},
+  {n: 2, id: 'geometry', title: 'Sample geometry', icon: Box, keys: ['length', 'width', 'thickness']},
+  {n: 3, id: 'gravity', title: 'Gravity condition', icon: Globe, keys: ['g']},
+  {n: 4, id: 'oxygen', title: 'Oxygen concentration', icon: Circle, keys: ['oxygen']},
+  {n: 5, id: 'pressure', title: 'Ambient pressure', icon: Scan, keys: ['pressure']},
+  {n: 6, id: 'flow', title: 'Forced airflow', icon: Wind, keys: ['flow']},
+  {n: 7, id: 'direction', title: 'Flow direction', icon: Fan, keys: ['direction']},
+  {n: 8, id: 'ignition', title: 'Ignition', icon: Zap, keys: ['power', 'duration']},
+  {n: 9, id: 'temp', title: 'Initial temperature', icon: Thermometer, keys: ['temp']},
+  {n: 10, id: 'suppression', title: 'Suppression', icon: ShieldAlert, keys: ['agent', 'conc', 'discharge']}
+];
+const CAMS = [['hero', Video, 'Hero · 0'], ['flame', Flame, 'Flame close-up · 1'], ['side', RectangleHorizontal, 'Side · 3'], ['top', ArrowDownToLine, 'Top · 7'], ['low', ArrowUpFromLine, 'Low angle'], ['inlet', Fan, 'Inlet fan'], ['wide', Orbit, 'Wide · module']];
+const OUTLINER = [['Module', 0, 'LAB-02 module'], ['Space', 1, 'Earth · stars'], ['FlowDuct', 0, 'Flow duct'], ['Sample', 1, 'Sample card'], ['Flame', 1, 'Flame volume'], ['Airflow', 1, 'Tracers · streamlines'], ['Soot', 1, 'Soot · embers'], ['Suppression', 1, 'Agent spray']];
 
-    try {
-      renderer = new THREE.WebGLRenderer({alpha:true, antialias:true, powerPreference:'high-performance'});
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
-      renderer.outputColorSpace = THREE.SRGBColorSpace;
-      renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.12;
-      host.appendChild(renderer.domElement);
-      controls = new OrbitControls(camera, renderer.domElement);
-      controls.enableDamping = true;
-      controls.enablePan = false;
-      controls.minDistance = 3.2;
-      controls.maxDistance = 10;
-      controls.maxPolarAngle = Math.PI * .76;
-      controls.target.set(0, -.15, 0);
+const fmt = (k, v) => { const f = FIELDS[k]; return f ? Number(v).toFixed(f.dec) : String(v); };
+const tc = t => { const f = Math.round(t * FPS); return String(f).padStart(4, '0'); };
+const nearestG = g => GRAVITY.reduce((a, b) => Math.abs(b.g - g) < Math.abs(a.g - g) ? b : a);
 
-      const mesh = (parent, geometry, material) => {
-        const object = new THREE.Mesh(geometry, material);
-        parent.add(object);
-        owned.push(geometry, material);
-        return object;
-      };
-      scene.add(new THREE.HemisphereLight(0xb4d9ff, 0x141b26, 1.55));
-      const rim = new THREE.DirectionalLight(0x7cc4f2, 1.9);
-      rim.position.set(-3, 4, -4);
-      scene.add(rim);
-      const key = new THREE.DirectionalLight(0xffffff, 1.2);
-      key.position.set(3, 4, 5);
-      scene.add(key);
-      const fireLight = new THREE.PointLight(0xffa23f, 0, 4);
-      fireLight.position.set(-.4, .1, 0);
-      scene.add(fireLight);
+function fromScenario(s, base) {
+  const p = {...base};
+  if (s?.material) p.material = s.material;
+  if (s?.oxygen && !Number.isNaN(Number(s.oxygen))) p.oxygen = Number(s.oxygen);
+  if (s?.airflow && !Number.isNaN(Number(s.airflow))) p.flow = Number(s.airflow);
+  if (s?.geometry && !Number.isNaN(Number(s.geometry))) p.width = Number(s.geometry) * 10;
+  return p;
+}
 
-      const assembly = new THREE.Group();
-      scene.add(assembly);
-      const platform = mesh(assembly, new THREE.BoxGeometry(4.4, .15, 2.65), new THREE.MeshStandardMaterial({color:0x182638, metalness:.68, roughness:.4}));
-      platform.position.y = -.92;
-      const rail = mesh(assembly, new THREE.BoxGeometry(3.6, .09, .94), new THREE.MeshStandardMaterial({color:0x617488, metalness:.72, roughness:.37}));
-      rail.position.y = -.76;
-      const sample = mesh(assembly, new THREE.BoxGeometry(3.32, .065, .7), new THREE.MeshStandardMaterial({color, roughness:.8}));
-      sample.position.y = -.68;
-      for (let i = 0; i < 12; i++) {
-        const stripe = mesh(assembly, new THREE.BoxGeometry(.012, .004, .69), new THREE.MeshBasicMaterial({color:0x5a4538, transparent:true, opacity:.45}));
-        stripe.position.set(-1.52 + i * .28, -.645, 0);
-      }
-
-      const chamberGeo = new THREE.BoxGeometry(4.7, 2.35, 2.95);
-      const frameLines = new THREE.LineSegments(new THREE.EdgesGeometry(chamberGeo), new THREE.LineBasicMaterial({color:0x71adcf, transparent:true, opacity:.38}));
-      frameLines.position.y = .15;
-      assembly.add(frameLines);
-      owned.push(chamberGeo, frameLines.geometry, frameLines.material);
-      const backGlass = mesh(assembly, new THREE.PlaneGeometry(4.7, 2.35), new THREE.MeshBasicMaterial({color:0x32678b, transparent:true, opacity:.045, depthWrite:false, side:THREE.DoubleSide}));
-      backGlass.position.set(0, .15, -1.48);
-      const grid = new THREE.GridHelper(8, 16, 0x355673, 0x20364d);
-      grid.position.y = -1.02;
-      scene.add(grid);
-      owned.push(grid.geometry, grid.material);
-
-      const arrows = [];
-      for (const z of [-.64, 0, .64]) {
-        const arrow = new THREE.ArrowHelper(new THREE.Vector3(1,0,0), new THREE.Vector3(-1.85,.53,z), 1.05, 0x65d1e6, .19, .095);
-        assembly.add(arrow);
-        arrows.push(arrow);
-      }
-
-      const plume = new THREE.Group();
-      plume.position.set(-.7, -.46, 0);
-      assembly.add(plume);
-      const sheets = [];
-      if (mode === 'Illustrative visualization') {
-        const volumeMaterial = new THREE.ShaderMaterial({
-          transparent:true, depthWrite:false, side:THREE.DoubleSide, blending:THREE.AdditiveBlending,
-          uniforms:{uTime:{value:0}},
-          vertexShader:`varying vec3 vNormal; varying vec3 vPos; void main(){vNormal=normalize(normalMatrix*normal); vPos=position; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,
-          fragmentShader:`varying vec3 vNormal; varying vec3 vPos; uniform float uTime; void main(){float edge=pow(1.0-abs(dot(normalize(vNormal),vec3(0.0,0.0,1.0))),1.25); float ripple=0.78+0.22*sin(vPos.x*12.0+vPos.y*9.0-uTime*3.4); float core=smoothstep(-.9,.65,vPos.x); vec3 blue=vec3(.12,.46,1.0); vec3 orange=vec3(1.0,.38,.07); vec3 yellow=vec3(1.0,.78,.31); vec3 col=mix(blue,orange,smoothstep(-.75,-.15,vPos.x)); col=mix(col,yellow,core*.42); float alpha=(.17+.46*edge)*ripple*smoothstep(-1.0,-.5,vPos.x)*(1.0-smoothstep(.62,1.0,vPos.x)); gl_FragColor=vec4(col,alpha);}`
-        });
-        const volume = mesh(plume,new THREE.SphereGeometry(1,48,32),volumeMaterial);
-        volume.scale.set(1.27,.46,.38);
-        volume.position.set(.15,.28,0);
-        sheets.push({material:volumeMaterial,volume});
-        const layers = [
-          {z:-.25, height:.54, opacity:.28, tint:new THREE.Color('#ff762e')},
-          {z:.25, height:.54, opacity:.28, tint:new THREE.Color('#ff762e')},
-          {z:-.12, height:.43, opacity:.5, tint:new THREE.Color('#ffb14e')},
-          {z:.12, height:.43, opacity:.5, tint:new THREE.Color('#ffb14e')},
-          {z:0, height:.30, opacity:.62, tint:new THREE.Color('#ffe0a1')}
-        ];
-        layers.forEach((layer, index) => {
-          const width = 2.35;
-          const geometry = new THREE.PlaneGeometry(width, 1, 30, 8);
-          geometry.rotateX(-Math.PI/2);
-          geometry.translate(.1, 0, layer.z);
-          const base = Float32Array.from(geometry.attributes.position.array);
-          const material = new THREE.ShaderMaterial({
-            transparent:true, depthWrite:false, side:THREE.DoubleSide, blending:THREE.AdditiveBlending,
-            uniforms:{uTime:{value:0},uOpacity:{value:layer.opacity},uTint:{value:layer.tint}},
-            vertexShader:`varying vec2 vUv; uniform float uTime; void main(){vUv=uv; vec3 p=position; float envelope=sin(3.14159*uv.x); p.y += envelope*(0.08+0.60*uv.y) + 0.045*sin(uTime*4.0+uv.x*15.0+uv.y*7.0)*envelope; p.z += 0.06*sin(uTime*2.8+uv.x*11.0+uv.y*4.0)*envelope; gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.0);}`,
-            fragmentShader:`varying vec2 vUv; uniform float uTime; uniform float uOpacity; uniform vec3 uTint; void main(){float x=sin(3.14159*vUv.x); float feather=pow(x,0.7)*pow(1.0-vUv.y,0.55); float waves=0.76+0.24*sin(vUv.x*24.0-uTime*4.5+vUv.y*9.0); float a=feather*waves*uOpacity; vec3 c=mix(vec3(0.18,0.53,1.0),uTint,smoothstep(0.05,0.42,vUv.x)); gl_FragColor=vec4(c,a);}`
-          });
-          const ribbon = mesh(plume, geometry, material);
-          ribbon.position.y = .04 + index * .008;
-          sheets.push({material, ribbon, base, height:layer.height});
-        });
-        // A small luminous ignition region anchors the ribbon to the sample.
-        const glowMaterial = new THREE.MeshBasicMaterial({color:0xffa44d, transparent:true, opacity:.23, depthWrite:false, blending:THREE.AdditiveBlending});
-        const glow = mesh(plume, new THREE.SphereGeometry(.33, 20, 14), glowMaterial);
-        glow.scale.set(1.5,.65,.9);
-        glow.position.set(-.78,.04,0);
-        sheets.push({glow});
-      }
-
-      const fit = () => {
-        const w = Math.max(host.clientWidth,1), h = Math.max(host.clientHeight,1);
-        camera.aspect = w / h;
-        camera.updateProjectionMatrix();
-        renderer.setSize(w,h,false);
-      };
-      observer = new ResizeObserver(fit);
-      observer.observe(host);
-      fit();
-      const clock = new THREE.Clock();
-      const draw = () => {
-        frame = requestAnimationFrame(draw);
-        const t = clock.getElapsedTime();
-        const oxygen = Number(scenario.oxygen) || 21;
-        const flow = Number(scenario.airflow) || 0;
-        plume.scale.x = .77 + Math.min(flow,30) / 42;
-        plume.scale.y = .72 + Math.min(oxygen,30) / 90;
-        plume.rotation.z = scenario.gravity === 'Earth (1 g)' ? .32 : 0;
-        arrows.forEach(a => a.visible = Boolean(flow));
-        if (mode === 'Illustrative visualization') {
-          sheets.forEach((s,i) => {
-            if (s.material) s.material.uniforms.uTime.value = reduced ? 0 : t;
-            if (s.volume) s.volume.scale.y = reduced ? .46 : .46 + .035*Math.sin(t*3.2);
-            if (s.glow) s.glow.material.opacity = reduced ? .2 : .18 + .07 * Math.sin(t*4);
-          });
-          fireLight.intensity = reduced ? 8 : 8 + 2 * Math.sin(t*3.5);
-        }
-        controls.update();
-        renderer.render(scene,camera);
-      };
-      draw();
-      setError(false);
-    } catch (e) {
-      setError(true);
-    }
-    return () => {
-      if (frame) cancelAnimationFrame(frame);
-      observer?.disconnect(); controls?.dispose();
-      owned.forEach(x => x?.dispose?.());
-      renderer?.dispose(); renderer?.domElement?.remove();
-    };
-  }, [scenario, mode, reduced]);
-
-  return <div className="scene" ref={mount} role="img" aria-label="Rotatable 3D schematic of a sample in an experimental chamber. The animated flame is illustrative, not measured data.">
-    {error && <div className="media-empty">3D view unavailable. The sourced experiment data below remains accessible.</div>}
+/* ---------------------------------------------------------------- fields */
+function NumField({k, value, onChange, ks}) {
+  const f = FIELDS[k];
+  const [edit, setEdit] = useState(false);
+  const drag = useRef(null);
+  const pct = (value - f.min) / (f.max - f.min) * 100;
+  const set = v => onChange(k, Math.min(f.max, Math.max(f.min, Math.round(v / f.step) * f.step)));
+  if (edit) return <input className="bf-input" autoFocus defaultValue={fmt(k, value)} onBlur={e => { const v = parseFloat(e.target.value); if (Number.isFinite(v)) set(v); setEdit(false); }} onKeyDown={e => { if (e.key === 'Enter') e.currentTarget.blur(); if (e.key === 'Escape') setEdit(false); }}/>;
+  return <div className={`bf ${ks || ''}`} role="slider" tabIndex={0} aria-label={f.label} aria-valuemin={f.min} aria-valuemax={f.max} aria-valuenow={value}
+    onKeyDown={e => { if (e.key === 'ArrowRight' || e.key === 'ArrowUp') { e.preventDefault(); set(value + f.step * 10); } if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') { e.preventDefault(); set(value - f.step * 10); } if (e.key === 'Enter') setEdit(true); }}
+    onPointerDown={e => { e.currentTarget.setPointerCapture(e.pointerId); drag.current = {x: e.clientX, v: value, w: e.currentTarget.clientWidth, moved: false}; }}
+    onPointerMove={e => { const d = drag.current; if (!d) return; const dx = e.clientX - d.x; if (Math.abs(dx) > 2) d.moved = true; if (d.moved) set(d.v + dx / d.w * (f.max - f.min) * (e.shiftKey ? .1 : 1)); }}
+    onPointerUp={() => { const d = drag.current; drag.current = null; if (d && !d.moved) setEdit(true); }}>
+    <i className="bf-fill" style={{width: `${pct}%`}}/>
+    <span className="bf-lab">{f.label}</span><span className="bf-val">{fmt(k, value)} <small>{f.unit}</small></span>
   </div>;
+}
+function Enum({k, value, options, onChange, ks, label}) {
+  return <label className={`be ${ks || ''}`}><span>{label}</span><select value={value} onChange={e => onChange(k, e.target.value)}>{options.map(o => { const [v, t] = Array.isArray(o) ? o : [o, o]; return <option key={v} value={v}>{t}</option>; })}</select><ChevronDown size={12}/></label>;
+}
+const Key = ({ks}) => <i className={`kf ${ks || ''}`} title={ks === 'key' ? 'On keyframe' : ks === 'anim' ? 'Animating' : ks ? 'Keyframed' : 'Not animated'}/>;
+
+/* ---------------------------------------------------------------- studio */
+export default function Lab({scenario, mode, onMode, reduced, onReduced, onNavigate}) {
+  const root = useRef(null), host = useRef(null), world = useRef(null);
+  const callouts = useRef({}), gizmo = useRef(null), spark = useRef(null), sparkData = useRef([]);
+  const props = useRef(null), track = useRef(null);
+  const [params, setParams] = useState(() => fromScenario(scenario, DEFAULT_PARAMS));
+  const [ui, setUi] = useState({t: 0, playing: false, live: params, d: null, fps: 60, igOK: 1, out: false});
+  const [full, setFull] = useState(() => typeof location !== 'undefined' && location.hash.startsWith('#studio'));
+  const [hud, setHud] = useState(true);
+  const [side, setSide] = useState(true);
+  const [tools, setTools] = useState(true);
+  const [open, setOpen] = useState(() => Object.fromEntries(PANELS.map(p => [p.id, true])));
+  const [vis, setVis] = useState(() => Object.fromEntries(OUTLINER.map(o => [o[0], true])));
+  const [cam, setCam] = useState('hero');
+  const [error, setError] = useState(false);
+  const live = ui.playing ? ui.live : params;
+  const t = ui.t;
+
+  /* world lifecycle */
+  useEffect(() => {
+    let api;
+    try { api = createLab(host.current, {params, mode, reduced}); } catch (e) { console.error(e); setError(true); return; }
+    world.current = api;
+    let last = 0, frames = 0, fpsT = performance.now(), fps = 60;
+    api.state.onFrame = f => {
+      frames++; const now = performance.now();
+      if (now - fpsT > 500) { fps = Math.round(frames * 1000 / (now - fpsT)); frames = 0; fpsT = now; }
+      for (const key in f.anchors) { const el = callouts.current[key], a = f.anchors[key]; if (el) { el.style.transform = `translate(${a.x}px,${a.y}px)`; el.style.opacity = a.vis ? 1 : 0; } }
+      drawGizmo(gizmo.current, f.quat);
+      const sd = sparkData.current; sd.push(f.lum); if (sd.length > 160) sd.shift(); drawSpark(spark.current, sd);
+      if (now - last > 45) { last = now; setUi({t: f.anim.t, playing: f.anim.playing, live: f.params, d: f.d, sm: f.sm, fps, igOK: f.igOK, out: f.out, ignite: f.ignite}); }
+    };
+    if (location.hash === '#studio-play') setTimeout(() => play(true), 600);
+    return () => { api.dispose(); world.current = null; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => { const s = world.current?.state; if (s) { s.params = params; } }, [params]);
+  useEffect(() => { const s = world.current?.state; if (s) s.mode = mode === 'Experiment setup' ? mode : 'Illustrative visualization'; }, [mode]);
+  useEffect(() => { const s = world.current?.state; if (s) s.reduced = reduced; }, [reduced]);
+  useEffect(() => { const o = world.current?.objects; if (!o) return; for (const k in vis) if (o[k]) o[k].visible = vis[k]; }, [vis]);
+
+  // follow the Define panel (evidence scenario) when it changes
+  const first = useRef(true);
+  useEffect(() => { if (first.current) { first.current = false; return; } pause(); setParams(p => fromScenario(scenario, p)); }, [scenario.material, scenario.oxygen, scenario.airflow, scenario.geometry]); // eslint-disable-line
+
+  /* playback */
+  const A = () => world.current?.state.anim;
+  const play = useCallback((fromStart) => {
+    const a = A(); if (!a) return;
+    if (fromStart || a.t >= END) { a.t = 0; world.current.reignite(); world.current.fly('hero', 1.6); }
+    a.playing = true; a.camera = true;
+  }, []);
+  const pause = useCallback(() => {
+    const a = A(); if (!a || !a.playing) return;
+    a.playing = false; setParams(paramsAt(a.t, world.current.state.params));
+  }, []);
+  const seek = useCallback(nt => {
+    const a = A(); if (!a) return;
+    const was = a.playing; a.t = Math.min(END, Math.max(0, nt));
+    if (!was) setParams(p => paramsAt(a.t, p));
+    setUi(u => ({...u, t: a.t}));
+  }, []);
+  const change = useCallback((k, v) => {
+    const a = A();
+    if (a?.playing) { a.playing = false; setParams({...paramsAt(a.t, world.current.state.params), [k]: v}); }
+    else setParams(p => ({...p, [k]: v}));
+  }, []);
+  const toggleFull = useCallback(() => {
+    const el = root.current; if (!el) return;
+    if (document.fullscreenElement) document.exitFullscreen?.();
+    else if (!full) { setFull(true); el.requestFullscreen?.().catch(() => {}); }
+    else setFull(false);
+  }, [full]);
+  useEffect(() => { const h = () => { if (!document.fullscreenElement) setFull(f => location.hash.startsWith('#studio') ? f : false); }; document.addEventListener('fullscreenchange', h); return () => document.removeEventListener('fullscreenchange', h); }, []);
+  const flyTo = name => { setCam(name); world.current?.fly(name, 2.2); };
+
+  /* shortcuts (Blender-ish) */
+  useEffect(() => {
+    const onKey = e => {
+      if (e.target.closest?.('input,select,textarea') || e.metaKey || e.ctrlKey) return;
+      const r = root.current?.getBoundingClientRect(); if (!full && r && (r.bottom < 80 || r.top > innerHeight - 80)) return;
+      const a = A(); const k = e.key.toLowerCase();
+      if (k === ' ') { e.preventDefault(); a?.playing ? pause() : play(); }
+      else if (k === 'f') toggleFull();
+      else if (k === 'n') setSide(s => !s);
+      else if (k === 't') setTools(s => !s);
+      else if (k === 'h') setHud(s => !s);
+      else if (k === 'r') world.current?.reignite();
+      else if (k === 'home') seek(0);
+      else if (k === 'arrowleft' && e.shiftKey) seek(0);
+      else if (k === 'arrowleft') seek((a?.t || 0) - 1);
+      else if (k === 'arrowright') seek((a?.t || 0) + 1);
+      else if (k === '0') flyTo('hero'); else if (k === '1') flyTo('flame'); else if (k === '3') flyTo('side'); else if (k === '7') flyTo('top');
+    };
+    addEventListener('keydown', onKey); return () => removeEventListener('keydown', onKey);
+  }, [full, pause, play, seek, toggleFull]);
+
+  /* follow animated panel while playing */
+  const activePanel = useMemo(() => ui.playing ? PANELS.find(p => p.keys.some(k => keyState(k, t) === 'anim' || keyState(k, t) === 'key'))?.id : null, [ui.playing, t]);
+  useEffect(() => { if (!activePanel) return; const el = props.current?.querySelector(`[data-panel="${activePanel}"]`); el?.scrollIntoView({behavior: 'smooth', block: 'nearest'}); }, [activePanel]);
+
+  const ks = k => ui.playing ? keyState(k, t) : (TRACKS[k]?.length > 1 ? 'keyed' : null);
+  const d = ui.d;
+  const cap = captionAt(t);
+  const pO2 = live.oxygen * live.pressure / 100;
+  const energy = live.power * live.duration;
+
+  const progress = t / END;
+  const regime = ui.out ? (d?.spray ? 'SUPPRESSED · EXTINGUISHED' : 'FLAME OUT · RE-FIRE IGNITER') : ui.igOK < .5 ? 'IGNITION FAILED' : d?.regime;
+
+  return <div ref={root} className={`studio ${full ? 'is-full' : ''} ${side ? '' : 'no-side'} ${hud ? '' : 'no-hud'}`}>
+    <header className="st-bar">
+      <div className="st-name"><span className="pip"/><b>Microgravity Flame Lab</b><small>ILLUSTRATIVE · NOT A CFD SIMULATION</small></div>
+      <div className="st-actions">
+        {(ui.playing || t > 0) && <div className="st-prog" aria-label="Simulation progress"><i style={{width: `${progress * 100}%`}}/><span>{Math.floor(t)}s / {END}s</span></div>}
+        <button className="sim-btn" onClick={() => ui.playing ? pause() : play(t <= 0 || t >= END)}>{ui.playing ? <><Pause size={15}/> Pause</> : <><Play size={15}/> {t > 0 && t < END ? 'Resume' : 'Simulate'}</>}</button>
+        <button className="st-iconbtn" title="Reset" onClick={() => { pause(); seek(0); setParams({...DEFAULT_PARAMS}); world.current?.reignite(); flyTo('hero'); }}><RotateCcw size={15}/></button>
+        <button className="st-iconbtn" title={side ? 'Hide parameters (N)' : 'Show parameters (N)'} onClick={() => setSide(v => !v)}>{side ? <EyeOff size={15}/> : <Eye size={15}/>}</button>
+        <button className="st-iconbtn" title="Full screen (F)" onClick={toggleFull}>{full ? <Minimize2 size={15}/> : <Maximize2 size={15}/>}</button>
+      </div>
+    </header>
+
+    <div className="st-body">
+      <div className="vp-canvas">
+        <div className="vp-gl" ref={host} role="img" aria-label="Interactive 3D chamber. The flame and airflow are an illustrative visualization, not measured imagery or a validated simulation."/>
+        {error && <div className="vp-empty">3D view unavailable on this device. The sourced evidence below remains accessible.</div>}
+        <div className="vp-overlay">
+          {regime && <span className="vp-regime" data-tone={ui.out ? 'none' : d?.tone}>{regime}</span>}
+          {cap && ui.playing && <div className="vp-cap" key={cap[0]}><small>{cap[2]}</small><p>{cap[3]}</p></div>}
+        </div>
+      </div>
+
+      <aside className="st-side">
+        <div className="pr-body" ref={props}>
+          <div className="pr-title">Parameters <small>{ui.playing ? 'SIMULATING' : 'DRAG OR CLICK TO EDIT'}</small></div>
+          {PANELS.map(p => <div key={p.id} data-panel={p.id} className={`pn ${activePanel === p.id ? 'active' : ''}`}>
+            <div className="pn-head"><em>{String(p.n).padStart(2, '0')}</em>{p.title}</div>
+            <div className="pn-body">{p.keys.map(k => {
+              const s = ui.playing ? ks(k) : null;
+              if (k === 'material') return <Enum key={k} k={k} label="Material" value={live.material} ks={s} onChange={change} options={Object.entries(MATERIALS).map(([v, m]) => [v, `${m.short} · ${m.note}`])}/>;
+              if (k === 'direction') return <Enum key={k} k={k} label="Direction" value={live.direction} ks={s} onChange={change} options={DIRECTIONS}/>;
+              if (k === 'agent') return <Enum key={k} k={k} label="Agent" value={live.agent} ks={s} onChange={change} options={AGENTS}/>;
+              if (k === 'discharge') return <button key={k} className={`bt ${live.discharge ? 'on' : ''} ${s || ''}`} onClick={() => change('discharge', !live.discharge)} disabled={live.agent === 'None'}><i/>{live.discharge ? 'Discharging' : 'Discharge agent'}</button>;
+              return <NumField key={k} k={k} value={live[k]} onChange={change} ks={s}/>;
+            })}
+              {p.id === 'gravity' && <div className="pills">{GRAVITY.map(g => <button key={g.name} className={nearestG(live.g).name === g.name ? 'on' : ''} onClick={() => change('g', g.g)}>{g.name}</button>)}</div>}
+              {p.id === 'ignition' && <button className="bt fire" onClick={() => world.current?.reignite()}><Zap size={12}/> Fire igniter</button>}
+            </div>
+          </div>)}
+        </div>
+      </aside>
+    </div>
+  </div>;
+}
+
+/* ---------------------------------------------------------------- helpers */
+const AX = [['X', [1, 0, 0], '#ff3653'], ['Y', [0, 0, -1], '#8adb00'], ['Z', [0, 1, 0], '#2c8fff']];
+function drawGizmo(svg, q) {
+  if (!svg || !q) return;
+  // rotate world axes into view space: v' = q⁻¹ · v
+  const [x, y, z, w] = [-q.x, -q.y, -q.z, q.w];
+  const rot = v => { const t = [2 * (y * v[2] - z * v[1]), 2 * (z * v[0] - x * v[2]), 2 * (x * v[1] - y * v[0])]; return [v[0] + w * t[0] + (y * t[2] - z * t[1]), v[1] + w * t[1] + (z * t[0] - x * t[2]), v[2] + w * t[2] + (x * t[1] - y * t[0])]; };
+  const items = [];
+  for (const [n, v, c] of AX) { const r = rot(v); items.push({n, c, x: r[0] * 34, y: -r[1] * 34, z: r[2], pos: true}); items.push({n, c, x: -r[0] * 34, y: r[1] * 34, z: -r[2], pos: false}); }
+  items.sort((a, b) => a.z - b.z);
+  svg.innerHTML = `<circle r="48" fill="rgba(255,255,255,.04)"/>` + items.map(i => i.pos
+    ? `<line x1="0" y1="0" x2="${i.x.toFixed(1)}" y2="${i.y.toFixed(1)}" stroke="${i.c}" stroke-width="2.4"/><circle cx="${i.x.toFixed(1)}" cy="${i.y.toFixed(1)}" r="9" fill="${i.c}"/><text x="${i.x.toFixed(1)}" y="${(i.y + 3.6).toFixed(1)}" text-anchor="middle" font-size="10" font-weight="700" fill="#0b0f16">${i.n}</text>`
+    : `<circle cx="${i.x.toFixed(1)}" cy="${i.y.toFixed(1)}" r="8" fill="${i.c}" fill-opacity=".22" stroke="${i.c}" stroke-opacity=".7"/>`).join('');
+}
+function drawSpark(c, data) {
+  if (!c) return; const g = c.getContext('2d'), w = c.width, h = c.height;
+  g.clearRect(0, 0, w, h);
+  g.strokeStyle = 'rgba(160,182,215,.12)'; g.lineWidth = 1; for (let i = 1; i < 4; i++) { g.beginPath(); g.moveTo(0, i * h / 4); g.lineTo(w, i * h / 4); g.stroke(); }
+  if (data.length < 2) return;
+  const grd = g.createLinearGradient(0, 0, w, 0); grd.addColorStop(0, 'rgba(115,210,226,.2)'); grd.addColorStop(1, 'rgba(255,172,94,1)');
+  g.strokeStyle = grd; g.lineWidth = 1.6; g.beginPath();
+  data.forEach((v, i) => { const x = i / 159 * w, y = h - 3 - Math.min(1, v / 1.4) * (h - 6); i ? g.lineTo(x, y) : g.moveTo(x, y); });
+  g.stroke();
 }
