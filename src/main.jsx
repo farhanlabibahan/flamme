@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {createRoot} from 'react-dom/client';
 import {ArrowRight, ArrowUpRight, BookOpen, Check, ChevronDown, Compass, ExternalLink, Flame, Info, Layers, Pause, Play, RotateCcw, Search, ShieldCheck, Wind, X} from 'lucide-react';
 import Lab from './Lab.jsx';
@@ -9,7 +9,7 @@ import './app.css';
 const DEMO = [
   {title:'The question', body:'Which microgravity experiments are relevant to SIBAL at about 22.1% oxygen and 20 cm/s airflow?', target:'mission'},
   {title:'Define the conditions', body:'Choose material, oxygen and flow. Unknown pressure is kept unknown—not guessed.', target:'scenario'},
-  {title:'Explore the chamber', body:'Tweak the ten controlled parameters or press Play to run the keyframed sweep. The flame response is illustrative — not measured footage or a combustion prediction.', target:'lab'},
+  {title:'Explore the chamber', body:'The guided keyframed sweep now runs through the ten controlled parameters. The flame response is illustrative — not measured footage or a combustion prediction.', target:'lab'},
   {title:'Trace the evidence', body:'Open the highest-ranked Saffire II record and follow its source link and original table row.', target:'evidence'},
   {title:'Compare responsibly', body:'Compare two observations while keeping material, thickness and missing-condition differences visible.', target:'comparison'}
 ];
@@ -17,6 +17,7 @@ const value = f => f?.status === 'ambiguous' ? `${display(f)} · verify` : displ
 const stat = (n,label) => <div className="mini-stat"><strong>{n}</strong><span>{label}</span></div>;
 
 function App(){
+  const labRef = useRef(null);
   const [scenario,setScenario] = useState({...initialScenario});
   const [view,setView] = useState('Explore');
   const [mode,setMode] = useState('Illustrative visualization');
@@ -36,8 +37,11 @@ function App(){
   const source = investigations.find(i=>i.id===record.investigationId);
   const brief = explain(record);
   const update=(key,v)=>{setScenario(s=>({...s,[key]:v}));setSearched(false)};
-  const reset=()=>{setScenario({...initialScenario});setView('Explore');setMode('Illustrative visualization');setSelected('2-5');setCompare(['2-5','2-2']);setQuery('');setFilter('All');setDrawer(null);setSearched(false);setAdvanced(false);setDemo(0);window.scrollTo({top:0,behavior:'instant'})};
+  const reset=()=>{labRef.current?.reset();setScenario({...initialScenario});setView('Explore');setMode('Illustrative visualization');setSelected('2-5');setCompare(['2-5','2-2']);setQuery('');setFilter('All');setDrawer(null);setSearched(false);setAdvanced(false);setDemo(0);window.scrollTo({top:0,behavior:'auto'})};
+  const exitDemo=()=>{labRef.current?.pause();setDemo(-1)};
   const toStep=i=>{
+    if(i===2)requestAnimationFrame(()=>labRef.current?.start());
+    else labRef.current?.pause();
     setDemo(i);
     if(i===3){setSearched(true);setSelected(rank(experiments,scenario)[0].record.id);setView('Explore')}
     if(i===4){setView('Compare');setCompare(['2-5','2-2'])}
@@ -57,13 +61,13 @@ function App(){
       <div className="side-foot"><span>Concept prototype · 2026</span><button onClick={()=>setDrawer('about')}><Info size={15}/> Scope & limitations</button></div>
     </aside>
     <main className="workspace">
-      <header className="topbar"><span>FIRE NAVIGATOR <b>/</b> {view==='Explore'?'Evidence explorer':'Comparison'}</span><div><span className="offline-badge">● LOCAL SOURCE EXCERPTS</span><button className="outline-btn" onClick={()=>demo<0?reset():setDemo(-1)}>{demo<0?<Play size={14}/>:<X size={14}/>} {demo<0?'Start guided demo':'Exit demo'}</button></div></header>
+      <header className="topbar"><span>FIRE NAVIGATOR <b>/</b> {view==='Explore'?'Evidence explorer':'Comparison'}</span><div><span className="offline-badge">● LOCAL SOURCE EXCERPTS</span><button className="outline-btn" onClick={()=>demo<0?reset():exitDemo()}>{demo<0?<Play size={14}/>:<X size={14}/>} {demo<0?'Start guided demo':'Exit demo'}</button></div></header>
       <div className="workspace-inner">
         {demo>=0&&<section className="demo-rail" aria-label="Guided demonstration"><div className="demo-copy"><small>GUIDED DEMO · {demo+1} / {DEMO.length}</small><strong>{DEMO[demo].title}</strong><p>{DEMO[demo].body}</p></div><div className="demo-controls"><div className="step-dots">{DEMO.map((s,i)=><button aria-label={`Go to step ${i+1}: ${s.title}`} aria-current={i===demo?'step':undefined} className={i===demo?'active':''} key={s.title} onClick={()=>toStep(i)}/>)}</div><button className="quiet-btn" onClick={reset}><RotateCcw size={14}/> Reset</button>{demo<4&&<button className="accent-btn" onClick={()=>toStep(demo+1)}>Next step <ArrowRight size={16}/></button>}</div></section>}
 
         {view==='Explore'?<>
           <section className="mission" id="mission"><div className="eyebrow">FLAME IN FREEFALL / EVIDENCE EXPLORER</div><h1>Fire evidence, <span>without the guesswork.</span></h1><p>Find relevant microgravity experiments, compare conditions, and trace each observation to its source.</p><div className="mission-meta">{stat(investigations.length,'investigations')}{stat(experiments.length,'curated experiment rows')}{stat('0','measured videos bundled')}<span className="scope-badge">Not a safety certification</span></div></section>
-          <section className="studio-wrap" id="lab"><Lab scenario={scenario} mode={mode} onMode={setMode} reduced={reduced} onReduced={setReduced} onNavigate={nav}/></section>
+          <section className="studio-wrap" id="lab"><Lab ref={labRef} scenario={scenario} mode={mode} onMode={setMode} reduced={reduced} onReduced={setReduced} onNavigate={nav}/></section>
           <section id="evidence" className="evidence-block"><div className="evidence-heading"><div><small>03 / INVESTIGATE</small><h2>Follow the evidence</h2></div><span>{results.length} records · transparent condition matching</span></div><div className="evidence-grid"><section className="surface scenario-panel" id="scenario"><div className="section-top"><small>01 / DEFINE</small><h2>Set the question</h2><p>Only controls that affect evidence ranking appear here.</p></div>
               {select('Material','material',[['Cotton–fiberglass (SIBAL)','Cotton–fiberglass (SIBAL)'],['Silicone','Silicone'],['PMMA','PMMA'],['','Any material']],'Source-reported sample material.')}
               <div className="field-pair">{select('Oxygen · vol %','oxygen',[['22.1','22.1'],['21.5','21.5'],['22.2','22.2'],['','Any']],'Matched within ±0.5 percentage points; approximate source values stay approximate.')}{select('Flow · cm/s','airflow',[['20','20'],['10','10'],['5','5'],['','Any']],'Matched within ±2 cm/s. BASS instrument readings are not airflow speeds.')}</div>

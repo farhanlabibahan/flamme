@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState} from 'react';
 import {ArrowDownToLine, ArrowUpFromLine, BookOpen, Box, Camera, ChevronDown, ChevronRight, Circle, Eye, EyeOff, Fan, Flame, Globe, Layers, Maximize2, Minimize2, Orbit, Pause, Play, RectangleHorizontal, RotateCcw, Scan, ShieldAlert, SkipBack, SkipForward, StepBack, StepForward, Thermometer, Video, Wind, Zap} from 'lucide-react';
 import {createLab} from './labScene.js';
 import {AGENTS, CAM_TRACK, CAPTIONS, DEFAULT_PARAMS, DIRECTIONS, END, EVENTS, FIELDS, FPS, GRAVITY, MATERIALS, SIBAL, TRACKS, captionAt, keyState, level, paramsAt} from './labModel.js';
@@ -58,7 +58,7 @@ function Enum({k, value, options, onChange, ks, label}) {
 const Key = ({ks}) => <i className={`kf ${ks || ''}`} title={ks === 'key' ? 'On keyframe' : ks === 'anim' ? 'Animating' : ks ? 'Keyframed' : 'Not animated'}/>;
 
 /* ---------------------------------------------------------------- studio */
-export default function Lab({scenario, mode, onMode, reduced, onReduced, onNavigate}) {
+const Lab = forwardRef(function Lab({scenario, mode, onMode, reduced, onReduced, onNavigate}, ref) {
   const root = useRef(null), host = useRef(null), world = useRef(null);
   const callouts = useRef({}), gizmo = useRef(null), spark = useRef(null), sparkData = useRef([]);
   const props = useRef(null), track = useRef(null);
@@ -119,6 +119,25 @@ export default function Lab({scenario, mode, onMode, reduced, onReduced, onNavig
     if (!was) setParams(p => paramsAt(a.t, p));
     setUi(u => ({...u, t: a.t}));
   }, []);
+  const resetLab = useCallback(() => {
+    const next = {...DEFAULT_PARAMS};
+    const a = A();
+    if (a) { a.playing = false; a.t = 0; a.camera = true; }
+    if (world.current?.state) world.current.state.params = next;
+    setParams(next);
+    setUi(u => ({...u, t: 0, playing: false, live: next}));
+    world.current?.reignite();
+    world.current?.fly('hero', 1.6);
+    setCam('hero');
+  }, []);
+  useImperativeHandle(ref, () => ({
+    pause,
+    reset: resetLab,
+    start() {
+      resetLab();
+      requestAnimationFrame(() => play(true));
+    }
+  }), [pause, play, resetLab]);
   const change = useCallback((k, v) => {
     const a = A();
     if (a?.playing) { a.playing = false; setParams({...paramsAt(a.t, world.current.state.params), [k]: v}); }
@@ -173,7 +192,7 @@ export default function Lab({scenario, mode, onMode, reduced, onReduced, onNavig
       <div className="st-actions">
         {(ui.playing || t > 0) && <div className="st-prog" aria-label="Simulation progress"><i style={{width: `${progress * 100}%`}}/><span>{Math.floor(t)}s / {END}s</span></div>}
         <button className="sim-btn" onClick={() => ui.playing ? pause() : play(t <= 0 || t >= END)}>{ui.playing ? <><Pause size={15}/> Pause</> : <><Play size={15}/> {t > 0 && t < END ? 'Resume' : 'Simulate'}</>}</button>
-        <button className="st-iconbtn" title="Reset" onClick={() => { pause(); seek(0); setParams({...DEFAULT_PARAMS}); world.current?.reignite(); flyTo('hero'); }}><RotateCcw size={15}/></button>
+        <button className="st-iconbtn" title="Reset" onClick={resetLab}><RotateCcw size={15}/></button>
         <button className="st-iconbtn" title={side ? 'Hide parameters (N)' : 'Show parameters (N)'} onClick={() => setSide(v => !v)}>{side ? <EyeOff size={15}/> : <Eye size={15}/>}</button>
         <button className="st-iconbtn" title="Full screen (F)" onClick={toggleFull}>{full ? <Minimize2 size={15}/> : <Maximize2 size={15}/>}</button>
       </div>
@@ -210,7 +229,9 @@ export default function Lab({scenario, mode, onMode, reduced, onReduced, onNavig
       </aside>
     </div>
   </div>;
-}
+});
+
+export default Lab;
 
 /* ---------------------------------------------------------------- helpers */
 const AX = [['X', [1, 0, 0], '#ff3653'], ['Y', [0, 0, -1], '#8adb00'], ['Z', [0, 1, 0], '#2c8fff']];
