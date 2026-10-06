@@ -1,0 +1,6 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import {experiments,display} from './data.js';import {rank,initialScenario,explain} from './science.js';
+test('ranking keeps matched source row first and never labels incomplete data exact',()=>{const results=rank(experiments,initialScenario);assert.equal(results[0].record.id,'2-5');assert.equal(results[0].exact,false);assert.equal(experiments[0].sample.thickness.normalized,null)});
+test('unspecified inputs do not count as matches',()=>{assert.equal(rank(experiments,{...initialScenario,oxygen:'',airflow:''})[0].matched,3)});
+test('qualitative and unavailable results are not given numeric units',()=>{assert.equal(display(experiments.find(r=>r.id==='2-2').measurements.burn),'Insignificant');assert.equal(display(experiments.find(r=>r.id==='2-2').measurements.spread),'n/a')});
+test('ambiguous thickness and spread header are disclosed',()=>{const r=experiments.find(x=>x.id==='2-5');assert.equal(r.sample.thickness.normalized,null);assert.match(explain(r).limitations,/spread-column header conflicts/)});
+test('bundled rows preserve source provenance',()=>{assert.equal(experiments.find(x=>x.id==='2-5').source.row,6);assert.equal(experiments.find(x=>x.id==='2-2').source.row,3)});
