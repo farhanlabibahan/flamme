@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AI Flow — Flame in Freefall</title>
+<title>Fire Navigator — Flame in Freefall</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
 :root{
-  --bg:#04060a;--ink:#eef2f7;--ink2:#c2cbd8;--muted:#7f8a9b;--dim:#4a5361;
+  --bg:#04060a;--ink:#eef2f7;--ink2:#c2cbd8;--muted:#8d98a9;--dim:#6f7a8b;
   --line:rgba(160,182,215,.13);--line2:rgba(160,182,215,.26);--line3:rgba(160,182,215,.45);
   --blue:#4f86ff;--blue2:#2f5fd6;--cyan:#73d2e2;--amber:#ffac5e;--red:#ff6458;--green:#6ee0a0;
   --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
@@ -58,7 +58,7 @@ button:focus-visible{outline:1px solid var(--cyan);outline-offset:3px}
 .ticks{display:flex;gap:5px}.ticks i{width:17px;height:2px;background:rgba(255,255,255,.12);transition:background .45s,box-shadow .45s}
 .ticks i.past{background:rgba(255,255,255,.42)}.ticks i.on{background:var(--cyan);box-shadow:0 0 8px rgba(115,210,226,.8)}
 .hud-bl{left:64px;bottom:40px;display:flex;gap:22px;align-items:center}.hud-bl .value{font:400 12px/1 var(--mono);color:var(--ink2);letter-spacing:.08em}
-.hud-bc{left:50%;bottom:42px;transform:translateX(-50%);font:500 11px/1 var(--mono);letter-spacing:.2em;color:var(--dim);white-space:nowrap}
+.hud-bc{left:50%;bottom:42px;transform:translateX(-50%);font:500 11px/1 var(--mono);letter-spacing:.2em;color:var(--muted);white-space:nowrap}.hud-bc b{font-weight:500;color:var(--amber)}
 .hud-br{right:64px;bottom:30px;display:flex;gap:8px;pointer-events:auto}
 .btn{font:500 12px/1 var(--mono);letter-spacing:.18em;color:var(--ink2);padding:11px 16px;border:1px solid var(--line2);background:rgba(10,14,22,.7);transition:all .25s}
 .btn:hover{color:#fff;border-color:var(--line3);background:rgba(79,134,255,.12)}.btn.on{color:var(--cyan);border-color:rgba(115,210,226,.5)}
@@ -68,21 +68,39 @@ button:focus-visible{outline:1px solid var(--cyan);outline-offset:3px}
 .head{position:absolute;left:120px;top:118px;width:1120px}
 .head h1{font:300 72px/.96 var(--disp);letter-spacing:-.03em;margin-top:18px}
 .head h1 span{color:var(--muted)}
-.head p{font:300 21px/1.38 var(--sans);color:var(--ink2);margin-top:14px;max-width:980px;letter-spacing:-.01em}
-.head .status{display:flex;gap:10px;margin-top:16px}
-.chip{font:500 11px/1 var(--mono);letter-spacing:.16em;padding:7px 9px;border:1px solid var(--line2);color:var(--ink2);background:rgba(120,150,200,.05)}
-.chip.plan{color:var(--cyan);border-style:dashed;border-color:rgba(115,210,226,.58);background:rgba(115,210,226,.05)}
-.chip.limit{color:var(--amber);border-style:dotted;border-color:rgba(255,172,94,.7);background:rgba(255,172,94,.05)}
+.head p{font:300 21px/1.38 var(--sans);color:var(--ink2);margin-top:14px;max-width:860px;letter-spacing:-.01em}
+.head .status{display:flex;align-items:center;gap:14px;margin-top:18px;font:500 10px/1 var(--mono);letter-spacing:.17em;color:var(--muted);text-transform:uppercase}
+.status .meta{display:flex;align-items:center;gap:8px;white-space:nowrap}
+.status .meta i{width:5px;height:5px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px rgba(115,210,226,.7)}
+.status .meta b{font-weight:500;color:var(--ink2)}
+.status .meta.caution b{color:var(--amber)}
+.status .divider{width:1px;height:12px;background:var(--line2)}
 
-.flame-label{position:absolute;right:116px;top:155px;width:350px;text-align:right}
-.flame-label strong{display:block;font:400 22px/1.1 var(--disp);letter-spacing:.02em;color:var(--ink2);margin-top:10px}
-.flame-label span{display:block;font:400 10px/1.5 var(--mono);letter-spacing:.15em;color:var(--dim);margin-top:8px}
+.model-map{position:absolute;left:1170px;top:104px;width:708px;height:300px;pointer-events:none}
+.model-callout{--lead:88px;position:absolute;width:220px;padding:10px 12px 11px;border-left:1px solid rgba(115,210,226,.6);background:linear-gradient(90deg,rgba(4,7,11,.82),rgba(4,7,11,.32) 82%,transparent);text-shadow:0 1px 8px #000}
+.model-callout .callout-head{display:flex;align-items:center;gap:9px;font:500 11px/1 var(--mono);letter-spacing:.17em;color:var(--cyan);text-transform:uppercase}
+.model-callout .callout-head b{font-weight:500;color:var(--muted)}
+.model-callout p{font:400 13px/1.35 var(--sans);letter-spacing:.005em;color:var(--ink2);margin-top:7px}
+.model-callout::after{content:'';position:absolute;left:100%;top:19px;width:var(--lead);height:1px;background:linear-gradient(90deg,rgba(115,210,226,.7),rgba(115,210,226,.16))}
+.model-callout::before{content:'';position:absolute;left:calc(100% + var(--lead) - 3px);top:16px;width:7px;height:7px;border:1px solid var(--cyan);border-radius:50%;background:#091019;box-shadow:0 0 9px rgba(115,210,226,.45);animation:calloutPulse 2.4s ease-in-out infinite}
+@keyframes calloutPulse{50%{transform:scale(1.35);box-shadow:0 0 14px rgba(115,210,226,.68)}}
+.model-callout.context{--lead:61px;left:0;top:60px}
+.model-callout.evidence{--lead:54px;left:0;top:210px;border-left-color:rgba(255,172,94,.68)}
+.model-callout.evidence .callout-head{color:var(--amber)}
+.model-callout.evidence::after{background:linear-gradient(90deg,rgba(255,172,94,.72),rgba(255,172,94,.14))}
+.model-callout.evidence::before{border-color:var(--amber);box-shadow:0 0 9px rgba(255,172,94,.42)}
+.model-callout.visual{--lead:36px;right:0;top:150px;width:180px;text-align:right;border-left:0;border-right:1px solid rgba(115,210,226,.6);background:linear-gradient(270deg,rgba(4,7,11,.82),rgba(4,7,11,.32) 82%,transparent)}
+.model-callout.visual .callout-head{justify-content:flex-end}
+.model-callout.visual::after{left:auto;right:100%;background:linear-gradient(270deg,rgba(115,210,226,.7),rgba(115,210,226,.16))}
+.model-callout.visual::before{left:auto;right:calc(100% + var(--lead) - 3px)}
 
 .flow-map{position:absolute;left:120px;top:450px;width:1680px;height:548px;padding:34px 32px;display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(2,1fr);gap:52px 24px;--c:rgba(115,210,226,.34);background:linear-gradient(180deg,rgba(8,13,20,.74),rgba(5,8,13,.48))}
 .flow-map>.map-label{position:absolute;left:24px;top:-25px;font:500 10px/1 var(--mono);letter-spacing:.2em;color:var(--cyan)}
 .flow-map>.map-note{position:absolute;right:0;top:-25px;font:500 10px/1 var(--mono);letter-spacing:.16em;color:var(--dim)}
+.map-note .grp{transition:color .45s}.map-note .grp em{font-style:normal;opacity:.7}.map-note .grp.on{color:var(--cyan)}.map-note .grp.past{color:var(--ink2)}
 #links{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:0}
 #links .base{fill:none;stroke:rgba(160,182,215,.14);stroke-width:1.2}
+#links .arrow-base{fill:rgba(160,182,215,.42)}#links .arrow-live{fill:var(--cyan)}
 #links .live{fill:none;stroke:var(--cyan);stroke-width:1.8;filter:drop-shadow(0 0 5px rgba(115,210,226,.55));stroke-dasharray:8 8;opacity:0;transition:opacity .45s}
 #links .live.on{opacity:1;animation:flowline .72s linear infinite}
 @keyframes flowline{to{stroke-dashoffset:-32}}
@@ -105,19 +123,20 @@ button:focus-visible{outline:1px solid var(--cyan);outline-offset:3px}
 .node-foot{margin-top:auto;display:flex;align-items:center;gap:10px}
 .node-foot .bar{height:2px;flex:1;background:rgba(255,255,255,.07);overflow:hidden}.node-foot .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue2),var(--cyan));transition:width 1.5s cubic-bezier(.2,.7,.2,1)}
 .node.current .bar i,.node.done .bar i{width:100%}.node.final.current .bar i{background:var(--green)}
-.node-foot .state{font:500 9px/1 var(--mono);letter-spacing:.13em;color:var(--dim);min-width:68px;text-align:right}
+.node-foot .state{font:500 10px/1 var(--mono);letter-spacing:.13em;color:var(--dim);min-width:68px;text-align:right}
+.node{cursor:pointer}.node:focus-visible{outline:1px solid var(--cyan);outline-offset:4px}
 .node.current .state{color:var(--cyan)}.node.done .state{color:var(--muted)}.node.final.current .state{color:#a9f5c8}
 .node[data-index="5"]{grid-column:5;grid-row:2}.node[data-index="6"]{grid-column:4;grid-row:2}.node[data-index="7"]{grid-column:3;grid-row:2}.node[data-index="8"]{grid-column:2;grid-row:2}.node[data-index="9"]{grid-column:1;grid-row:2}
 
 .flow-signal{position:absolute;width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 12px var(--cyan);z-index:3;opacity:0;pointer-events:none}
 .flow-signal.on{opacity:1}
-.fallback-flame{display:none;position:absolute;right:178px;top:155px;width:220px;height:220px;border-radius:50%;z-index:0;
+.fallback-flame{display:none;position:absolute;left:1430px;top:152px;width:220px;height:220px;border-radius:50%;z-index:0;
   background:radial-gradient(circle at 44% 48%,rgba(255,247,218,.94) 0 9%,rgba(255,166,75,.68) 28%,rgba(80,119,255,.45) 56%,transparent 72%);filter:blur(7px);animation:breathe 2.5s ease-in-out infinite}
 @keyframes breathe{50%{transform:scale(1.04);filter:blur(9px)}}
 
 body.cine .hud-br,body.cine .hud-bl{opacity:0;pointer-events:none}body.cine{cursor:none}
 body.cine .head h1{font-size:76px}.no-three .fallback-flame{display:block}
-@media(prefers-reduced-motion:reduce){#grain,.scan,.fallback-flame,#links .live.on{animation:none}.node{transition:none}}
+@media(prefers-reduced-motion:reduce){#grain,.scan,.fallback-flame,#links .live.on,.model-callout::before{animation:none}.node{transition:none}}
 </style>
 </head>
 <body>
@@ -128,21 +147,36 @@ body.cine .head h1{font-size:76px}.no-three .fallback-flame{display:block}
 
   <main id="content">
     <header class="head">
-      <div class="eyebrow"><span class="pip"></span><b>PROPOSED AI FLOW</b><span class="slash">/</span>FIRE NAVIGATOR</div>
-      <h1>From question to <span>traceable evidence.</span></h1>
-      <p>A retrieval-grounded workflow for finding, comparing, interpreting, and checking microgravity combustion evidence.</p>
-      <div class="status"><span class="chip plan">PLANNED AI · CONCEPT DEMONSTRATION</span><span class="chip limit">NOT A SAFETY CERTIFICATION</span></div>
+      <div class="eyebrow"><span class="pip"></span><b>INTELLIGENCE ARCHITECTURE</b><span class="slash">/</span>FIRE NAVIGATOR</div>
+      <h1>From experiment data to <span>explainable insight.</span></h1>
+      <p>A planned ML, AI reasoning, and agentic-memory workflow for learning from microgravity combustion experiments while preserving provenance and uncertainty.</p>
+      <div class="status" aria-label="Prototype status">
+        <span class="meta"><i></i><b>Concept architecture</b></span>
+        <span class="divider"></span>
+        <span class="meta caution">Data readiness <b>Expansion required</b></span>
+        <span class="divider"></span>
+        <span class="meta">Intended use <b>Research decision support</b></span>
+      </div>
     </header>
 
-    <div class="flame-label">
-      <div class="eyebrow" style="justify-content:flex-end"><span class="pip"></span>MICROGRAVITY COMBUSTION</div>
-      <strong>Evidence before interpretation.</strong>
-      <span>ILLUSTRATIVE VISUALIZATION · NOT MEASURED FOOTAGE</span>
-    </div>
+    <aside class="model-map" aria-label="Microgravity flame context">
+      <div class="model-callout context">
+        <span class="callout-head"><b>01</b> Microgravity context</span>
+        <p>Reduced buoyancy changes how hot gases circulate.</p>
+      </div>
+      <div class="model-callout visual">
+        <span class="callout-head"><b>02</b> Visual model</span>
+        <p>Qualitative flame behavior—not a measured prediction.</p>
+      </div>
+      <div class="model-callout evidence">
+        <span class="callout-head"><b>03</b> Evidence boundary</span>
+        <p>Findings remain linked to reviewed experiment records.</p>
+      </div>
+    </aside>
 
-    <section class="flow-map frame" aria-label="Proposed AI evidence workflow">
-      <div class="map-label">AI EVIDENCE PIPELINE · 10 STAGES</div>
-      <div class="map-note">RETRIEVE · NORMALIZE · RANK · GROUND · VERIFY</div>
+    <section class="flow-map frame" aria-label="Proposed ML, AI, and agentic-memory workflow">
+      <div class="map-label">SYSTEM WORKFLOW · 10 STAGES</div>
+      <div class="map-note" id="groups"><span class="grp">DATA <em>01–04</em></span> → <span class="grp">MODEL <em>05–07</em></span> → <span class="grp">INTELLIGENCE <em>08</em></span> → <span class="grp">MEMORY <em>09</em></span> → <span class="grp">OUTPUT <em>10</em></span></div>
       <svg id="links" aria-hidden="true"></svg>
       <span class="flow-signal" id="signal"></span>
     </section>
@@ -154,9 +188,9 @@ body.cine .head h1{font-size:76px}.no-three .fallback-flame{display:block}
       <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><circle cx="11" cy="11" r="9.5" fill="none" stroke="rgba(255,255,255,.35)"/><circle cx="11" cy="11" r="5" fill="none" stroke="#ffac5e"/><circle cx="11" cy="11" r="2" fill="#73d2e2"/></svg>
       <span class="brand">FLAME IN FREEFALL</span><span class="sep"></span><span class="label">RESEARCH CONSOLE</span>
     </div>
-    <div class="hud-tr"><span class="label" id="hudStage">AI EVIDENCE FLOW</span><span class="prog" id="hudProg">00 <span>/ 10</span></span><div class="ticks" id="ticks"></div></div>
+    <div class="hud-tr"><span class="label" id="hudStage">ARCHITECTURE OVERVIEW</span><span class="prog" id="hudProg">00 <span>/ 10</span></span><div class="ticks" id="ticks"></div></div>
     <div class="hud-bl"><span class="label">UTC</span><span class="value" id="clock">—</span><span class="label">LINK</span><span class="value" style="color:#8ff0b6">● NOMINAL</span></div>
-    <div class="hud-bc">CONCEPT PROTOTYPE · PLANNED AI WORKFLOW · SOURCE DOMAIN: NASA PSI &amp; NTRS</div>
+    <div class="hud-bc">CONCEPT PROTOTYPE · NASA PSI + NTRS DATA DOMAIN · <b>NOT FOR SAFETY CERTIFICATION</b></div>
     <div class="hud-br"><button class="btn" id="replay">REPLAY · R</button><button class="btn" id="pause">PAUSE · SPACE</button><button class="btn" id="cine">CINEMATIC · C</button></div>
     <div class="hud-line"><i id="hudLine"></i></div>
   </div>
@@ -171,17 +205,20 @@ body.cine .head h1{font-size:76px}.no-three .fallback-flame{display:block}
 
 const W=1920,H=1080,START_MS=700,STEP_MS=1800;
 const STEPS=[
-  ['ASK','Research question'],
-  ['UNDERSTAND','Extract intent and conditions'],
-  ['RETRIEVE','Retrieve PSI experiment rows and NTRS passages'],
-  ['NORMALIZE','Normalize terms and units; preserve original values'],
-  ['RANK','Rank physical similarity and show evidence quality separately'],
-  ['GROUND','Build a source-linked evidence package'],
-  ['SYNTHESIZE','Generate a constrained summary—or report insufficient evidence'],
-  ['VERIFY','Check claims, numbers, conditions, and citations'],
-  ['QUALIFY','Show Observed · Interpreted · Unknown'],
-  ['TRACE','Compare records and open original sources']
+  ['QUESTION','Define the research question'],
+  ['PARSE','Extract controlled inputs and the target outcome'],
+  ['DATA','Load reviewed PSI experiment records and verified metadata'],
+  ['NORMALIZE','Normalize variables while preserving original values and provenance'],
+  ['FEATURES','Engineer physics-aware features and missing-data indicators'],
+  ['TRAIN','Train and cross-validate candidate ML models'],
+  ['INFER','Estimate outcomes with calibrated uncertainty and applicability limits'],
+  ['EXPLAIN','Explain feature influence, analogues, and out-of-domain conditions'],
+  ['MEMORY','AI agent checks constraints and updates experiment memory'],
+  ['REPORT','Show Observed · Predicted · Unknown with source trace']
 ];
+const GROUPS=[0,0,0,0,1,1,1,2,3,4]; // stage index -> DATA, MODEL, INTELLIGENCE, MEMORY, OUTPUT
+const groupEls=[...document.querySelectorAll('#groups .grp')];
+function setGroups(index,end){const g=index<0?-1:GROUPS[index];groupEls.forEach((el,i)=>{el.classList.toggle('on',!end&&i===g);el.classList.toggle('past',end||i<g)})}
 const stage=document.getElementById('stage');
 const map=document.querySelector('.flow-map');
 const links=document.getElementById('links');
@@ -211,8 +248,10 @@ STEPS.forEach(([phase,title],index)=>{
   const card=document.createElement('article');
   card.className='node frame'+(index===STEPS.length-1?' final':'');
   card.dataset.index=index;
-  card.innerHTML=`<div class="node-head"><span class="num">${String(index+1).padStart(2,'0')}</span><span class="phase">${phase}</span></div><h2>${title}</h2><div class="node-foot"><span class="bar"><i></i></span><span class="state">QUEUED</span></div>`;
+  card.innerHTML=`<div class="node-head"><span class="num">${String(index+1).padStart(2,'0')}</span><span class="phase">${phase}</span></div><h2>${title}</h2><div class="node-foot"><span class="bar"><i></i></span><span class="state">PLANNED</span></div>`;
+  card.tabIndex=0;card.setAttribute('role','button');card.setAttribute('aria-label',`Stage ${index+1} of ${STEPS.length}: ${title}`);
   card.addEventListener('click',()=>jump(index));
+  card.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();jump(index)}});
   map.appendChild(card);
   const tick=document.createElement('i');ticks.appendChild(tick);
 });
@@ -234,10 +273,10 @@ function pathFor(a,b){
 }
 function drawLinks(){
   links.setAttribute('viewBox',`0 0 ${map.clientWidth} ${map.clientHeight}`);
-  links.innerHTML='';
+  links.innerHTML='<defs><marker id="arrowBase" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path class="arrow-base" d="M0 0 L8 4 L0 8 Z"/></marker><marker id="arrowLive" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path class="arrow-live" d="M0 0 L8 4 L0 8 Z"/></marker></defs>';
   for(let i=0;i<cards.length-1;i++){
     const d=pathFor(cards[i],cards[i+1]);
-    links.insertAdjacentHTML('beforeend',`<path class="base" d="${d}"/><path class="live" data-link="${i}" d="${d}"/>`);
+    links.insertAdjacentHTML('beforeend',`<path class="base" d="${d}" marker-end="url(#arrowBase)"/><path class="live" data-link="${i}" d="${d}" marker-end="url(#arrowLive)"/>`);
   }
 }
 drawLinks();
@@ -248,20 +287,21 @@ function setStep(index){
     card.classList.toggle('seen',i<=index);
     card.classList.toggle('current',i===index);
     card.classList.toggle('done',i<index);
-    card.querySelector('.state').textContent=i<index?'COMPLETE':i===index?(i===cards.length-1?'READY':'PROCESSING'):'QUEUED';
+    card.querySelector('.state').textContent=i===index?'IN VIEW':'PLANNED';
   });
   [...links.querySelectorAll('.live')].forEach((line,i)=>line.classList.toggle('on',i<index));
   tickEls.forEach((tick,i)=>{tick.className=i<index?'past':i===index?'on':''});
   prog.innerHTML=`${String(index+1).padStart(2,'0')} <span>/ 10</span>`;
   hudStage.textContent=STEPS[index][0];
   hudLine.style.width=`${((index+1)/STEPS.length)*100}%`;
+  setGroups(index,false);
 }
 function finish(){
   running=false;clearTimeout(timer);timer=null;
-  cards.forEach((card,i)=>{card.classList.remove('current');card.classList.add('seen','done');card.querySelector('.state').textContent='COMPLETE'});
+  cards.forEach((card,i)=>{card.classList.remove('current');card.classList.add('seen','done');card.querySelector('.state').textContent='PLANNED'});
   [...links.querySelectorAll('.live')].forEach(line=>line.classList.add('on'));
   tickEls.forEach(tick=>tick.className='past');
-  hudStage.textContent='FLOW COMPLETE';pauseButton.textContent='REPLAY · SPACE';pauseButton.classList.remove('on');
+  hudStage.textContent='WALKTHROUGH END';setGroups(STEPS.length-1,true);pauseButton.textContent='PLAY · SPACE';pauseButton.classList.remove('on');
 }
 function schedule(delay=STEP_MS){
   clearTimeout(timer);remaining=delay;lastStepAt=performance.now();
@@ -271,7 +311,7 @@ function schedule(delay=STEP_MS){
 }
 function play(reset=true){
   clearTimeout(timer);
-  if(reset){current=-1;cards.forEach(c=>{c.classList.remove('seen','current','done');c.querySelector('.state').textContent='QUEUED'});[...links.querySelectorAll('.live')].forEach(l=>l.classList.remove('on'));tickEls.forEach(t=>t.className='');prog.innerHTML='00 <span>/ 10</span>';hudStage.textContent='AI EVIDENCE FLOW';hudLine.style.width='0%';remaining=START_MS}
+  if(reset){current=-1;cards.forEach(c=>{c.classList.remove('seen','current','done');c.querySelector('.state').textContent='PLANNED'});[...links.querySelectorAll('.live')].forEach(l=>l.classList.remove('on'));tickEls.forEach(t=>t.className='');prog.innerHTML='00 <span>/ 10</span>';hudStage.textContent='ARCHITECTURE OVERVIEW';hudLine.style.width='0%';setGroups(-1,false);remaining=START_MS}
   running=true;pauseButton.textContent='PAUSE · SPACE';pauseButton.classList.add('on');schedule(reset?START_MS:remaining);
 }
 function togglePause(){
@@ -285,14 +325,15 @@ document.getElementById('replay').addEventListener('click',()=>play(true));
 pauseButton.addEventListener('click',togglePause);
 document.getElementById('cine').addEventListener('click',e=>{document.body.classList.toggle('cine');e.currentTarget.classList.toggle('on')});
 addEventListener('keydown',e=>{
-  if(e.code==='Space'){e.preventDefault();togglePause()}
+  if(e.metaKey||e.ctrlKey||e.altKey)return; // leave browser shortcuts (Ctrl/Cmd+R, Cmd+C) alone
+  if(e.code==='Space'){e.preventDefault();if(!e.repeat)togglePause()}
   else if(e.key==='r'||e.key==='R')play(true);
   else if(e.key==='c'||e.key==='C'){document.body.classList.toggle('cine');document.getElementById('cine').classList.toggle('on')}
   else if(e.key==='ArrowRight')jump(Math.min(STEPS.length-1,current+1));
   else if(e.key==='ArrowLeft')jump(Math.max(0,current-1));
 });
 
-function clock(){document.getElementById('clock').textContent=new Date().toISOString().slice(0,22).replace('T',' ')}
+function clock(){document.getElementById('clock').textContent=new Date().toISOString().slice(0,19).replace('T',' ')}
 clock();setInterval(clock,1000);
 
 /* Three.js flame treatment adapted from the existing index_7.html visual system. */
@@ -315,7 +356,7 @@ function glowTexture(){
   const m=new THREE.ShaderMaterial({uniforms:{uTime:U.time,uPix,uOp:{value:.72}},vertexShader:`attribute vec4 aR;uniform float uTime;uniform float uPix;uniform float uOp;varying vec3 vC;varying float vA;void main(){vec3 p=position;p.x+=sin(uTime*.05*(.5+aR.x)+aR.y*30.)*.5;p.y=mod(p.y+uTime*.025*(.3+aR.z)+7.5,15.)-7.5;vec4 mv=modelViewMatrix*vec4(p,1.);gl_Position=projectionMatrix*mv;float d=-mv.z;gl_PointSize=uPix*(1.1+aR.x*2.)*(10./max(d,.5));vA=uOp*smoothstep(28.,7.,d)*smoothstep(.4,2.5,d)*(.14+.34*aR.w);vC=mix(vec3(.62,.72,.9),vec3(1.,.78,.55),step(.95,aR.y));}`,fragmentShader:SOFT_FRAG,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending});
   scene.add(new THREE.Points(g,m));
 }
-const flame=new THREE.Group();flame.position.set(4.35,2.45,-.2);flame.scale.setScalar(.72);scene.add(flame);
+const flame=new THREE.Group();flame.position.set(3.79,1.82,-.2);flame.scale.setScalar(.6);scene.add(flame);
 const flameShells=[];
 {
   const counts=[480,980,210,230],n=counts.reduce((a,b)=>a+b),g=new THREE.BufferGeometry(),p=new Float32Array(n*3),r=new Float32Array(n*4),ty=new Float32Array(n);let k=0;
@@ -331,8 +372,21 @@ const flameShells=[];
   const amber=new THREE.Sprite(new THREE.SpriteMaterial({map:glow,color:0xff9a4a,transparent:true,opacity:.06,blending:THREE.AdditiveBlending,depthWrite:false}));amber.scale.set(6.2,6.2,1);flame.add(amber);
 }
 fit();
+const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)');let motionScale=reduceMotion.matches?.2:1;
+reduceMotion.addEventListener?.('change',e=>{motionScale=e.matches?.2:1});
 let last=performance.now(),elapsed=0;
-function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;elapsed+=dt;U.time.value=elapsed;flame.rotation.y+=dt*.07;flame.rotation.x=Math.sin(elapsed*.13)*.12;flame.scale.setScalar(.72*(1+.012*Math.sin(elapsed*1.1)));flameShells.forEach((m,i)=>m.uniforms.uOp.value=.88*(1+.05*Math.sin(elapsed*(1.7+i*.6)+i)));renderer.render(scene,camera);requestAnimationFrame(frame)}
+function frame(now){
+  const dt=Math.min(.05,(now-last)/1000)*motionScale;last=now;elapsed+=dt;
+  const motionTime=elapsed*1.35;
+  U.time.value=motionTime;
+  flame.rotation.y+=dt*.16;
+  flame.rotation.x=Math.sin(elapsed*.38)*.16;
+  flame.rotation.z=Math.sin(elapsed*.22)*.075;
+  flame.position.y=1.82+Math.sin(elapsed*.62)*.05*motionScale;
+  flame.scale.setScalar(.6*(1+.024*Math.sin(elapsed*1.25)+.008*Math.sin(elapsed*2.7)));
+  flameShells.forEach((m,i)=>m.uniforms.uOp.value=.88*(1+.075*Math.sin(elapsed*(1.55+i*.52)+i)));
+  renderer.render(scene,camera);requestAnimationFrame(frame)
+}
 requestAnimationFrame(frame);
 play(true);
 })();
