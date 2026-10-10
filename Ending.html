@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<!--
+  FLAME IN FREEFALL · Closing (3:53–4:20)
+  Plays after the team card. Three scenes, one per spoken line:
+    1. 3:53–4:07  "Fire behaves differently in microgravity…"        (14 s)
+    2. 4:07–4:14  "Our prototype connects each insight…"             ( 7 s)
+    3. 4:14–4:20  "From one flame to the next frontier…" + logo      ( 6 s, then holds)
+
+  HOW TO RUN
+  1. Open in Chrome (online the first time, for Google Fonts).
+  2. Full screen (F11 / Ctrl+Cmd+F). The stage is a fixed 1920×1080 canvas scaled to fit, so record at 1080p.
+  3. It plays through on its own with the timings above and holds on the logo.
+
+  CONTROLS
+  → / SPACE / click ... jump to the next scene      ← ... previous scene
+  1 2 3 ............... jump to a scene              R ... replay from the start
+  C ................... cinematic mode (hides the hint and cursor)
+
+  DATA NOTE: BASS-II is a real NASA investigation. The condition values and the limit shown on the
+  prototype card are illustrative and are labelled ILLUSTRATIVE on screen.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Flamme Closing</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#04060a; --ink:#eef2f7; --ink2:#c2cbd8; --muted:#7f8a9b; --dim:#4a5361;
+  --line:rgba(160,182,215,.13); --line2:rgba(160,182,215,.26);
+  --blue:#4f86ff; --cyan:#73d2e2; --amber:#ffac5e; --red:#ff6458; --infb:#7fa6ff;
+  /* the soft flame palette used by the Flamme logo */
+  --fb:rgba(96,122,228,.85); --fl:rgba(176,146,206,.8); --fa:rgba(236,172,98,.88);
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --disp:'Space Grotesk',Inter,system-ui,-apple-system,'Segoe UI',sans-serif;
+  --sans:Inter,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --ease:cubic-bezier(.2,.7,.15,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#000;overflow:hidden}
+body{color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;user-select:none}
+body.cine{cursor:none}
+
+#stage{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;overflow:hidden;
+  background:radial-gradient(120% 95% at 50% 38%,#0b121d 0%,#070b12 46%,#030508 100%)}
+#stars{position:absolute;inset:0;z-index:0}
+#grid{position:absolute;inset:0;z-index:1;pointer-events:none;
+  background-image:linear-gradient(rgba(130,160,210,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(130,160,210,.04) 1px,transparent 1px);
+  background-size:80px 80px;background-position:-1px -1px;
+  -webkit-mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,#000 25%,transparent 85%);mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,#000 25%,transparent 85%)}
+#vignette{position:absolute;inset:0;z-index:6;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,transparent 52%,rgba(0,0,0,.6) 100%)}
+#grain{position:absolute;left:-50%;top:-50%;width:200%;height:200%;z-index:7;pointer-events:none;opacity:.05;animation:grain 1.2s steps(6) infinite;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+@keyframes grain{0%{transform:translate(0,0)}17%{transform:translate(-3%,2%)}34%{transform:translate(2%,-4%)}51%{transform:translate(-4%,-1%)}68%{transform:translate(3%,3%)}85%{transform:translate(-1%,4%)}100%{transform:translate(0,0)}}
+
+.mono{font-family:var(--mono)}
+.label{font:500 12px/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.eyebrow{display:inline-flex;align-items:center;gap:14px;font:500 14px/1 var(--mono);letter-spacing:.26em;color:var(--muted);text-transform:uppercase}
+.eyebrow b{font-weight:500;color:var(--ink2)}
+.eyebrow .sl{color:var(--dim)}
+.pip{width:6px;height:6px;border-radius:50%;background:var(--amber);box-shadow:0 0 10px rgba(255,172,94,.8);flex:none}
+
+.frame{--c:rgba(190,208,235,.55);position:relative;border:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(15,20,30,.74),rgba(8,11,17,.62))}
+.frame::before{content:'';position:absolute;inset:-1px;pointer-events:none;z-index:2;
+  background:
+   linear-gradient(var(--c),var(--c)) 0 0/12px 1px no-repeat, linear-gradient(var(--c),var(--c)) 0 0/1px 12px no-repeat,
+   linear-gradient(var(--c),var(--c)) 100% 0/12px 1px no-repeat, linear-gradient(var(--c),var(--c)) 100% 0/1px 12px no-repeat,
+   linear-gradient(var(--c),var(--c)) 0 100%/12px 1px no-repeat, linear-gradient(var(--c),var(--c)) 0 100%/1px 12px no-repeat,
+   linear-gradient(var(--c),var(--c)) 100% 100%/12px 1px no-repeat, linear-gradient(var(--c),var(--c)) 100% 100%/1px 12px no-repeat}
+
+/* ---------- HUD ---------- */
+#hud{position:absolute;inset:0;z-index:5;pointer-events:none}
+.hud-tl{position:absolute;left:64px;top:44px;display:flex;align-items:center;gap:14px}
+.hud-tl .brand{font:500 14px/1 var(--mono);letter-spacing:.26em;color:var(--ink)}
+.hud-tl .hsep{width:1px;height:16px;background:var(--line2)}
+.hud-tr{position:absolute;right:64px;top:40px;display:flex;align-items:center;gap:18px}
+.hud-tr .prog{font:500 15px/1 var(--mono);letter-spacing:.12em;color:var(--ink)}
+.hud-tr .prog span{color:var(--dim)}
+.hud-bc{position:absolute;left:50%;top:50px;transform:translateX(-50%);font:500 11px/1 var(--mono);letter-spacing:.24em;color:var(--dim);white-space:nowrap}
+.hud-line{position:absolute;left:0;bottom:0;height:2px;width:100%;background:rgba(255,255,255,.04)}
+.hud-line i{display:block;height:100%;width:0;background:linear-gradient(90deg,transparent,var(--cyan))}
+.logo{flex:none;display:block}
+#hint{position:fixed;right:16px;bottom:14px;z-index:20;font:400 12px/1 var(--mono);color:var(--dim);letter-spacing:.08em}
+body.cine #hint{display:none}
+
+/* ---------- scenes ---------- */
+.scene{position:absolute;inset:0;z-index:3;visibility:hidden;opacity:0;transition:opacity .8s ease,visibility 0s linear .8s}
+.scene.on{visibility:visible;opacity:1;transition:opacity .8s ease .1s,visibility 0s}
+/* elements marked .a animate in when their scene turns on, after --d seconds */
+.a{opacity:0;transform:translateY(22px);transition:opacity .9s ease,transform 1.1s var(--ease)}
+.scene.on .a{opacity:1;transform:none;transition-delay:calc(var(--d,0) * 1s)}
+
+/* soft microgravity flame orb, in the reference palette: dark core, amber shell, periwinkle rim */
+.orb{position:absolute;border-radius:50%;
+  background:radial-gradient(circle at 50% 50%,
+    rgba(6,9,16,.95) 0%,rgba(6,9,16,.9) 30%,
+    rgba(70,80,140,.35) 37%,
+    rgba(236,172,98,.75) 46%,rgba(226,160,120,.6) 54%,
+    rgba(176,146,206,.45) 61%,rgba(96,122,228,.7) 68%,rgba(96,122,228,.25) 74%,transparent 80%);
+  filter:blur(1.5px);animation:orbBreath 4s ease-in-out infinite}
+@keyframes orbBreath{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
+.orb::after{content:'';position:absolute;inset:-14%;border-radius:50%;
+  background:radial-gradient(circle,transparent 52%,rgba(96,122,228,.16) 62%,transparent 74%);filter:blur(10px)}
+
+/* ===== Scene 1: fire behaves differently in microgravity ===== */
+#s1 .head{position:absolute;left:0;right:0;top:150px;text-align:center}
+#s1 h2{font:300 74px/1.05 var(--disp);letter-spacing:-.03em;margin-top:22px}
+#s1 h2 em{font-style:normal;color:transparent;
+  background:linear-gradient(0deg,var(--fb) 0%,var(--fl) 45%,var(--fa) 100%);-webkit-background-clip:text;background-clip:text}
+.compare{position:absolute;left:50%;top:360px;width:1240px;margin-left:-620px;height:360px;display:flex;justify-content:space-between;align-items:center}
+.flamebox{position:relative;width:520px;height:360px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end}
+.flamebox .cap{margin-top:22px;display:flex;gap:12px;align-items:center}
+.flamebox .cap .label b{color:var(--ink2);font-weight:500}
+.stagef{position:relative;width:520px;height:300px}
+/* earth candle: teardrop pulled upward by buoyancy */
+.candle{position:absolute;left:50%;bottom:6px;width:34px;height:96px;margin-left:-17px;border-radius:4px 4px 2px 2px;
+  background:linear-gradient(180deg,rgba(220,214,230,.55),rgba(150,150,170,.35))}
+.wick{position:absolute;left:50%;bottom:100px;width:3px;height:16px;margin-left:-1.5px;background:#2a2a30;border-radius:2px}
+.tear{position:absolute;left:50%;bottom:104px;width:74px;height:170px;margin-left:-37px;
+  border-radius:50% 50% 46% 46% / 64% 64% 36% 36%;transform-origin:50% 100%;
+  background:radial-gradient(ellipse 55% 60% at 50% 66%,rgba(255,248,230,.95) 0%,rgba(255,214,140,.9) 30%,rgba(240,160,80,.7) 58%,rgba(220,110,60,.25) 80%,transparent 100%);
+  box-shadow:0 0 50px 8px rgba(240,160,80,.18);filter:blur(1px);animation:tearFlick 1.6s ease-in-out infinite}
+.tear::after{content:'';position:absolute;left:22%;right:22%;bottom:-4px;height:30%;border-radius:50%;
+  background:radial-gradient(ellipse at 50% 80%,rgba(96,122,228,.75),transparent 70%)}
+@keyframes tearFlick{0%,100%{transform:scaleY(1) skewX(0)}30%{transform:scaleY(1.04) skewX(-1.5deg)}60%{transform:scaleY(.97) skewX(1.2deg)}}
+.updraft{position:absolute;left:50%;bottom:150px;width:2px;height:150px;margin-left:-1px;
+  background:linear-gradient(0deg,rgba(255,172,94,.0),rgba(255,172,94,.35));opacity:.6}
+.updraft::before,.updraft::after{content:'';position:absolute;top:0;width:10px;height:10px;border-top:1px solid rgba(255,172,94,.5);border-left:1px solid rgba(255,172,94,.5);transform:translateX(-4px) rotate(45deg)}
+/* microgravity: the flame wraps the wick as a sphere */
+#s1 .orb{left:50%;top:50%;width:250px;height:250px;margin:-110px 0 0 -125px}
+.mwick{position:absolute;left:50%;top:50%;width:3px;height:22px;margin:4px 0 0 -1.5px;background:#2a2a30;border-radius:2px;z-index:2}
+.vs{font:500 13px/1 var(--mono);letter-spacing:.3em;color:var(--dim)}
+.verbs{position:absolute;left:50%;top:812px;transform:translateX(-50%);display:flex;align-items:center;gap:0}
+.verb{display:flex;align-items:center;gap:14px;padding:16px 26px;border:1px solid var(--line);background:rgba(12,17,26,.55);
+  font:400 30px/1 var(--disp);letter-spacing:-.01em;color:var(--ink2)}
+.verb .n{font:500 12px/1 var(--mono);letter-spacing:.16em;color:var(--cyan)}
+.link{width:70px;height:1px;background:linear-gradient(90deg,rgba(115,210,226,.5),rgba(236,172,98,.5));transform:scaleX(0);transform-origin:0 50%;transition:transform .8s var(--ease)}
+#s1.on .link{transform:scaleX(1)}
+#s1.on .link.l1{transition-delay:9.6s}
+#s1.on .link.l2{transition-delay:10.6s}
+.verb.lit{border-color:rgba(236,172,98,.45);color:var(--ink);box-shadow:0 0 30px rgba(236,172,98,.12) inset}
+
+/* ===== Scene 2: prototype connects insight -> experiment + conditions, limits visible ===== */
+#s2 .head{position:absolute;left:150px;top:150px}
+#s2 h2{font:300 58px/1.08 var(--disp);letter-spacing:-.025em;margin-top:20px;max-width:1400px}
+#s2 h2 span{color:var(--ink2)}
+.proto{position:absolute;left:150px;right:150px;top:400px;height:500px}
+.ins{position:absolute;left:0;top:90px;width:520px;padding:30px 32px}
+.ins .q{font:400 28px/1.3 var(--disp);letter-spacing:-.01em;margin-top:16px}
+.ins .tags{display:flex;gap:8px;margin-top:22px}
+.tag{font:500 11px/1 var(--mono);letter-spacing:.12em;color:var(--ink2);padding:6px 8px;background:rgba(120,150,200,.07);border:1px solid var(--line)}
+.tag.amb{color:var(--amber);border-color:rgba(255,172,94,.35);background:rgba(255,172,94,.06)}
+.tag.cy{color:var(--cyan);border-color:rgba(115,210,226,.35);background:rgba(115,210,226,.06)}
+.exp{position:absolute;right:0;top:0;width:520px;padding:26px 30px}
+.exp .t{font:400 34px/1 var(--disp);margin-top:14px;letter-spacing:-.02em}
+.exp .sub{font:300 18px/1.4 var(--sans);color:var(--ink2);margin-top:10px}
+.conds{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
+.cond{border:1px solid var(--line);padding:12px 14px;background:rgba(10,14,22,.5)}
+.cond .k{font:500 11px/1 var(--mono);letter-spacing:.16em;color:var(--muted)}
+.cond .v{font:400 20px/1 var(--disp);margin-top:8px}
+.limit{position:absolute;right:0;top:372px;width:520px;padding:18px 22px;display:flex;gap:14px;align-items:flex-start;
+  border:1px dashed rgba(255,172,94,.45);background:rgba(255,172,94,.04)}
+.limit .tx{font:300 18px/1.4 var(--sans);color:var(--ink2)}
+.limit .tx b{color:var(--amber);font-weight:500}
+#wires{position:absolute;inset:0;overflow:visible;pointer-events:none}
+#wires path{fill:none;stroke-width:1.5;stroke-dasharray:var(--len);stroke-dashoffset:var(--len);transition:stroke-dashoffset 1.2s var(--ease)}
+#s2.on #wires path{stroke-dashoffset:0}
+#s2.on #wires .w1{transition-delay:1.6s}
+#s2.on #wires .w2{transition-delay:2.6s}
+#wires circle{opacity:0;transition:opacity .4s}
+#s2.on #wires circle{opacity:1;transition-delay:2.4s}
+#s2.on #wires circle.c2{transition-delay:3.6s}
+.illus{position:absolute;right:150px;bottom:110px;font:500 11px/1 var(--mono);letter-spacing:.2em;color:var(--dim)}
+
+/* ===== Scene 3: final tagline + logo ===== */
+#s3 .orb{left:50%;top:50%;width:560px;height:560px;margin:-330px 0 0 -280px;opacity:0;transform:scale(.6);
+  transition:opacity 1.6s ease,transform 2.4s var(--ease)}
+#s3.on .orb{opacity:.42;transform:scale(1)}
+#sparks{position:absolute;inset:0;z-index:2}
+#s3 .lock{position:absolute;left:0;right:0;top:50%;transform:translateY(-58%);text-align:center;z-index:4}
+#s3 .tagline{font:300 40px/1.3 var(--disp);letter-spacing:-.015em;color:var(--ink);margin-top:40px}
+#s3 .tagline .p2{color:var(--ink2)}
+#s3 .credit{margin-top:46px}
+/* "Flamme" filled like a microgravity flame: soft, low-opacity ombre from a periwinkle-blue base,
+   through a lavender-rose blend, into a warm amber core; a faint glow of the same colours sits behind */
+#word{display:flex;justify-content:center;margin-top:34px;font:500 260px/.9 var(--disp);letter-spacing:-.03em}
+#word span{position:relative;z-index:0;display:inline-block;opacity:0;transform:translateY(60px);
+  background:linear-gradient(0deg,rgba(88,116,226,.78) 0%,rgba(110,134,232,.78) 22%,rgba(176,146,206,.74) 36%,
+    rgba(222,160,140,.78) 47%,rgba(236,172,98,.84) 62%,rgba(244,200,140,.86) 100%);
+  background-size:100% 135%;background-position:50% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  transition:opacity 1.2s ease,transform 1.2s var(--ease);
+  animation:breathe 4.5s ease-in-out infinite;animation-delay:calc(var(--d) * -6)}
+/* the colour boundary drifts slowly up and down, like a flame breathing */
+@keyframes breathe{0%,100%{background-position:50% 100%}50%{background-position:50% 55%}}
+#word span::before{content:attr(data-c);position:absolute;left:0;top:0;z-index:-1;pointer-events:none;
+  background:inherit;background-size:inherit;-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:blur(18px);opacity:.55;animation:inherit}
+
+#word{justify-content:center}
+.scene.on #word span{opacity:1;transform:none}
+</style>
+</head>
+<body>
+<div id="stage">
+  <canvas id="stars" width="1920" height="1080"></canvas>
+  <div id="grid"></div>
+
+  <!-- 1 · Fire behaves differently in microgravity -->
+  <section class="scene" id="s1">
+    <div class="head">
+      <div class="eyebrow a" style="--d:.2"><span class="pip"></span><b>Why we built Flamme</b><span class="sl">/</span>Fire in microgravity</div>
+      <h2 class="a" style="--d:.4">Fire behaves <em>differently</em> in microgravity.</h2>
+    </div>
+    <div class="compare">
+      <div class="flamebox a" style="--d:1.2">
+        <div class="stagef"><div class="tear"></div><div class="wick"></div><div class="candle"></div></div>
+        <div class="cap"><span class="label"><b>ON EARTH</b> · BUOYANCY PULLS IT UP</span></div>
+      </div>
+      <div class="vs a" style="--d:2">VS</div>
+      <div class="flamebox a" style="--d:2.6">
+        <div class="stagef"><div class="orb"></div><div class="mwick"></div></div>
+        <div class="cap"><span class="label"><b>IN MICROGRAVITY</b> · A SPHERE, NO RISING PLUME</span></div>
+      </div>
+    </div>
+    <div class="verbs">
+      <div class="verb a" id="v1" style="--d:8.6"><span class="n">01</span>Explore</div>
+      <div class="link l1"></div>
+      <div class="verb a" id="v2" style="--d:9.6"><span class="n">02</span>Compare</div>
+      <div class="link l2"></div>
+      <div class="verb a" id="v3" style="--d:10.6"><span class="n">03</span>Understand</div>
+    </div>
+  </section>
+
+  <!-- 2 · Our prototype connects each insight to its experiment and conditions -->
+  <section class="scene" id="s2">
+    <div class="head">
+      <div class="eyebrow a" style="--d:.1"><span class="pip"></span><b>Working prototype</b><span class="sl">/</span>Evidence, connected</div>
+      <h2 class="a" style="--d:.3">Every insight linked to its experiment, <span>its conditions and its limits.</span></h2>
+    </div>
+    <div class="proto">
+      <svg id="wires" viewBox="0 0 1620 500" preserveAspectRatio="none">
+        <defs><linearGradient id="wg" x1="0" x2="1"><stop offset="0" stop-color="#73d2e2" stop-opacity=".8"/><stop offset="1" stop-color="#ecac62" stop-opacity=".8"/></linearGradient></defs>
+        <path class="w1" d="M520 180 C 760 180, 820 120, 1100 120" stroke="url(#wg)" style="--len:620"/>
+        <path class="w2" d="M520 230 C 780 240, 820 420, 1100 420" stroke="rgba(255,172,94,.6)" style="--len:680"/>
+        <circle cx="1100" cy="120" r="5" fill="#0b121d" stroke="#ecac62" stroke-width="1.5"/>
+        <circle class="c2" cx="1100" cy="420" r="5" fill="#0b121d" stroke="#ffac5e" stroke-width="1.5"/>
+      </svg>
+      <div class="ins frame a" style="--d:.9">
+        <div class="label">INSIGHT</div>
+        <div class="q">Flames near extinction can survive longer at lower oxygen when the flow is slow.</div>
+        <div class="tags"><span class="tag cy">RANKED #1</span><span class="tag">2 SOURCES</span></div>
+      </div>
+      <div class="exp frame a" style="--d:2">
+        <div class="label">EXPERIMENT</div>
+        <div class="t">BASS-II</div>
+        <div class="sub">Burning and Suppression of Solids · ISS</div>
+        <div class="conds">
+          <div class="cond"><div class="k">GRAVITY</div><div class="v">µg</div></div>
+          <div class="cond"><div class="k">O₂</div><div class="v">17–21 %</div></div>
+          <div class="cond"><div class="k">FLOW</div><div class="v">low</div></div>
+          <div class="cond"><div class="k">MATERIAL</div><div class="v">PMMA</div></div>
+        </div>
+      </div>
+      <div class="limit a" style="--d:3.4">
+        <span class="tag amb">LIMIT</span>
+        <div class="tx"><b>Not reported:</b> exact pressure for every run. The gap stays visible instead of being filled in.</div>
+      </div>
+    </div>
+    <div class="illus a" style="--d:3.6">ILLUSTRATIVE · CONCEPT DEMONSTRATION</div>
+  </section>
+
+  <!-- 3 · From one flame to the next frontier -->
+  <section class="scene" id="s3">
+    <canvas id="sparks" width="1920" height="1080"></canvas>
+    <div class="orb"></div>
+    <div class="lock">
+      <div id="word"></div>
+      <div class="tagline a" style="--d:1.4">From one flame to the next frontier,<br><span class="p2">we bring the evidence with us.</span></div>
+      <div class="credit a" style="--d:2.6"><div class="eyebrow"><svg class="logo" width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9.5" fill="none" stroke="rgba(255,255,255,.35)"/><circle cx="11" cy="11" r="5" fill="none" stroke="#ffac5e"/><circle cx="11" cy="11" r="2" fill="#73d2e2"/></svg><b>Team Flamme</b><span class="sl">/</span>NASA Space Apps Challenge 2026<span class="sl">/</span>Flame in Freefall</div></div>
+    </div>
+  </section>
+
+  <div id="hud">
+    <div class="hud-tl"><svg class="logo" width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9.5" fill="none" stroke="rgba(255,255,255,.35)"/><circle cx="11" cy="11" r="5" fill="none" stroke="#ffac5e"/><circle cx="11" cy="11" r="2" fill="#73d2e2"/></svg><span class="brand">FLAME IN FREEFALL</span><span class="hsep"></span><span class="label">CLOSING</span></div>
+    <div class="hud-bc">NASA SPACE APPS CHALLENGE 2026 · TEAM FLAMME</div>
+    <div class="hud-tr"><span class="label" id="hudName"></span><span class="prog" id="hudProg"></span></div>
+    <div class="hud-line"><i id="hudLine"></i></div>
+  </div>
+  <div id="vignette"></div>
+  <div id="grain"></div>
+</div>
+<div id="hint">→ next · ← back · R replay · C cinematic</div>
+
+<script>
+/* scene lengths match the script timings: 3:53–4:07, 4:07–4:14, 4:14–4:20 */
+const SCENES = [
+  {id:'s1', name:'MICROGRAVITY', dur:14},
+  {id:'s2', name:'PROTOTYPE',    dur:7},
+  {id:'s3', name:'THE NEXT FRONTIER', dur:null},
+];
+const W = 1920, H = 1080;
+const stage = document.getElementById('stage');
+function fit(){
+  const s = Math.min(innerWidth / W, innerHeight / H);
+  stage.style.transform = `translate(${(innerWidth - W * s) / 2}px,${(innerHeight - H * s) / 2}px) scale(${s})`;
+}
+addEventListener('resize', fit); fit();
+
+/* logo word, same look as the team intro */
+document.getElementById('word').innerHTML =
+  [...'Flamme'].map((ch, i) => `<span data-c="${ch}" style="transition-delay:${.3 + i*.09}s;--d:${(i*.14).toFixed(2)}s">${ch}</span>`).join('');
+
+let cur = -1, timers = [];
+function at(s, fn){ timers.push(setTimeout(fn, s*1000)); }
+function go(i){
+  i = Math.max(0, Math.min(SCENES.length - 1, i));
+  timers.forEach(clearTimeout); timers = [];
+  document.querySelectorAll('.scene').forEach(el => el.classList.remove('on'));
+  document.querySelectorAll('.verb').forEach(v => v.classList.remove('lit'));
+  const el = document.getElementById(SCENES[i].id);
+  void el.offsetWidth;
+  el.classList.add('on');
+  cur = i;
+  document.getElementById('hudName').textContent = SCENES[i].name;
+  document.getElementById('hudProg').innerHTML = String(i+1).padStart(2,'0') + ' <span>/ ' + String(SCENES.length).padStart(2,'0') + '</span>';
+  const line = document.getElementById('hudLine');
+  const total = SCENES.reduce((a, s) => a + (s.dur || 6), 0);
+  const before = SCENES.slice(0, i).reduce((a, s) => a + (s.dur || 6), 0);
+  const mine = SCENES[i].dur || 6;
+  line.style.transition = 'none'; line.style.width = (before / total * 100) + '%'; void line.offsetWidth;
+  line.style.transition = `width ${mine}s linear`; line.style.width = ((before + mine) / total * 100) + '%';
+  if (i === 0){
+    /* light up each verb as it is spoken: "explore, compare, and understand" */
+    ['v1','v2','v3'].forEach((v, k) => at(9.4 + k, () => document.getElementById(v).classList.add('lit')));
+  }
+  if (SCENES[i].dur) at(SCENES[i].dur, () => go(i + 1));
+}
+
+addEventListener('keydown', e => {
+  const k = e.key.toLowerCase();
+  if (k === 'arrowright' || k === ' ') { e.preventDefault(); go(cur + 1); }
+  if (k === 'arrowleft') go(cur - 1);
+  if (k === 'r') go(0);
+  if (k === 'c') document.body.classList.toggle('cine');
+  if ('123'.includes(k)) go(+k - 1);
+});
+stage.addEventListener('click', () => go(cur + 1));
+
+/* starfield */
+(function(){
+  const c = document.getElementById('stars'), g = c.getContext('2d');
+  const st = Array.from({length: 260}, () => ({x: Math.random()*W, y: Math.random()*H, r: Math.random()*1.1 + .2, a: Math.random()*.5 + .1, p: Math.random()*6.28, v: (Math.random()*.08 + .02)}));
+  (function draw(t){
+    g.clearRect(0,0,W,H);
+    for (const s of st){
+      s.x -= s.v; if (s.x < 0) s.x = W;
+      g.globalAlpha = s.a * (.6 + .4 * Math.sin(t/1400 + s.p));
+      g.fillStyle = '#cfe0ff'; g.beginPath(); g.arc(s.x, s.y, s.r, 0, 6.283); g.fill();
+    }
+    requestAnimationFrame(draw);
+  })(0);
+})();
+
+/* scene 3: soft embers drifting outward from the flame, toward "the next frontier" */
+(function(){
+  const c = document.getElementById('sparks'), g = c.getContext('2d');
+  const cols = ['236,172,98','176,146,206','96,122,228'];
+  const ps = Array.from({length: 90}, () => spawn(true));
+  function spawn(init){
+    const a = Math.random()*6.283, d = init ? Math.random()*520 : 150 + Math.random()*40;
+    return {a, d, v: .35 + Math.random()*.7, r: Math.random()*1.8 + .6, c: cols[Math.random()*3|0], o: Math.random()*.5 + .2};
+  }
+  (function draw(){
+    g.clearRect(0,0,W,H);
+    if (cur === 2){
+      for (let i = 0; i < ps.length; i++){
+        const p = ps[i];
+        p.d += p.v;
+        const x = W/2 + Math.cos(p.a)*p.d, y = 480 + Math.sin(p.a)*p.d*.8;
+        const fade = Math.max(0, 1 - p.d/760);
+        g.fillStyle = `rgba(${p.c},${p.o*fade})`;
+        g.beginPath(); g.arc(x, y, p.r, 0, 6.283); g.fill();
+        if (p.d > 760) ps[i] = spawn(false);
+      }
+    }
+    requestAnimationFrame(draw);
+  })();
+})();
+
+(document.fonts ? document.fonts.ready : Promise.resolve()).then(() => go(0));
+</script>
+</body>
+</html>
