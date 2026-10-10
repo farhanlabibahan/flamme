@@ -29,7 +29,7 @@ Research question
     → original NASA investigation, DOI, file, and row
 ```
 
-The planned system extends that foundation with machine learning, constrained AI reasoning, and structured agentic memory:
+The planned system extends that foundation with Machine Learning, constrained AI reasoning, and structured Agentic Memory:
 
 ```text
 Reviewed records
