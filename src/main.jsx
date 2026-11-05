@@ -8,7 +8,6 @@ import {parsePrompt, hasAnyField} from './prompt.js';
 import './app.css';
 
 const value = f => f?.status === 'ambiguous' ? `${display(f)} · verify` : display(f);
-const stat = (n,label) => <div className="mini-stat"><strong>{n}</strong><span>{label}</span></div>;
 
 /* layered blue flame mark — flat nested bands (deep navy outer shell down to a near-white core), same family as the app's flat/no-glow design language */
 const FLAME_D = "M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z";
@@ -188,7 +187,7 @@ function App(){
             </div>}
           </section>}
         {view==='Evidence'?<>
-          <section className="mission" id="mission"><h1>Fire evidence, <span>without the guesswork.</span></h1><div className="mission-meta">{stat(investigations.length,'investigations')}{stat(experiments.length,'experiment rows')}</div></section>
+          <section className="mission" id="mission"><h1>Fire evidence, <span>without the guesswork.</span></h1></section>
           <section id="evidence" className="evidence-block"><div className="evidence-heading"><h2>Follow the evidence</h2><span>{results.length} records</span></div>
             <div className="filter-bar" id="scenario">
               {select('Material','material',[['Cotton–fiberglass (SIBAL)','Cotton–fiberglass (SIBAL)'],['Silicone','Silicone'],['PMMA','PMMA'],['','Any material']],'Source-reported sample material.')}

@@ -84,13 +84,8 @@ a{color:var(--cyan);text-decoration:none}svg{vertical-align:middle;flex-shrink:0
 
 /* ============================================================ hero */
 .mission{padding:6px 0 22px}
-.mission h1{font:600 clamp(36px,4.6vw,60px)/1.05 var(--disp);letter-spacing:-.02em;margin:0 0 18px}
+.mission h1{font:600 clamp(36px,4.6vw,60px)/1.05 var(--disp);letter-spacing:-.02em;margin:0}
 .mission h1 span,.comparison-intro h1 span{color:var(--muted)}
-.mission-meta{display:flex;align-items:center;gap:0;border:1px solid var(--line);background:rgba(255,255,255,.02);width:max-content}
-.mini-stat{display:flex;flex-direction:column;gap:6px;padding:14px 22px;border-right:1px solid var(--line)}
-.mini-stat:last-child{border-right:0}
-.mini-stat strong{font:700 28px/1 var(--disp);color:var(--ink)}
-.mini-stat span{font:600 9px var(--disp);letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
 
 /* ============================================================ ask flame */
 .ask-panel{margin-bottom:28px;padding:22px 20px 24px}
@@ -125,6 +120,9 @@ a{color:var(--cyan);text-decoration:none}svg{vertical-align:middle;flex-shrink:0
 .st-actions{display:flex;align-items:center;gap:8px}
 .st-iconbtn{display:grid;place-items:center;width:34px;height:34px;border-radius:0;color:#8a93a3;border:1px solid rgba(160,182,215,.13);transition:all .2s}
 .st-iconbtn:hover{color:#fff;border-color:rgba(160,182,215,.3);background:rgba(255,255,255,.06)}
+.st-iconbtn.flash{animation:iconFlash 1.8s ease-in-out infinite}
+@keyframes iconFlash{0%,100%{box-shadow:0 0 0 0 rgba(79,134,255,.55);border-color:rgba(160,182,215,.13);color:#8a93a3}50%{box-shadow:0 0 0 7px rgba(79,134,255,0);border-color:rgba(127,184,255,.9);color:#fff}}
+@media(prefers-reduced-motion:reduce){.st-iconbtn.flash{animation:none}}
 
 .st-body{display:grid;grid-template-columns:minmax(0,1fr) 320px;min-height:0}
 .studio.no-side .st-body{grid-template-columns:minmax(0,1fr) 0}
@@ -138,11 +136,8 @@ a{color:var(--cyan);text-decoration:none}svg{vertical-align:middle;flex-shrink:0
 .vp-regime[data-tone=none]{color:#8a93a3;border-color:rgba(160,182,215,.26);background:rgba(8,10,14,.6)}
 .vp-regime[data-tone=cool]{color:#d6f5ff;border-color:rgba(26,168,189,.7);background:rgba(6,24,32,.6)}
 .studio.no-hud .vp-regime{opacity:0}
-.vp-hint{position:absolute;left:50%;bottom:54px;transform:translateX(-50%);z-index:4;display:flex;align-items:center;gap:9px;padding:10px 18px;background:rgba(28,33,46,.88);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid rgba(160,182,215,.28);color:#dde3ec;font:500 12px var(--sans);white-space:nowrap;transition:opacity .4s ease,transform .4s ease}
-.vp-hint span{color:#5a6478}
-.vp-hint svg{color:#8fb0ff;flex:none}
-.vp-hint.hide{opacity:0;transform:translate(-50%,8px);pointer-events:none}
-@media(prefers-reduced-motion:reduce){.vp-hint{transition:none}}
+.vp-hint{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);z-index:4;display:flex;align-items:center;gap:7px;color:rgba(255,255,255,.68);font:500 11.5px var(--sans);letter-spacing:.01em;white-space:nowrap;text-shadow:0 1px 6px rgba(0,0,0,.65);pointer-events:none}
+.vp-hint svg{color:rgba(255,255,255,.55);flex:none}
 .vp-cap{position:absolute;left:50%;bottom:40px;transform:translateX(-50%);width:min(820px,84%);text-align:center;animation:capIn .8s cubic-bezier(.2,.8,.2,1)}
 .vp-cap small{font:600 11px var(--mono);letter-spacing:.2em;color:var(--amber)}
 .vp-cap p{font:500 24px/1.3 var(--disp);letter-spacing:-.01em;color:#fff;margin:10px 0 0;text-shadow:0 2px 18px #000,0 0 2px #000}
@@ -318,7 +313,7 @@ mark.trace{background:none;color:inherit;transition:background .4s,color .4s;pad
   radial-gradient(40% 40% at 10% 15%,rgba(36,91,255,.1),transparent 65%),
   #0d1016}
 @keyframes heroDrift{0%{background-position:30% 10%,0 0,0 0}100%{background-position:55% 30%,0 0,0 0}}
-.l-hero-inner{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:40px;max-width:1320px;width:100%;margin:0 auto;animation:heroRise .9s cubic-bezier(.2,.8,.2,1) both}
+.l-hero-inner{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:70px;max-width:1320px;width:100%;margin:0 auto;animation:heroRise .9s cubic-bezier(.2,.8,.2,1) both}
 @keyframes heroRise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 .l-hero-text{flex:1;min-width:0;max-width:540px}
 .l-hero-text h1{font:600 clamp(36px,4.6vw,56px)/1.12 var(--disp);letter-spacing:-.02em;color:#fff;margin:0 0 16px}
