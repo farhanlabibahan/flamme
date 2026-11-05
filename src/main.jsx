@@ -18,13 +18,12 @@ function Landing({onEnter}){
     <nav className="l-nav">
       <span className="l-wordmark"><span className="brand-flame"><Flame/></span>Flamme</span>
       <div className="l-navlinks">
-        <a href="#features" onClick={scrollTo('features')}>Features</a>
         <a href="#cta" onClick={scrollTo('cta')}>Team</a>
       </div>
       <button className="l-navcta" onClick={onEnter}>Enter Flamme <ArrowRight size={14}/></button>
     </nav>
 
-    {/* SECTION 2 — hero: real NASA photo as full-bleed background + black overlay, text on top */}
+    {/* SECTION 2 — hero: real NASA photo as full-bleed background + black overlay, text + animated blue blade art on top */}
     <header className="l-hero">
       <div className="l-hero-bg">
         <img src="https://commons.wikimedia.org/wiki/Special:FilePath/ISS-46%20BASS-II%20flame%20test%20with%20reduced%20oxygen%20partial%20pressure.jpg?width=2000" alt="A real NASA BASS-II flame test burning on the International Space Station, photographed in reduced oxygen partial pressure"/>
@@ -36,30 +35,14 @@ function Landing({onEnter}){
         <p>An interactive microgravity flame lab and a source-linked evidence explorer for NASA's combustion data — built by Team Flamme.</p>
         <div className="l-cta-row">
           <button className="l-btn-primary" onClick={onEnter}>Enter Flamme <ArrowRight size={16}/></button>
-          <a className="l-btn-secondary" href="#features" onClick={scrollTo('features')}>See the method</a>
+          <a className="l-btn-secondary" href="#cta" onClick={scrollTo('cta')}>View source</a>
         </div>
-        <div className="l-preview">
-          <div className="l-preview-bar"><i/><i/><i/><em>Flame Lab</em><small>ILLUSTRATIVE</small></div>
-          <div className="l-preview-body">
-            <div className="l-preview-canvas"><div className="l-preview-flame"/><span>Chamber viewport</span></div>
-            <div className="l-preview-side">
-              {['Material','Oxygen','Airflow','Direction'].map((l,i)=><div key={l} className="l-preview-row"><span>{l}</span><i style={{"--w":[62,41,78,50][i]+'%'}}/></div>)}
-            </div>
-          </div>
+        <div className="l-blade-group" aria-hidden="true">
+          <div className="l-blade-halo"/>
+          {[-84,-56,-28,0,28,56,84].map((off,i)=><span key={i} className="l-blade" style={{height:(220-Math.abs(off)*1.05)+'px',transform:`translate(-50%,-50%) rotate(45deg) translateX(${off}px)`,animationDelay:`${i*0.3}s`}}/>)}
         </div>
       </div>
     </header>
-
-    {/* SECTION 2.5 — abstract animated blue blade art, companion visual to the hero */}
-    <section className="l-art-section">
-      <div className="l-art-text">
-        <h2>Real fire, real data.</h2>
-        <p>Every flame on this page traces back to an actual NASA microgravity experiment — not a stock photo, not a render.</p>
-      </div>
-      <div className="l-blade-group" aria-hidden="true">
-        {[-90,-60,-30,0,30,60,90].map((off,i)=><span key={i} className="l-blade" style={{height:(190-Math.abs(off)*0.9)+'px',transform:`translate(-50%,-50%) rotate(45deg) translateX(${off}px)`,animationDelay:`${i*0.3}s`}}/>)}
-      </div>
-    </section>
 
     {/* SECTION 3 — trusted-by / sourced-from */}
     <section className="l-logos">
@@ -67,47 +50,7 @@ function Landing({onEnter}){
       <div className="l-logos-row"><b>NASA PSI</b><b>NTRS</b><b>Saffire II</b><b>BASS II</b><b>FLEX</b></div>
     </section>
 
-    {/* SECTION 4 — features, 2x2 grid */}
-    <section className="l-section" id="features">
-      <small className="l-section-eyebrow">THE PLATFORM</small>
-      <h2>Everything you need to read the evidence</h2>
-      <p className="l-section-sub">Flamme brings a controlled flame lab, a plain-language question box, and a source-linked record explorer into one workspace.</p>
-      <div className="l-feature-grid">
-        <div className="l-feature-card">
-          <div className="l-feature-visual">
-            <div className="l-mock-input">cotton-fiberglass at 22% oxygen, 20 cm/s opposed <i/></div>
-            <div className="l-mock-chips"><span>material: Cotton–fiberglass</span><span>oxygen ≈ 22%</span><span>flow: Opposed</span></div>
-          </div>
-          <h3>Ask Flame</h3><p>Describe a scenario in plain language and get back recognized conditions, not a black box.</p>
-        </div>
-        <div className="l-feature-card">
-          <div className="l-feature-visual">
-            <div className="l-mock-sliders">{['Oxygen 22.1%','Airflow 20 cm/s','Ignite power 80 W'].map(l=><div key={l} className="l-mock-slider"><span>{l}</span></div>)}</div>
-          </div>
-          <h3>Flame Lab</h3><p>Set real controlled parameters and watch the illustrative chamber respond live.</p>
-        </div>
-        <div className="l-feature-card">
-          <div className="l-feature-visual">
-            <div className="l-mock-rows">
-              <div className="l-mock-row"><b>Cotton–fiberglass (SIBAL)</b><span className="ok">material match</span></div>
-              <div className="l-mock-row"><b>Silicone · 0.61 mm</b><span className="diff">oxygen differs</span></div>
-            </div>
-          </div>
-          <h3>Evidence explorer</h3><p>Find NASA microgravity combustion records that match your scenario, ranked transparently.</p>
-        </div>
-        <div className="l-feature-card">
-          <div className="l-feature-visual">
-            <div className="l-mock-compare">
-              <div><b>2-5</b><span>22.1% O₂</span><span>20 cm/s</span></div>
-              <div><b>2-2</b><span>22.1% O₂</span><span>Not reported</span></div>
-            </div>
-          </div>
-          <h3>Compare</h3><p>Hold records side by side without hiding what's missing or different.</p>
-        </div>
-      </div>
-    </section>
-
-    {/* SECTION 5 — final CTA + footer */}
+    {/* SECTION 4 — final CTA + footer */}
     <section className="l-final" id="cta">
       <div className="l-final-glow"/>
       <div className="l-final-inner">
