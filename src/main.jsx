@@ -10,52 +10,187 @@ import './app.css';
 const value = f => f?.status === 'ambiguous' ? `${display(f)} · verify` : display(f);
 const stat = (n,label) => <div className="mini-stat"><strong>{n}</strong><span>{label}</span></div>;
 
+const sourceQuotes = [experiments[0], experiments[4]].map(e=>({
+  text:e.source.notes,
+  who:investigations.find(i=>i.id===e.investigationId)?.name,
+  file:`${e.source.file} · row ${e.source.row}`
+}));
+
 function Landing({onEnter}){
+  const [qi,setQi]=useState(0);
   const jump=v=>{onEnter();setTimeout(()=>document.dispatchEvent(new CustomEvent('flamme-nav',{detail:v})),0)};
+  const scrollTo=id=>e=>{e.preventDefault();document.getElementById(id)?.scrollIntoView({behavior:'smooth'})};
   return <div className="landing">
-    <div className="landing-glow"/><div className="landing-glow landing-glow2"/>
-    <nav className="landing-nav">
-      <span className="landing-wordmark"><span className="brand-flame"><Flame/></span>Flamme</span>
-      <div className="landing-navlinks">
-        <button onClick={()=>jump('Lab')}>Lab</button>
-        <button onClick={()=>jump('Ask')}>Ask</button>
-        <button onClick={()=>jump('Evidence')}>Evidence</button>
-        <button onClick={()=>jump('Compare')}>Compare</button>
+    {/* SECTION 1 — nav */}
+    <nav className="l-nav">
+      <span className="l-wordmark"><span className="brand-flame"><Flame/></span>Flamme</span>
+      <div className="l-navlinks">
+        <a href="#features" onClick={scrollTo('features')}>Features</a>
+        <a href="#how" onClick={scrollTo('how')}>How It Works</a>
+        <a href="#access" onClick={scrollTo('access')}>Access</a>
+        <a href="#cta" onClick={scrollTo('cta')}>Team</a>
       </div>
-      <button className="accent-btn landing-nav-cta" onClick={onEnter}>Enter Flamme <ArrowRight size={15}/></button>
+      <button className="l-navcta" onClick={onEnter}>Enter Flamme <ArrowRight size={14}/></button>
     </nav>
-    <main className="landing-hero">
-      <small className="eyebrow">FLAME IN FREEFALL · NASA SPACE APPS 2026</small>
-      <h1>Fire evidence,<br/><span>without the guesswork.</span></h1>
-      <p>An interactive microgravity flame lab and a source-linked evidence explorer for NASA's combustion data — built by Team Flamme.</p>
-      <div className="landing-cta-row">
-        <button className="accent-btn landing-cta" onClick={onEnter}>Enter Flamme <ArrowRight size={18}/></button>
-        <a className="outline-btn landing-cta" href="#method" onClick={e=>{e.preventDefault();document.getElementById('method')?.scrollIntoView({behavior:'smooth'})}}>See the method</a>
+
+    {/* SECTION 2 — hero: real NASA photo as full-bleed background + black overlay, text on top */}
+    <header className="l-hero">
+      <div className="l-hero-bg">
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/ISS-46%20BASS-II%20flame%20test%20with%20reduced%20oxygen%20partial%20pressure.jpg?width=2000" alt="A real NASA BASS-II flame test burning on the International Space Station, photographed in reduced oxygen partial pressure"/>
+        <div className="l-hero-overlay"/>
       </div>
-      <figure className="landing-shot">
-        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/ISS-46%20BASS-II%20flame%20test%20with%20reduced%20oxygen%20partial%20pressure.jpg?width=1600" alt="A real NASA BASS-II flame test burning on the International Space Station, photographed in reduced oxygen partial pressure"/>
-        <figcaption><span className="pip"/> LIVE SOURCE PHOTO · NASA ISS-46 BASS-II flame test, reduced O₂</figcaption>
-      </figure>
-      <div className="landing-logos">
-        <span>Evidence sourced from</span>
-        <b>NASA PSI</b><b>NTRS</b><b>Saffire</b><b>BASS-II</b><b>FLEX</b>
+      <div className="l-hero-content">
+        <small className="l-eyebrow"><Sparkles size={12}/> Flame in Freefall · NASA Space Apps 2026</small>
+        <h1>Fire evidence,<br/>without the guesswork.</h1>
+        <p>An interactive microgravity flame lab and a source-linked evidence explorer for NASA's combustion data — built by Team Flamme.</p>
+        <div className="l-cta-row">
+          <button className="l-btn-primary" onClick={onEnter}>Enter Flamme <ArrowRight size={16}/></button>
+          <a className="l-btn-secondary" href="#features" onClick={scrollTo('features')}>See the method</a>
+        </div>
+        <div className="l-preview">
+          <div className="l-preview-bar"><i/><i/><i/><em>Flame Lab</em><small>ILLUSTRATIVE</small></div>
+          <div className="l-preview-body">
+            <div className="l-preview-canvas"><div className="l-preview-flame"/><span>Chamber viewport</span></div>
+            <div className="l-preview-side">
+              {['Material','Oxygen','Airflow','Direction'].map((l,i)=><div key={l} className="l-preview-row"><span>{l}</span><i style={{"--w":[62,41,78,50][i]+'%'}}/></div>)}
+            </div>
+          </div>
+        </div>
       </div>
-    </main>
-    <section className="landing-cards" id="method">
-      <div className="landing-card" style={{"--img":"url(https://commons.wikimedia.org/wiki/Special:FilePath/Candlespace.jpg?width=900)"}}>
-        <div className="landing-card-img"/>
-        <div className="landing-card-body"><FlaskConical size={20}/><h3>Flame Lab</h3><p>Set real controlled parameters and watch the illustrative chamber respond live.</p></div>
-      </div>
-      <div className="landing-card" style={{"--img":"url(https://commons.wikimedia.org/wiki/Special:FilePath/Fire%20in%20Space.jpg?width=900)"}}>
-        <div className="landing-card-img"/>
-        <div className="landing-card-body"><Sparkles size={20}/><h3>Ask Flame</h3><p>Describe a scenario in plain language and get back recognized conditions, not a black box.</p></div>
-      </div>
-      <div className="landing-card" style={{"--img":"url(https://commons.wikimedia.org/wiki/Special:FilePath/ISS-35%20Burning%20and%20Suppression%20of%20Solids%20(BASS)%20experiment.jpg?width=900)"}}>
-        <div className="landing-card-img"/>
-        <div className="landing-card-body"><Compass size={20}/><h3>Evidence explorer</h3><p>Find NASA microgravity combustion records that match your scenario.</p></div>
+    </header>
+
+    {/* SECTION 3 — trusted-by / sourced-from */}
+    <section className="l-logos">
+      <span>Evidence sourced from</span>
+      <div className="l-logos-row"><b>NASA PSI</b><b>NTRS</b><b>Saffire II</b><b>BASS II</b><b>FLEX</b></div>
+    </section>
+
+    {/* SECTION 4 — features, 2x2 grid */}
+    <section className="l-section" id="features">
+      <small className="l-section-eyebrow">THE PLATFORM</small>
+      <h2>Everything you need to read the evidence</h2>
+      <p className="l-section-sub">Flamme brings a controlled flame lab, a plain-language question box, and a source-linked record explorer into one workspace.</p>
+      <div className="l-feature-grid">
+        <div className="l-feature-card">
+          <div className="l-feature-visual">
+            <div className="l-mock-input">cotton-fiberglass at 22% oxygen, 20 cm/s opposed <i/></div>
+            <div className="l-mock-chips"><span>material: Cotton–fiberglass</span><span>oxygen ≈ 22%</span><span>flow: Opposed</span></div>
+          </div>
+          <h3>Ask Flame</h3><p>Describe a scenario in plain language and get back recognized conditions, not a black box.</p>
+        </div>
+        <div className="l-feature-card">
+          <div className="l-feature-visual">
+            <div className="l-mock-sliders">{['Oxygen 22.1%','Airflow 20 cm/s','Ignite power 80 W'].map(l=><div key={l} className="l-mock-slider"><span>{l}</span></div>)}</div>
+          </div>
+          <h3>Flame Lab</h3><p>Set real controlled parameters and watch the illustrative chamber respond live.</p>
+        </div>
+        <div className="l-feature-card">
+          <div className="l-feature-visual">
+            <div className="l-mock-rows">
+              <div className="l-mock-row"><b>Cotton–fiberglass (SIBAL)</b><span className="ok">material match</span></div>
+              <div className="l-mock-row"><b>Silicone · 0.61 mm</b><span className="diff">oxygen differs</span></div>
+            </div>
+          </div>
+          <h3>Evidence explorer</h3><p>Find NASA microgravity combustion records that match your scenario, ranked transparently.</p>
+        </div>
+        <div className="l-feature-card">
+          <div className="l-feature-visual">
+            <div className="l-mock-compare">
+              <div><b>2-5</b><span>22.1% O₂</span><span>20 cm/s</span></div>
+              <div><b>2-2</b><span>22.1% O₂</span><span>Not reported</span></div>
+            </div>
+          </div>
+          <h3>Compare</h3><p>Hold records side by side without hiding what's missing or different.</p>
+        </div>
       </div>
     </section>
-    <footer className="landing-foot">Flame photography: NASA (public domain) · No NASA endorsement · No safety certification · No validated flame prediction</footer>
+
+    {/* SECTION 5 — workspace showcase + metrics */}
+    <section className="l-section l-workspace">
+      <small className="l-section-eyebrow">THE WORKSPACE</small>
+      <h2>One workspace that brings the evidence together</h2>
+      <p className="l-section-sub">No separate tools, no exporting — ask, inspect, and trace a record back to its source without leaving the page.</p>
+      <figure className="l-wide-shot">
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Jsc2023e046631.jpg?width=1800" alt="A row of bright combustion flames photographed against a black background at NASA Johnson Space Center"/>
+        <figcaption>NASA · Johnson Space Center combustion test imagery</figcaption>
+      </figure>
+      <div className="l-metrics">
+        <div><strong>{investigations.length}</strong><span>NASA investigations</span></div>
+        <div><strong>{experiments.length}</strong><span>curated experiment rows</span></div>
+        <div><strong>10</strong><span>controlled parameters</span></div>
+        <div><strong>0</strong><span>AI model calls</span></div>
+      </div>
+    </section>
+
+    {/* SECTION 6 — how it works */}
+    <section className="l-section" id="how">
+      <small className="l-section-eyebrow">GET STARTED</small>
+      <h2>Three steps from question to evidence</h2>
+      <div className="l-steps">
+        <div className="l-step"><em>1</em><h3>Ask Flame</h3><p>Type a scenario in plain language; a deterministic keyword parser reads back the conditions it recognized.</p></div>
+        <div className="l-step"><em>2</em><h3>Follow the evidence</h3><p>Review matched NASA records, ranked by how closely their conditions compare to yours.</p></div>
+        <div className="l-step"><em>3</em><h3>Explore Flame Lab</h3><p>Drag or type the controlled variables yourself and watch the illustrative chamber respond.</p></div>
+      </div>
+    </section>
+
+    {/* SECTION 7 — real excerpts from the dataset, in place of testimonials */}
+    <section className="l-section l-quotes">
+      <small className="l-section-eyebrow">FROM THE DATA</small>
+      <h2>Real notes from the source files</h2>
+      <p className="l-section-sub">No invented testimonials — these are the actual caveats attached to the rows Flamme cites.</p>
+      <div className="l-quote-card">
+        <p>&ldquo;{sourceQuotes[qi].text}&rdquo;</p>
+        <div className="l-quote-who"><span className="l-quote-avatar"><Flame size={14}/></span><div><b>{sourceQuotes[qi].who}</b><small>{sourceQuotes[qi].file}</small></div></div>
+      </div>
+      <div className="l-quote-dots">{sourceQuotes.map((_,idx)=><button key={idx} className={idx===qi?'on':''} aria-label={`Show note ${idx+1}`} onClick={()=>setQi(idx)}/>)}</div>
+    </section>
+
+    {/* SECTION 8 — honesty guarantees, in place of pricing */}
+    <section className="l-section" id="access">
+      <small className="l-section-eyebrow">WHAT YOU GET</small>
+      <h2>No black boxes, by design</h2>
+      <p className="l-section-sub">Flamme is a free research prototype, not a product with tiers — these are the three guarantees it holds itself to instead.</p>
+      <div className="l-promise-grid">
+        <div className="l-promise-card">
+          <h3>Illustrative</h3><div className="l-promise-tag">Flame Lab</div>
+          <ul>{['Not a CFD simulation','Not a validated flame prediction','Reacts to real parameter values'].map(t=><li key={t}><Check size={13}/>{t}</li>)}</ul>
+          <button className="l-btn-secondary-full" onClick={()=>jump('Lab')}>Open the Lab</button>
+        </div>
+        <div className="l-promise-card featured">
+          <span className="l-badge">Core promise</span>
+          <h3>Source-linked</h3><div className="l-promise-tag">Every evidence card</div>
+          <ul>{['Traces to a NASA investigation ID','Shows file, row, and raw notes','No NASA endorsement implied'].map(t=><li key={t}><Check size={13}/>{t}</li>)}</ul>
+          <button className="l-btn-primary-full" onClick={()=>jump('Evidence')}>Follow the evidence</button>
+        </div>
+        <div className="l-promise-card">
+          <h3>Deterministic</h3><div className="l-promise-tag">Ask Flame</div>
+          <ul>{['Regex/keyword parsing only','No AI model is ever called','Every match is editable, nothing hidden'].map(t=><li key={t}><Check size={13}/>{t}</li>)}</ul>
+          <button className="l-btn-secondary-full" onClick={()=>jump('Ask')}>Ask a question</button>
+        </div>
+      </div>
+    </section>
+
+    {/* SECTION 9 — final CTA + footer with oversized wordmark */}
+    <section className="l-final" id="cta">
+      <div className="l-final-glow"/>
+      <div className="l-final-inner">
+        <div className="l-final-left">
+          <h2>Explore the evidence with Flamme</h2>
+          <p>Built for the Flame in Freefall challenge by Team Flamme. No NASA endorsement · no safety certification · no validated flame prediction.</p>
+          <div className="l-cta-row">
+            <button className="l-btn-primary" onClick={onEnter}>Enter Flamme <ArrowRight size={16}/></button>
+            <a className="l-btn-secondary" href="https://github.com/farhanlabibahan/flamme" target="_blank" rel="noreferrer">View source <ArrowUpRight size={14}/></a>
+          </div>
+        </div>
+        <div className="l-final-links">
+          <div><b>Product</b><a onClick={()=>jump('Lab')}>Lab</a><a onClick={()=>jump('Ask')}>Ask</a><a onClick={()=>jump('Evidence')}>Evidence</a><a onClick={()=>jump('Compare')}>Compare</a></div>
+          <div><b>Sources</b><a href="https://psi.nasa.gov" target="_blank" rel="noreferrer">NASA PSI</a><a href="https://github.com/farhanlabibahan/flamme" target="_blank" rel="noreferrer">GitHub</a></div>
+          <div><b>Team</b><span>Team Flamme</span><span>NASA Space Apps 2026</span></div>
+        </div>
+      </div>
+      <div className="l-wordmark-huge" aria-hidden="true">FLAMME</div>
+      <footer className="landing-foot">Flame photography: NASA (public domain) · No NASA endorsement · No safety certification · No validated flame prediction</footer>
+    </section>
   </div>;
 }
 
