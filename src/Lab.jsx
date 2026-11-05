@@ -1,5 +1,5 @@
 import React, {forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState} from 'react';
-import {ArrowDownToLine, ArrowUpFromLine, Box, ChevronDown, Circle, Eye, EyeOff, Fan, Flame, Globe, Layers, Maximize2, Minimize2, Orbit, RectangleHorizontal, RotateCcw, Scan, ShieldAlert, Thermometer, Video, Wind, Zap} from 'lucide-react';
+import {ArrowDownToLine, ArrowUpFromLine, Box, ChevronDown, Circle, Eye, EyeOff, Fan, Flame, Globe, Layers, Maximize2, Minimize2, Mouse, Orbit, RectangleHorizontal, RotateCcw, Scan, ShieldAlert, Thermometer, Video, Wind, Zap} from 'lucide-react';
 import {createLab} from './labScene.js';
 import {AGENTS, DEFAULT_PARAMS, DIRECTIONS, FIELDS, GRAVITY, MATERIALS, SIBAL} from './labModel.js';
 
@@ -167,7 +167,7 @@ const Lab = forwardRef(function Lab({scenario, mode, onMode, reduced, onReduced}
         {error && <div className="vp-empty">3D view unavailable on this device. The sourced evidence below remains accessible.</div>}
         <div className="vp-overlay">
           {regime && <span className="vp-regime" data-tone={ui.out ? 'none' : d?.tone}>{regime}</span>}
-          {!error && <div className="vp-hint"><Orbit size={13}/> Use your mouse to hover and change angle</div>}
+          {!error && <div className="vp-hint"><span className="vp-hint-key"><Mouse size={14}/></span><span className="vp-hint-text">Hover to look around</span></div>}
         </div>
       </div>
 
