@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {createRoot} from 'react-dom/client';
-import {ArrowRight, ArrowUpRight, BookOpen, Check, ChevronDown, Compass, ExternalLink, FlaskConical, Info, Layers, Search, ShieldCheck, Sparkles, X} from 'lucide-react';
+import {ArrowRight, ArrowUpRight, BookOpen, Check, ChevronDown, Compass, ExternalLink, FlaskConical, Info, Layers, PanelLeftClose, PanelLeftOpen, Search, ShieldCheck, Sparkles, X} from 'lucide-react';
 import Lab from './Lab.jsx';
 import {experiments, investigations, display} from './data.js';
 import {initialScenario, rank, explain} from './science.js';
@@ -129,6 +129,8 @@ function App(){
   const [query,setQuery] = useState('');
   const [filter,setFilter] = useState('All');
   const [drawer,setDrawer] = useState(null);
+  const [navCollapsed,setNavCollapsed] = useState(()=>{try{return localStorage.getItem('flamme-nav-collapsed')==='1'}catch{return false}});
+  const toggleNav = () => setNavCollapsed(c=>{try{localStorage.setItem('flamme-nav-collapsed',c?'0':'1')}catch{}return !c});
   const [reduced,setReduced] = useState(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   const [searched,setSearched] = useState(false);
   const [advanced,setAdvanced] = useState(false);
@@ -160,17 +162,19 @@ function App(){
 
   if(!entered) return <Landing onEnter={()=>setEntered(true)}/>;
 
-  return <div className="app-shell">
+  return <div className={`app-shell ${navCollapsed?'nav-collapsed':''}`}>
     <aside className="side-nav">
-      <button className="identity" onClick={()=>{setView('Evidence');window.scrollTo({top:0,behavior:'smooth'})}} aria-label="Flamme home"><span className="brand-flame"><MicroFlame/></span><span className="identity-wordmark">Flamme</span></button>
+      <div className="side-head">
+        <button className="identity" onClick={()=>{setView('Evidence');window.scrollTo({top:0,behavior:'smooth'})}} aria-label="Flamme home"><span className="brand-flame"><MicroFlame/></span><span className="identity-wordmark">Flamme</span></button>
+        <button className="nav-collapse-btn" onClick={toggleNav} aria-label={navCollapsed?'Expand sidebar':'Collapse sidebar'} title={navCollapsed?'Expand sidebar':'Collapse sidebar'}>{navCollapsed?<PanelLeftOpen size={16}/>:<PanelLeftClose size={16}/>}</button>
+      </div>
       <div className="nav-overline">WORKSPACE</div>
-      {[[FlaskConical,'Lab'],[Sparkles,'Ask'],[Compass,'Evidence'],[Layers,'Compare'],[BookOpen,'Sources']].map(([Icon,name])=><button key={name} className={`nav-link ${view===name?'active':''}`} onClick={()=>{
+      {[[FlaskConical,'Lab'],[Sparkles,'Ask'],[Compass,'Evidence'],[Layers,'Compare'],[BookOpen,'Sources']].map(([Icon,name])=><button key={name} className={`nav-link ${view===name?'active':''}`} title={navCollapsed?name:undefined} onClick={()=>{
         if(name==='Sources')return setDrawer(drawer==='all'?null:'all');
         setDrawer(null);setView(name);
-      }}><Icon size={19}/>{name}{name==='Compare'&&<em>{compare.length}</em>}</button>)}
+      }}><Icon size={19}/><span className="nav-link-text">{name}</span>{name==='Compare'&&<em>{compare.length}</em>}</button>)}
     </aside>
     <main className="workspace">
-      <header className="topbar"><span className="topbar-brand"><MicroFlame size={16}/> FLAMME <b>/</b> <em key={view} className="topbar-label">{view==='Lab'?'Flame Lab':view==='Ask'?'Ask Flame':view==='Compare'?'Comparison':'Evidence explorer'}</em></span></header>
       <div className={`workspace-inner ${view==='Lab'?'lab-inner':''}`}>
         {drawer&&<section className="surface source-panel" role="region" aria-label={drawer==='about'?'Scope and limitations':drawer==='all'?'Data sources':'Source information'}>
           <button className="drawer-close" aria-label="Close" onClick={()=>setDrawer(null)}><X/></button>
