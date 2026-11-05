@@ -1,4 +1,4 @@
-import React, {useMemo, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {createRoot} from 'react-dom/client';
 import {ArrowRight, ArrowUpRight, BookOpen, Check, ChevronDown, Compass, ExternalLink, Flame, FlaskConical, Info, Layers, Search, ShieldCheck, Sparkles, X} from 'lucide-react';
 import Lab from './Lab.jsx';
@@ -11,25 +11,51 @@ const value = f => f?.status === 'ambiguous' ? `${display(f)} · verify` : displ
 const stat = (n,label) => <div className="mini-stat"><strong>{n}</strong><span>{label}</span></div>;
 
 function Landing({onEnter}){
+  const jump=v=>{onEnter();setTimeout(()=>document.dispatchEvent(new CustomEvent('flamme-nav',{detail:v})),0)};
   return <div className="landing">
-    <div className="landing-glow"/>
-    <header className="landing-top">
-      <span className="brand-flame"><Flame/></span>
-      <span className="landing-wordmark">Flamme</span>
-      <span className="landing-team">TEAM FLAMME</span>
-    </header>
+    <div className="landing-glow"/><div className="landing-glow landing-glow2"/>
+    <nav className="landing-nav">
+      <span className="landing-wordmark"><span className="brand-flame"><Flame/></span>Flamme</span>
+      <div className="landing-navlinks">
+        <button onClick={()=>jump('Lab')}>Lab</button>
+        <button onClick={()=>jump('Ask')}>Ask</button>
+        <button onClick={()=>jump('Evidence')}>Evidence</button>
+        <button onClick={()=>jump('Compare')}>Compare</button>
+      </div>
+      <button className="accent-btn landing-nav-cta" onClick={onEnter}>Enter Flamme <ArrowRight size={15}/></button>
+    </nav>
     <main className="landing-hero">
       <small className="eyebrow">FLAME IN FREEFALL · NASA SPACE APPS 2026</small>
       <h1>Fire evidence,<br/><span>without the guesswork.</span></h1>
       <p>An interactive microgravity flame lab and a source-linked evidence explorer for NASA's combustion data — built by Team Flamme.</p>
-      <button className="accent-btn landing-cta" onClick={onEnter}>Enter Flamme <ArrowRight size={18}/></button>
-      <div className="landing-cards">
-        <div className="landing-card"><FlaskConical size={20}/><h3>Flame Lab</h3><p>Set real controlled parameters and watch the illustrative chamber respond live.</p></div>
-        <div className="landing-card"><Sparkles size={20}/><h3>Ask Flame</h3><p>Describe a scenario in plain language and get back recognized conditions, not a black box.</p></div>
-        <div className="landing-card"><Compass size={20}/><h3>Evidence explorer</h3><p>Find NASA microgravity combustion records that match your scenario.</p></div>
+      <div className="landing-cta-row">
+        <button className="accent-btn landing-cta" onClick={onEnter}>Enter Flamme <ArrowRight size={18}/></button>
+        <a className="outline-btn landing-cta" href="#method" onClick={e=>{e.preventDefault();document.getElementById('method')?.scrollIntoView({behavior:'smooth'})}}>See the method</a>
+      </div>
+      <figure className="landing-shot">
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/ISS-46%20BASS-II%20flame%20test%20with%20reduced%20oxygen%20partial%20pressure.jpg?width=1600" alt="A real NASA BASS-II flame test burning on the International Space Station, photographed in reduced oxygen partial pressure"/>
+        <figcaption><span className="pip"/> LIVE SOURCE PHOTO · NASA ISS-46 BASS-II flame test, reduced O₂</figcaption>
+      </figure>
+      <div className="landing-logos">
+        <span>Evidence sourced from</span>
+        <b>NASA PSI</b><b>NTRS</b><b>Saffire</b><b>BASS-II</b><b>FLEX</b>
       </div>
     </main>
-    <footer className="landing-foot">No NASA endorsement · No safety certification · No validated flame prediction</footer>
+    <section className="landing-cards" id="method">
+      <div className="landing-card" style={{"--img":"url(https://commons.wikimedia.org/wiki/Special:FilePath/Candlespace.jpg?width=900)"}}>
+        <div className="landing-card-img"/>
+        <div className="landing-card-body"><FlaskConical size={20}/><h3>Flame Lab</h3><p>Set real controlled parameters and watch the illustrative chamber respond live.</p></div>
+      </div>
+      <div className="landing-card" style={{"--img":"url(https://commons.wikimedia.org/wiki/Special:FilePath/Fire%20in%20Space.jpg?width=900)"}}>
+        <div className="landing-card-img"/>
+        <div className="landing-card-body"><Sparkles size={20}/><h3>Ask Flame</h3><p>Describe a scenario in plain language and get back recognized conditions, not a black box.</p></div>
+      </div>
+      <div className="landing-card" style={{"--img":"url(https://commons.wikimedia.org/wiki/Special:FilePath/ISS-35%20Burning%20and%20Suppression%20of%20Solids%20(BASS)%20experiment.jpg?width=900)"}}>
+        <div className="landing-card-img"/>
+        <div className="landing-card-body"><Compass size={20}/><h3>Evidence explorer</h3><p>Find NASA microgravity combustion records that match your scenario.</p></div>
+      </div>
+    </section>
+    <footer className="landing-foot">Flame photography: NASA (public domain) · No NASA endorsement · No safety certification · No validated flame prediction</footer>
   </div>;
 }
 
@@ -38,6 +64,11 @@ function App(){
   const [entered,setEntered] = useState(false);
   const [scenario,setScenario] = useState({...initialScenario});
   const [view,setView] = useState('Evidence');
+  useEffect(()=>{
+    const h=e=>setView(e.detail);
+    document.addEventListener('flamme-nav',h);
+    return()=>document.removeEventListener('flamme-nav',h);
+  },[]);
   const [mode,setMode] = useState('Illustrative visualization');
   const [selected,setSelected] = useState('2-5');
   const [compare,setCompare] = useState(['2-5','2-2']);
