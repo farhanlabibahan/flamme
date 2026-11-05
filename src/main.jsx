@@ -49,9 +49,6 @@ function Landing({onEnter}){
     {/* SECTION 1 — nav (no CTA here — the one wide Enter Flamme button lives in the hero) */}
     <nav className="l-nav">
       <span className="l-wordmark"><span className="brand-flame"><MicroFlame/></span>Flamme</span>
-      <div className="l-navlinks">
-        <a href="#cta" onClick={scrollTo('cta')}>Team</a>
-      </div>
     </nav>
 
     {/* SECTION 2 — hero: dark bg, headline left (with the single wide Enter Flamme CTA), animated blue blade art right */}
@@ -59,7 +56,6 @@ function Landing({onEnter}){
       <div className="l-hero-overlay"/>
       <div className="l-hero-inner">
         <div className="l-hero-text">
-          <small className="l-eyebrow"><Sparkles size={12}/> Flame in Freefall · NASA Space Apps 2026</small>
           <h1>Fire evidence,<br/>without the guesswork.</h1>
           <p>An interactive microgravity flame lab and a source-linked evidence explorer for NASA's combustion data.</p>
           <div className="l-cta-row">
