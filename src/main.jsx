@@ -10,23 +10,29 @@ import './app.css';
 const value = f => f?.status === 'ambiguous' ? `${display(f)} · verify` : display(f);
 const stat = (n,label) => <div className="mini-stat"><strong>{n}</strong><span>{label}</span></div>;
 
-/* a spherical microgravity flame — real micro-g flames burn as blue spheres, not teardrops */
+/* a flame matching the lab's own render: thin blue reaction shell + a warm soot cap */
 const MicroFlame = ({size=18}) => <svg width={size} height={size} viewBox="0 0 32 32" className="micro-flame" aria-hidden="true">
-  <circle cx="16" cy="16" r="10.5" fill="url(#mfCore)"/>
-  <circle cx="16" cy="16" r="10.5" fill="none" stroke="url(#mfRing)" strokeWidth="1.3"/>
-  <circle cx="12" cy="12.5" r="2.2" fill="#eef5ff" opacity=".9"/>
   <defs>
-    <radialGradient id="mfCore" cx="38%" cy="34%" r="72%">
-      <stop offset="0%" stopColor="#eef5ff"/>
-      <stop offset="32%" stopColor="#8fb0ff"/>
-      <stop offset="68%" stopColor="#2b5bdb"/>
-      <stop offset="100%" stopColor="#0c1c4d"/>
+    <radialGradient id="mfGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stopColor="#5f8cff" stopOpacity=".5"/>
+      <stop offset="100%" stopColor="#5f8cff" stopOpacity="0"/>
     </radialGradient>
-    <linearGradient id="mfRing" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stopColor="#bcd0ff"/>
-      <stop offset="100%" stopColor="#245bff"/>
-    </linearGradient>
+    <radialGradient id="mfCap" cx="63%" cy="68%" r="46%">
+      <stop offset="0%" stopColor="#ffdba3"/>
+      <stop offset="40%" stopColor="#ff9a3d"/>
+      <stop offset="100%" stopColor="#ff9a3d" stopOpacity="0"/>
+    </radialGradient>
+    <radialGradient id="mfShell" cx="48%" cy="42%" r="54%">
+      <stop offset="0%" stopColor="#dce8ff" stopOpacity="0"/>
+      <stop offset="76%" stopColor="#dce8ff" stopOpacity="0"/>
+      <stop offset="87%" stopColor="#7fa8ff" stopOpacity=".95"/>
+      <stop offset="100%" stopColor="#2f5bdb" stopOpacity="0"/>
+    </radialGradient>
   </defs>
+  <circle cx="16" cy="16" r="15" fill="url(#mfGlow)"/>
+  <circle cx="16" cy="16" r="11" fill="url(#mfCap)"/>
+  <circle cx="16" cy="16" r="11" fill="url(#mfShell)"/>
+  <circle cx="12" cy="11.5" r="1.5" fill="#fff" opacity=".9"/>
 </svg>;
 
 const TRACE_STEPS = [

@@ -69,7 +69,10 @@ const Lab = forwardRef(function Lab({scenario, mode, onMode, reduced, onReduced}
   const [vis, setVis] = useState(() => Object.fromEntries(OUTLINER.map(o => [o[0], true])));
   const [cam, setCam] = useState('hero');
   const [error, setError] = useState(false);
+  const [hint, setHint] = useState(true);
   const live = params;
+
+  useEffect(() => { if (!hint) return; const t = setTimeout(() => setHint(false), 7000); return () => clearTimeout(t); }, [hint]);
 
   /* world lifecycle */
   useEffect(() => {
@@ -161,10 +164,11 @@ const Lab = forwardRef(function Lab({scenario, mode, onMode, reduced, onReduced}
 
     <div className="st-body">
       <div className="vp-canvas">
-        <div className="vp-gl" ref={host} role="img" aria-label="Interactive 3D chamber. The flame and airflow are an illustrative visualization, not measured imagery or a validated simulation."/>
+        <div className="vp-gl" ref={host} role="img" aria-label="Interactive 3D chamber. The flame and airflow are an illustrative visualization, not measured imagery or a validated simulation." onPointerDown={() => setHint(false)}/>
         {error && <div className="vp-empty">3D view unavailable on this device. The sourced evidence below remains accessible.</div>}
         <div className="vp-overlay">
           {regime && <span className="vp-regime" data-tone={ui.out ? 'none' : d?.tone}>{regime}</span>}
+          {!error && !full && <div className={`vp-hint ${hint ? '' : 'hide'}`}><Orbit size={14}/> Move your mouse to look around<span>·</span><Maximize2 size={14}/> Press F or use the button to go full screen</div>}
         </div>
       </div>
 
