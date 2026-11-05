@@ -89,8 +89,8 @@ These counts describe the current repository snapshot, not the number of records
 
 The interface is a plain, directly-clickable web app — there is no scripted walkthrough or narrated playback. A typical path:
 
-1. Ask which records are relevant to cotton–fiberglass SIBAL at approximately 22.1% oxygen and 20 cm/s airflow.
-2. Inspect the selected material, oxygen, flow, and other reported or unavailable conditions.
+1. Type a plain-language question into **Ask Flame** (e.g. "cotton-fiberglass at 22% oxygen with 20 cm/s opposed airflow"). A deterministic keyword/regex parser (`src/prompt.js`) — not an AI model — reads back what it recognized as removable chips and fills the Define panel below; anything it doesn't recognize is left for you to set manually. No call ever happens automatically; everything you see traces to a rule you can read in the source.
+2. Inspect the selected material, oxygen, flow, and other reported or unavailable conditions in the Define panel.
 3. Use the Flame Lab to explore the controlled variables by dragging or typing values; the chamber reacts live. Its flame is illustrative.
 4. Rank the bundled records using transparent condition matching.
 5. Open Saffire II sample 2-5 and inspect its observation and limitations.
