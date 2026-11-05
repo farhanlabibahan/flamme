@@ -162,6 +162,7 @@ a{color:var(--cyan);text-decoration:none}svg{vertical-align:middle;flex-shrink:0
 /* ============================================================ evidence */
 .evidence-block{scroll-margin-top:80px;padding-top:44px}
 .evidence-heading{display:flex;align-items:end;justify-content:space-between;margin-bottom:18px}
+.lab-heading{padding-top:44px}
 .evidence-heading h2{font:300 44px/1 var(--disp);letter-spacing:-.03em;margin:10px 0 0}
 .evidence-heading>span{font:500 10px var(--mono);letter-spacing:.18em;color:var(--muted);text-transform:uppercase}
 .evidence-grid{display:grid;grid-template-columns:300px minmax(320px,.95fr) minmax(400px,1.1fr);gap:16px;align-items:start}
