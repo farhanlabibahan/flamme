@@ -138,16 +138,16 @@ export function createLab(host, initial) {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.6));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.NeutralToneMapping;
-  renderer.toneMappingExposure = 1.05;
+  renderer.toneMappingExposure = 1.22;
   renderer.setClearColor(0x05070b, 1);
   host.appendChild(renderer.domElement);
 
   const scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0x020306, 0.075);
+  scene.fog = new THREE.FogExp2(0x030509, 0.05);
   const pmrem = new THREE.PMREMGenerator(renderer);
   const envRT = pmrem.fromScene(new RoomEnvironment(), 0.04);
   scene.environment = envRT.texture;
-  scene.environmentIntensity = 0.1;
+  scene.environmentIntensity = 0.2;
 
   const camera = new THREE.PerspectiveCamera(38, 1, 0.05, 500);
   camera.position.set(...CAMS.hero.p);
@@ -162,12 +162,12 @@ export function createLab(host, initial) {
   const time = {value: 0};
 
   /* ----- lights ----- */
-  scene.add(new THREE.HemisphereLight(0x8fb4ff, 0x080a0e, .1));
-  const sun = new THREE.DirectionalLight(0xbcd2ff, .08); sun.position.set(2, 6, 3); scene.add(sun);
-  const spot = new THREE.SpotLight(0xd6e6ff, 6, 16, .5, .9, 1.3);
+  scene.add(new THREE.HemisphereLight(0x8fb4ff, 0x1a222e, .24));
+  const sun = new THREE.DirectionalLight(0xbcd2ff, .18); sun.position.set(2, 6, 3); scene.add(sun);
+  const spot = new THREE.SpotLight(0xd6e6ff, 7, 18, .55, .85, 1.2);
   spot.position.set(0.3, 3.45, 0.4); spot.target.position.copy(DUCT_POS); scene.add(spot, spot.target);
   for (const [x, y, z, c, i] of [[-10, 2.4, -6.5, 0x2f7dff, 12], [10, 1.8, 6.5, 0x3aa6ff, 9], [-10, -2.6, 6.5, 0x1f5bd6, 7], [10, -2.8, -6.5, 0x2a60c8, 7], [0, 3.2, -6, 0x4f86ff, 6]]) {
-    const l = new THREE.PointLight(c, i * .18, 0, 1.6); l.position.set(x, y, z); scene.add(l);
+    const l = new THREE.PointLight(c, i * .26, 0, 1.6); l.position.set(x, y, z); scene.add(l);
   }
   const fireLight = new THREE.PointLight(0xff8a3d, 0, 0, 1.55); scene.add(fireLight);
   const igniteLight = new THREE.PointLight(0xffc27a, 0, 0, 2); scene.add(igniteLight);

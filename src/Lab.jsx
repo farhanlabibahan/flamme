@@ -70,6 +70,12 @@ const Lab = forwardRef(function Lab({scenario, mode, onMode, reduced, onReduced}
   const [cam, setCam] = useState('hero');
   const [error, setError] = useState(false);
   const [pulseFull, setPulseFull] = useState(true);
+  const [toast, setToast] = useState('in');
+  useEffect(() => {
+    const t1 = setTimeout(() => setToast('out'), 5000);
+    const t2 = setTimeout(() => setToast(null), 5700);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
+  }, []);
   const live = params;
 
   /* world lifecycle */
@@ -148,22 +154,18 @@ const Lab = forwardRef(function Lab({scenario, mode, onMode, reduced, onReduced}
     addEventListener('keydown', onKey); return () => removeEventListener('keydown', onKey);
   }, [full, toggleFull]);
 
-  const d = ui.d;
-  const regime = ui.out ? (d?.spray ? 'SUPPRESSED · EXTINGUISHED' : 'FLAME OUT · RE-FIRE IGNITER') : ui.igOK < .5 ? 'IGNITION FAILED' : d?.regime;
-
   return <div ref={root} className={`studio ${full ? 'is-full' : ''} ${side ? '' : 'no-side'} ${hud ? '' : 'no-hud'}`}>
     <div className="st-body">
       <div className="vp-canvas">
         <div className="vp-gl" ref={host} role="img" aria-label="Interactive 3D chamber. The flame and airflow are an illustrative visualization, not measured imagery or a validated simulation."/>
         {error && <div className="vp-empty">3D view unavailable on this device. The sourced evidence below remains accessible.</div>}
         <div className="vp-overlay">
-          <div className="vp-title"><span className="vp-hint-key"><Mouse size={13}/></span><span className="vp-title-text"><span className="vp-title-main">Lab Simulation</span><span className="vp-title-sub">Illustrative · not a CFD simulation</span></span></div>
+          {toast && <div className={`vp-toast ${toast === 'out' ? 'is-out' : ''}`}><span className="vp-hint-key"><Mouse size={13}/></span><span className="vp-toast-text"><span className="vp-toast-main">Okay, you can use your mouse to drag over and do things.</span><span className="vp-toast-sub">Illustrative simulation · not a CFD simulation</span></span></div>}
           <div className="vp-actions">
             <button className="st-iconbtn" title="Reset" onClick={resetLab}><RotateCcw size={15}/></button>
             <button className="st-iconbtn" title={side ? 'Hide parameters (N)' : 'Show parameters (N)'} onClick={() => setSide(v => !v)}>{side ? <EyeOff size={15}/> : <Eye size={15}/>}</button>
             <button className={`st-iconbtn ${pulseFull && !full ? 'flash' : ''}`} title="Full screen (F)" onClick={toggleFull}>{full ? <Minimize2 size={15}/> : <Maximize2 size={15}/>}</button>
           </div>
-          {regime && <span className="vp-regime" data-tone={ui.out ? 'none' : d?.tone}>{regime}</span>}
           {!error && <div className="vp-hint"><span className="vp-hint-key"><Mouse size={14}/></span><span className="vp-hint-text">Hover to look around</span></div>}
         </div>
       </div>
@@ -171,9 +173,9 @@ const Lab = forwardRef(function Lab({scenario, mode, onMode, reduced, onReduced}
       <aside className="st-side">
         <div className="pr-body" ref={props}>
           <div className="pr-title">Parameters <small>DRAG OR CLICK TO EDIT</small></div>
-          {PANELS.map(p => <div key={p.id} data-panel={p.id} className="pn">
-            <div className="pn-head"><em>{String(p.n).padStart(2, '0')}</em>{p.title}</div>
-            <div className="pn-body">{p.keys.map(k => {
+          {PANELS.map(p => <div key={p.id} data-panel={p.id} className={`pn ${open[p.id] ? '' : 'closed'}`}>
+            <button className="pn-head" onClick={() => setOpen(o => ({...o, [p.id]: !o[p.id]}))} aria-expanded={!!open[p.id]}><em>{String(p.n).padStart(2, '0')}</em>{p.title}<ChevronDown size={13} className="pn-chevron"/></button>
+            {open[p.id] && <div className="pn-body">{p.keys.map(k => {
               if (k === 'material') return <Enum key={k} k={k} label="Material" value={live.material} onChange={change} options={Object.entries(MATERIALS).map(([v, m]) => [v, `${m.short} · ${m.note}`])}/>;
               if (k === 'direction') return <Enum key={k} k={k} label="Direction" value={live.direction} onChange={change} options={DIRECTIONS}/>;
               if (k === 'agent') return <Enum key={k} k={k} label="Agent" value={live.agent} onChange={change} options={AGENTS}/>;
@@ -182,7 +184,7 @@ const Lab = forwardRef(function Lab({scenario, mode, onMode, reduced, onReduced}
             })}
               {p.id === 'gravity' && <div className="pills">{GRAVITY.map(g => <button key={g.name} className={nearestG(live.g).name === g.name ? 'on' : ''} onClick={() => change('g', g.g)}>{g.name}</button>)}</div>}
               {p.id === 'ignition' && <button className="bt fire" onClick={() => world.current?.reignite()}><Zap size={12}/> Fire igniter</button>}
-            </div>
+            </div>}
           </div>)}
         </div>
       </aside>
