@@ -32,7 +32,7 @@ a{color:var(--cyan);text-decoration:none}svg{vertical-align:middle;flex-shrink:0
 
 /* ============================================================ shell */
 .app-shell{position:relative;z-index:1;min-height:100vh;display:flex}
-.side-nav{--nav-accent:#4f86ff;position:fixed;inset:0 auto 0 0;width:220px;background:rgba(20,24,34,.45);-webkit-backdrop-filter:blur(26px) saturate(180%);backdrop-filter:blur(26px) saturate(180%);border-right:1px solid var(--line);padding:28px 0;display:flex;flex-direction:column;z-index:10}
+.side-nav{--nav-accent:#4f86ff;position:fixed;inset:0 auto 0 0;width:220px;background:rgba(14,17,25,.68);-webkit-backdrop-filter:blur(26px) saturate(180%);backdrop-filter:blur(26px) saturate(180%);border-right:1px solid var(--line);padding:28px 0;display:flex;flex-direction:column;z-index:10}
 .identity{display:flex;align-items:center;gap:12px;text-align:left;font:600 14px/1 var(--disp);letter-spacing:.01em;padding:0 16px;white-space:nowrap}
 .identity-wordmark{font-weight:700}
 .identity small{display:block;font:500 8px var(--mono);letter-spacing:.2em;color:var(--dim);margin-top:6px;font-weight:400}
@@ -51,7 +51,7 @@ a{color:var(--cyan);text-decoration:none}svg{vertical-align:middle;flex-shrink:0
 .side-nav a{color:var(--cyan)}
 .side-nav button:focus-visible,.side-nav a:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
 .workspace{margin-left:220px;min-width:0;flex:1}
-.topbar{height:62px;display:flex;align-items:center;border-bottom:1px solid var(--line);padding:0 32px;color:var(--muted);font:600 11px var(--disp);letter-spacing:.04em;background:rgba(20,24,34,.4);-webkit-backdrop-filter:blur(18px) saturate(160%);backdrop-filter:blur(18px) saturate(160%);position:sticky;top:0;z-index:9;overflow:hidden}
+.topbar{height:62px;display:flex;align-items:center;border-bottom:1px solid var(--line);padding:0 32px;color:var(--muted);font:600 11px var(--disp);letter-spacing:.04em;background:rgba(14,17,25,.62);-webkit-backdrop-filter:blur(18px) saturate(160%);backdrop-filter:blur(18px) saturate(160%);position:sticky;top:0;z-index:9;overflow:hidden}
 .topbar::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(36,91,255,.5),transparent);background-size:200% 100%;animation:topbarSheen 7s ease-in-out infinite;opacity:.5;pointer-events:none}
 @keyframes topbarSheen{0%{background-position:150% 0}50%{background-position:-50% 0}100%{background-position:150% 0}}
 .topbar-brand{position:relative;z-index:1;display:flex;align-items:center;gap:9px}
