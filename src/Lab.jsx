@@ -1,7 +1,7 @@
-import React, {forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState} from 'react';
-import {ArrowDownToLine, ArrowUpFromLine, BookOpen, Box, Camera, ChevronDown, ChevronRight, Circle, Eye, EyeOff, Fan, Flame, Globe, Layers, Maximize2, Minimize2, Orbit, Pause, Play, RectangleHorizontal, RotateCcw, Scan, ShieldAlert, SkipBack, SkipForward, StepBack, StepForward, Thermometer, Video, Wind, Zap} from 'lucide-react';
+import React, {forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState} from 'react';
+import {ArrowDownToLine, ArrowUpFromLine, Box, ChevronDown, Circle, Eye, EyeOff, Fan, Flame, Globe, Layers, Maximize2, Minimize2, Orbit, RectangleHorizontal, RotateCcw, Scan, ShieldAlert, Thermometer, Video, Wind, Zap} from 'lucide-react';
 import {createLab} from './labScene.js';
-import {AGENTS, CAM_TRACK, CAPTIONS, DEFAULT_PARAMS, DIRECTIONS, END, EVENTS, FIELDS, FPS, GRAVITY, MATERIALS, SIBAL, TRACKS, captionAt, keyState, level, paramsAt} from './labModel.js';
+import {AGENTS, DEFAULT_PARAMS, DIRECTIONS, FIELDS, GRAVITY, MATERIALS, SIBAL} from './labModel.js';
 
 /* Blender-style workspace around an ILLUSTRATIVE chamber visualization.
    Inputs are the ten controlled parameters of the evidence catalogue; the
@@ -23,7 +23,6 @@ const CAMS = [['hero', Video, 'Hero · 0'], ['flame', Flame, 'Flame close-up · 
 const OUTLINER = [['Module', 0, 'LAB-02 module'], ['Space', 1, 'Earth · stars'], ['FlowDuct', 0, 'Flow duct'], ['Sample', 1, 'Sample card'], ['Flame', 1, 'Flame volume'], ['Airflow', 1, 'Tracers · streamlines'], ['Soot', 1, 'Soot · embers'], ['Suppression', 1, 'Agent spray']];
 
 const fmt = (k, v) => { const f = FIELDS[k]; return f ? Number(v).toFixed(f.dec) : String(v); };
-const tc = t => { const f = Math.round(t * FPS); return String(f).padStart(4, '0'); };
 const nearestG = g => GRAVITY.reduce((a, b) => Math.abs(b.g - g) < Math.abs(a.g - g) ? b : a);
 
 function fromScenario(s, base) {
@@ -55,15 +54,13 @@ function NumField({k, value, onChange, ks}) {
 function Enum({k, value, options, onChange, ks, label}) {
   return <label className={`be ${ks || ''}`}><span>{label}</span><select value={value} onChange={e => onChange(k, e.target.value)}>{options.map(o => { const [v, t] = Array.isArray(o) ? o : [o, o]; return <option key={v} value={v}>{t}</option>; })}</select><ChevronDown size={12}/></label>;
 }
-const Key = ({ks}) => <i className={`kf ${ks || ''}`} title={ks === 'key' ? 'On keyframe' : ks === 'anim' ? 'Animating' : ks ? 'Keyframed' : 'Not animated'}/>;
-
 /* ---------------------------------------------------------------- studio */
-const Lab = forwardRef(function Lab({scenario, mode, onMode, reduced, onReduced, onNavigate}, ref) {
+const Lab = forwardRef(function Lab({scenario, mode, onMode, reduced, onReduced}, ref) {
   const root = useRef(null), host = useRef(null), world = useRef(null);
   const callouts = useRef({}), gizmo = useRef(null), spark = useRef(null), sparkData = useRef([]);
   const props = useRef(null), track = useRef(null);
   const [params, setParams] = useState(() => fromScenario(scenario, DEFAULT_PARAMS));
-  const [ui, setUi] = useState({t: 0, playing: false, live: params, d: null, fps: 60, igOK: 1, out: false});
+  const [ui, setUi] = useState({d: null, fps: 60, igOK: 1, out: false});
   const [full, setFull] = useState(() => typeof location !== 'undefined' && location.hash.startsWith('#studio'));
   const [hud, setHud] = useState(true);
   const [side, setSide] = useState(true);
@@ -72,8 +69,7 @@ const Lab = forwardRef(function Lab({scenario, mode, onMode, reduced, onReduced,
   const [vis, setVis] = useState(() => Object.fromEntries(OUTLINER.map(o => [o[0], true])));
   const [cam, setCam] = useState('hero');
   const [error, setError] = useState(false);
-  const live = ui.playing ? ui.live : params;
-  const t = ui.t;
+  const live = params;
 
   /* world lifecycle */
   useEffect(() => {
@@ -87,9 +83,8 @@ const Lab = forwardRef(function Lab({scenario, mode, onMode, reduced, onReduced,
       for (const key in f.anchors) { const el = callouts.current[key], a = f.anchors[key]; if (el) { el.style.transform = `translate(${a.x}px,${a.y}px)`; el.style.opacity = a.vis ? 1 : 0; } }
       drawGizmo(gizmo.current, f.quat);
       const sd = sparkData.current; sd.push(f.lum); if (sd.length > 160) sd.shift(); drawSpark(spark.current, sd);
-      if (now - last > 45) { last = now; setUi({t: f.anim.t, playing: f.anim.playing, live: f.params, d: f.d, sm: f.sm, fps, igOK: f.igOK, out: f.out, ignite: f.ignite}); }
+      if (now - last > 45) { last = now; setUi({d: f.d, sm: f.sm, fps, igOK: f.igOK, out: f.out}); }
     };
-    if (location.hash === '#studio-play') setTimeout(() => play(true), 600);
     return () => { api.dispose(); world.current = null; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -104,20 +99,9 @@ const Lab = forwardRef(function Lab({scenario, mode, onMode, reduced, onReduced,
 
   /* playback */
   const A = () => world.current?.state.anim;
-  const play = useCallback((fromStart) => {
-    const a = A(); if (!a) return;
-    if (fromStart || a.t >= END) { a.t = 0; world.current.reignite(); world.current.fly('hero', 1.6); }
-    a.playing = true; a.camera = true;
-  }, []);
   const pause = useCallback(() => {
     const a = A(); if (!a || !a.playing) return;
-    a.playing = false; setParams(paramsAt(a.t, world.current.state.params));
-  }, []);
-  const seek = useCallback(nt => {
-    const a = A(); if (!a) return;
-    const was = a.playing; a.t = Math.min(END, Math.max(0, nt));
-    if (!was) setParams(p => paramsAt(a.t, p));
-    setUi(u => ({...u, t: a.t}));
+    a.playing = false;
   }, []);
   const resetLab = useCallback(() => {
     const next = {...DEFAULT_PARAMS};
@@ -125,23 +109,17 @@ const Lab = forwardRef(function Lab({scenario, mode, onMode, reduced, onReduced,
     if (a) { a.playing = false; a.t = 0; a.camera = true; }
     if (world.current?.state) world.current.state.params = next;
     setParams(next);
-    setUi(u => ({...u, t: 0, playing: false, live: next}));
+    setUi(u => ({...u}));
     world.current?.reignite();
     world.current?.fly('hero', 1.6);
     setCam('hero');
   }, []);
   useImperativeHandle(ref, () => ({
     pause,
-    reset: resetLab,
-    start() {
-      resetLab();
-      requestAnimationFrame(() => play(true));
-    }
-  }), [pause, play, resetLab]);
+    reset: resetLab
+  }), [pause, resetLab]);
   const change = useCallback((k, v) => {
-    const a = A();
-    if (a?.playing) { a.playing = false; setParams({...paramsAt(a.t, world.current.state.params), [k]: v}); }
-    else setParams(p => ({...p, [k]: v}));
+    setParams(p => ({...p, [k]: v}));
   }, []);
   const toggleFull = useCallback(() => {
     const el = root.current; if (!el) return;
@@ -157,41 +135,24 @@ const Lab = forwardRef(function Lab({scenario, mode, onMode, reduced, onReduced,
     const onKey = e => {
       if (e.target.closest?.('input,select,textarea') || e.metaKey || e.ctrlKey) return;
       const r = root.current?.getBoundingClientRect(); if (!full && r && (r.bottom < 80 || r.top > innerHeight - 80)) return;
-      const a = A(); const k = e.key.toLowerCase();
-      if (k === ' ') { e.preventDefault(); a?.playing ? pause() : play(); }
-      else if (k === 'f') toggleFull();
+      const k = e.key.toLowerCase();
+      if (k === 'f') toggleFull();
       else if (k === 'n') setSide(s => !s);
       else if (k === 't') setTools(s => !s);
       else if (k === 'h') setHud(s => !s);
       else if (k === 'r') world.current?.reignite();
-      else if (k === 'home') seek(0);
-      else if (k === 'arrowleft' && e.shiftKey) seek(0);
-      else if (k === 'arrowleft') seek((a?.t || 0) - 1);
-      else if (k === 'arrowright') seek((a?.t || 0) + 1);
       else if (k === '0') flyTo('hero'); else if (k === '1') flyTo('flame'); else if (k === '3') flyTo('side'); else if (k === '7') flyTo('top');
     };
     addEventListener('keydown', onKey); return () => removeEventListener('keydown', onKey);
-  }, [full, pause, play, seek, toggleFull]);
+  }, [full, toggleFull]);
 
-  /* follow animated panel while playing */
-  const activePanel = useMemo(() => ui.playing ? PANELS.find(p => p.keys.some(k => keyState(k, t) === 'anim' || keyState(k, t) === 'key'))?.id : null, [ui.playing, t]);
-  useEffect(() => { if (!activePanel) return; const el = props.current?.querySelector(`[data-panel="${activePanel}"]`); el?.scrollIntoView({behavior: 'smooth', block: 'nearest'}); }, [activePanel]);
-
-  const ks = k => ui.playing ? keyState(k, t) : (TRACKS[k]?.length > 1 ? 'keyed' : null);
   const d = ui.d;
-  const cap = captionAt(t);
-  const pO2 = live.oxygen * live.pressure / 100;
-  const energy = live.power * live.duration;
-
-  const progress = t / END;
   const regime = ui.out ? (d?.spray ? 'SUPPRESSED · EXTINGUISHED' : 'FLAME OUT · RE-FIRE IGNITER') : ui.igOK < .5 ? 'IGNITION FAILED' : d?.regime;
 
   return <div ref={root} className={`studio ${full ? 'is-full' : ''} ${side ? '' : 'no-side'} ${hud ? '' : 'no-hud'}`}>
     <header className="st-bar">
       <div className="st-name"><span className="pip"/><b>Microgravity Flame Lab</b><small>ILLUSTRATIVE · NOT A CFD SIMULATION</small></div>
       <div className="st-actions">
-        {(ui.playing || t > 0) && <div className="st-prog" aria-label="Simulation progress"><i style={{width: `${progress * 100}%`}}/><span>{Math.floor(t)}s / {END}s</span></div>}
-        <button className="sim-btn" onClick={() => ui.playing ? pause() : play(t <= 0 || t >= END)}>{ui.playing ? <><Pause size={15}/> Pause</> : <><Play size={15}/> {t > 0 && t < END ? 'Resume' : 'Simulate'}</>}</button>
         <button className="st-iconbtn" title="Reset" onClick={resetLab}><RotateCcw size={15}/></button>
         <button className="st-iconbtn" title={side ? 'Hide parameters (N)' : 'Show parameters (N)'} onClick={() => setSide(v => !v)}>{side ? <EyeOff size={15}/> : <Eye size={15}/>}</button>
         <button className="st-iconbtn" title="Full screen (F)" onClick={toggleFull}>{full ? <Minimize2 size={15}/> : <Maximize2 size={15}/>}</button>
@@ -204,22 +165,20 @@ const Lab = forwardRef(function Lab({scenario, mode, onMode, reduced, onReduced,
         {error && <div className="vp-empty">3D view unavailable on this device. The sourced evidence below remains accessible.</div>}
         <div className="vp-overlay">
           {regime && <span className="vp-regime" data-tone={ui.out ? 'none' : d?.tone}>{regime}</span>}
-          {cap && ui.playing && <div className="vp-cap" key={cap[0]}><small>{cap[2]}</small><p>{cap[3]}</p></div>}
         </div>
       </div>
 
       <aside className="st-side">
         <div className="pr-body" ref={props}>
-          <div className="pr-title">Parameters <small>{ui.playing ? 'SIMULATING' : 'DRAG OR CLICK TO EDIT'}</small></div>
-          {PANELS.map(p => <div key={p.id} data-panel={p.id} className={`pn ${activePanel === p.id ? 'active' : ''}`}>
+          <div className="pr-title">Parameters <small>DRAG OR CLICK TO EDIT</small></div>
+          {PANELS.map(p => <div key={p.id} data-panel={p.id} className="pn">
             <div className="pn-head"><em>{String(p.n).padStart(2, '0')}</em>{p.title}</div>
             <div className="pn-body">{p.keys.map(k => {
-              const s = ui.playing ? ks(k) : null;
-              if (k === 'material') return <Enum key={k} k={k} label="Material" value={live.material} ks={s} onChange={change} options={Object.entries(MATERIALS).map(([v, m]) => [v, `${m.short} · ${m.note}`])}/>;
-              if (k === 'direction') return <Enum key={k} k={k} label="Direction" value={live.direction} ks={s} onChange={change} options={DIRECTIONS}/>;
-              if (k === 'agent') return <Enum key={k} k={k} label="Agent" value={live.agent} ks={s} onChange={change} options={AGENTS}/>;
-              if (k === 'discharge') return <button key={k} className={`bt ${live.discharge ? 'on' : ''} ${s || ''}`} onClick={() => change('discharge', !live.discharge)} disabled={live.agent === 'None'}><i/>{live.discharge ? 'Discharging' : 'Discharge agent'}</button>;
-              return <NumField key={k} k={k} value={live[k]} onChange={change} ks={s}/>;
+              if (k === 'material') return <Enum key={k} k={k} label="Material" value={live.material} onChange={change} options={Object.entries(MATERIALS).map(([v, m]) => [v, `${m.short} · ${m.note}`])}/>;
+              if (k === 'direction') return <Enum key={k} k={k} label="Direction" value={live.direction} onChange={change} options={DIRECTIONS}/>;
+              if (k === 'agent') return <Enum key={k} k={k} label="Agent" value={live.agent} onChange={change} options={AGENTS}/>;
+              if (k === 'discharge') return <button key={k} className={`bt ${live.discharge ? 'on' : ''}`} onClick={() => change('discharge', !live.discharge)} disabled={live.agent === 'None'}><i/>{live.discharge ? 'Discharging' : 'Discharge agent'}</button>;
+              return <NumField key={k} k={k} value={live[k]} onChange={change}/>;
             })}
               {p.id === 'gravity' && <div className="pills">{GRAVITY.map(g => <button key={g.name} className={nearestG(live.g).name === g.name ? 'on' : ''} onClick={() => change('g', g.g)}>{g.name}</button>)}</div>}
               {p.id === 'ignition' && <button className="bt fire" onClick={() => world.current?.reignite()}><Zap size={12}/> Fire igniter</button>}

@@ -53,8 +53,7 @@ This proposed architecture is **not a RAG implementation**. Source traceability 
 | Condition matching | Implemented as deterministic, inspectable rules in `src/science.js`. |
 | Evidence explanations | Implemented as deterministic templates; clearly labelled rule-based. |
 | Source trace | Implemented for NASA PSI investigation pages, DOI, local CSV filename, and row number. |
-| Interactive Flame Lab | Implemented with React and Three.js as a qualitative visual model. |
-| Guided demonstration | Implemented as a five-step path through question, conditions, chamber, evidence, and comparison. |
+| Interactive Flame Lab | Implemented with React and Three.js as a qualitative visual model. Parameters are set and read live, not driven by a canned timeline. |
 | Wider research catalog | Collected locally, but not fully integrated into the React interface. |
 | Findings pipeline | Implemented separately in Python; produces findings and mission-scenario rankings. |
 | Machine-learning model | Planned; no trained model is currently executed by the app. |
@@ -86,20 +85,19 @@ The repository also contains a broader data catalog harvested on 2026-10-01:
 
 These counts describe the current repository snapshot, not the number of records currently searchable in the React app.
 
-## Demonstration workflow
+## Using the site
 
-The intended prototype story follows one research question from conditions to evidence:
+The interface is a plain, directly-clickable web app — there is no scripted walkthrough or narrated playback. A typical path:
 
-1. Start the guided demo.
-2. Ask which records are relevant to cotton–fiberglass SIBAL at approximately 22.1% oxygen and 20 cm/s airflow.
-3. Inspect the selected material, oxygen, flow, and other reported or unavailable conditions.
-4. Use the Flame Lab to understand the controlled variables. Its flame is illustrative.
-5. Rank the bundled records using transparent condition matching.
-6. Open Saffire II sample 2-5 and inspect its observation and limitations.
-7. Trace the record to the NASA PSI investigation, DOI, source CSV, and original row.
-8. Compare it with another record while keeping material, thickness, and missing conditions visible.
+1. Ask which records are relevant to cotton–fiberglass SIBAL at approximately 22.1% oxygen and 20 cm/s airflow.
+2. Inspect the selected material, oxygen, flow, and other reported or unavailable conditions.
+3. Use the Flame Lab to explore the controlled variables by dragging or typing values; the chamber reacts live. Its flame is illustrative.
+4. Rank the bundled records using transparent condition matching.
+5. Open Saffire II sample 2-5 and inspect its observation and limitations.
+6. Trace the record to the NASA PSI investigation, DOI, source CSV, and original row.
+7. Compare it with another record while keeping material, thickness, and missing conditions visible.
 
-The demonstration should establish traceability and responsible comparison. It should not claim that the prototype identifies the safest material or predicts a real fire.
+This should establish traceability and responsible comparison. It should not be read as claiming that the prototype identifies the safest material or predicts a real fire.
 
 ## Controlled parameter model
 
@@ -230,8 +228,8 @@ Every future analysis should separate:
 ```text
 .
 ├── src/
-│   ├── main.jsx              React evidence explorer and guided demo
-│   ├── Lab.jsx               Flame Lab UI, controls, playback, and accessibility
+│   ├── main.jsx              React evidence explorer (Explore / Compare)
+│   ├── Lab.jsx                Flame Lab UI, live parameter controls, and accessibility
 │   ├── labScene.js           Three.js room, chamber, flame, airflow, and rendering
 │   ├── labModel.js           Qualitative response model and 92-second timeline
 │   ├── data.js               Five curated source records and provenance
@@ -272,8 +270,7 @@ Vite normally serves the project at `http://localhost:5173/`.
 Useful views:
 
 - `/` — evidence explorer and embedded Flame Lab.
-- `/#studio` — full-window Flame Lab for manual recording.
-- `/#studio-play` — studio view that begins the guided lab sequence after loading.
+- `/#studio` — full-window Flame Lab.
 
 ### Test and build
 
@@ -286,27 +283,22 @@ npm run preview
 Current verification:
 
 - `npm test`: **5/5 tests passing**.
-- `npm run build`: **currently blocked because the root `index.html` entry is absent from this working tree**. The React source remains present; restore the Vite entry before treating the checkout as build-ready.
-
-The expected Vite entry contains a `#root` element and loads `/src/main.jsx` as a module. This README does not restore deleted working-tree files because those changes may be intentional.
+- `npm run build`: **passing** — the Vite entry `index.html` loads `/src/main.jsx` into a `#root` element.
 
 ## Flame Lab controls
 
-The Flame Lab is an interactive explanatory model, not a scientific simulation.
+The Flame Lab is an interactive explanatory model, not a scientific simulation. There is no auto-playing timeline — every parameter is set directly and the chamber responds live.
 
 - Drag a numeric field horizontally to adjust it.
 - Click a numeric field to type a value.
-- `Space` — play or pause.
 - `F` — toggle full screen.
 - `N` — show or hide the parameter panel.
 - `T` — show or hide viewport tools.
 - `H` — show or hide the status overlay.
 - `R` — re-fire the igniter.
-- `Home` or `Shift + Left` — return to the start.
-- `Left` / `Right` — move one second.
 - `0`, `1`, `3`, `7` — switch to hero, flame, side, or top camera.
 
-The 92-second timeline demonstrates how the visualization responds qualitatively to flow, oxygen, pressure, geometry, gravity, direction, temperature, ignition, suppression, and material. The response curves in [`src/labModel.js`](src/labModel.js) are hand-designed explanatory relationships and are not fitted to NASA measurements.
+The response model in [`src/labModel.js`](src/labModel.js) (`derive()`) computes the flame's qualitative reaction to whatever parameters are currently set. It is a hand-designed explanatory relationship, not fitted to NASA measurements.
 
 ## Data refresh and derived artifacts
 
