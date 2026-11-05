@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {createRoot} from 'react-dom/client';
-import {ArrowRight, ArrowUpRight, BookOpen, Check, ChevronDown, Compass, ExternalLink, Flame, FlaskConical, Info, Layers, Search, ShieldCheck, Sparkles, X} from 'lucide-react';
+import {ArrowRight, ArrowUpRight, BookOpen, Check, ChevronDown, Compass, ExternalLink, FlaskConical, Info, Layers, Search, ShieldCheck, Sparkles, X} from 'lucide-react';
 import Lab from './Lab.jsx';
 import {experiments, investigations, display} from './data.js';
 import {initialScenario, rank, explain} from './science.js';
@@ -10,13 +10,39 @@ import './app.css';
 const value = f => f?.status === 'ambiguous' ? `${display(f)} · verify` : display(f);
 const stat = (n,label) => <div className="mini-stat"><strong>{n}</strong><span>{label}</span></div>;
 
+/* a spherical microgravity flame — real micro-g flames burn as blue spheres, not teardrops */
+const MicroFlame = ({size=18}) => <svg width={size} height={size} viewBox="0 0 32 32" className="micro-flame" aria-hidden="true">
+  <circle cx="16" cy="16" r="10.5" fill="url(#mfCore)"/>
+  <circle cx="16" cy="16" r="10.5" fill="none" stroke="url(#mfRing)" strokeWidth="1.3"/>
+  <circle cx="12" cy="12.5" r="2.2" fill="#eef5ff" opacity=".9"/>
+  <defs>
+    <radialGradient id="mfCore" cx="38%" cy="34%" r="72%">
+      <stop offset="0%" stopColor="#eef5ff"/>
+      <stop offset="32%" stopColor="#8fb0ff"/>
+      <stop offset="68%" stopColor="#2b5bdb"/>
+      <stop offset="100%" stopColor="#0c1c4d"/>
+    </radialGradient>
+    <linearGradient id="mfRing" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stopColor="#bcd0ff"/>
+      <stop offset="100%" stopColor="#245bff"/>
+    </linearGradient>
+  </defs>
+</svg>;
+
+const TRACE_STEPS = [
+  {k:'01 · ASK',t:'You ask',d:'"cotton-fiberglass at 22% oxygen, 20 cm/s opposed"'},
+  {k:'02 · READ',t:'Flame reads it',d:'material · oxygen · flow — recognized, not assumed'},
+  {k:'03 · MATCH',t:'Closest record found',d:'BASS II · sample 2-5 · Cotton–fiberglass (SIBAL)'},
+  {k:'04 · TRACE',t:'Traced to its source',d:'NASA PSI · Saffire II · source row 14'},
+];
+
 function Landing({onEnter}){
   const jump=v=>{onEnter();setTimeout(()=>document.dispatchEvent(new CustomEvent('flamme-nav',{detail:v})),0)};
   const scrollTo=id=>e=>{e.preventDefault();document.getElementById(id)?.scrollIntoView({behavior:'smooth'})};
   return <div className="landing">
     {/* SECTION 1 — nav */}
     <nav className="l-nav">
-      <span className="l-wordmark"><span className="brand-flame"><Flame/></span>Flamme</span>
+      <span className="l-wordmark"><span className="brand-flame"><MicroFlame/></span>Flamme</span>
       <div className="l-navlinks">
         <a href="#cta" onClick={scrollTo('cta')}>Team</a>
       </div>
@@ -47,6 +73,22 @@ function Landing({onEnter}){
     <section className="l-logos">
       <span>Evidence sourced from</span>
       <div className="l-logos-row"><b>NASA PSI</b><b>NTRS</b><b>Saffire II</b><b>BASS II</b><b>FLEX</b></div>
+    </section>
+
+    {/* SECTION 3.5 — animated demo: how a question traces back to its NASA source */}
+    <section className="l-trace">
+      <div className="l-trace-head">
+        <small>How it works</small>
+        <h2>From a question to its NASA source</h2>
+      </div>
+      <div className="l-trace-flow">
+        {TRACE_STEPS.map((n,i)=><React.Fragment key={n.k}>
+          <div className="l-trace-node" style={{animationDelay:`${i*1.8}s`}}>
+            <small>{n.k}</small><b>{n.t}</b><span>{n.d}</span>
+          </div>
+          {i<TRACE_STEPS.length-1&&<div className="l-trace-line"><i style={{animationDelay:`${i*1.8}s`}}/></div>}
+        </React.Fragment>)}
+      </div>
     </section>
 
     {/* SECTION 4 — final CTA + footer */}
