@@ -34,7 +34,7 @@ a{color:var(--cyan);text-decoration:none}svg{vertical-align:middle;flex-shrink:0
 .app-shell{position:relative;z-index:1;min-height:100vh;display:flex}
 .side-nav{--nav-accent:#4f86ff;position:fixed;inset:0 auto 0 0;width:220px;background:rgba(14,17,25,.68);-webkit-backdrop-filter:blur(26px) saturate(180%);backdrop-filter:blur(26px) saturate(180%);border-right:1px solid var(--line);padding:28px 0;display:flex;flex-direction:column;z-index:10;transition:width .22s cubic-bezier(.2,.8,.2,1)}
 .side-head{display:flex;align-items:center;gap:6px;padding:0 10px 0 16px}
-.identity{display:flex;align-items:center;gap:12px;text-align:left;font:600 14px/1 var(--disp);letter-spacing:.01em;white-space:nowrap;flex:1;min-width:0}
+.identity{display:flex;align-items:center;gap:12px;text-align:left;font:700 19px/1 var(--disp);letter-spacing:.01em;white-space:nowrap;flex:1;min-width:0}
 .identity-wordmark{font-weight:700}
 .identity small{display:block;font:500 8px var(--mono);letter-spacing:.2em;color:var(--dim);margin-top:6px;font-weight:400}
 .brand-flame{height:40px;width:40px;flex:none;display:grid;place-items:center}
@@ -285,7 +285,7 @@ a{color:var(--cyan);text-decoration:none}svg{vertical-align:middle;flex-shrink:0
   .side-nav{position:sticky;top:0;width:100%;height:56px;flex-direction:row;align-items:center;padding:8px 12px;border-right:0;border-bottom:1px solid var(--line)}
   .side-head{padding:0;flex:none}
   .nav-collapse-btn{display:none}
-  .identity{font-size:11px}.identity small,.nav-overline{display:none}.brand-flame{width:32px;height:32px}.brand-flame svg{width:32px;height:32px}
+  .identity{font-size:14px}.identity small,.nav-overline{display:none}.brand-flame{width:32px;height:32px}.brand-flame svg{width:32px;height:32px}
   .nav-link{width:auto;padding:8px;margin:0 0 0 6px;gap:0}.nav-link-text{display:none}.nav-link em{font-size:10px;margin-left:3px}
   .workspace{margin-left:0;width:100%}.app-shell{display:block}
   .workspace-inner{padding:18px 16px}
@@ -307,7 +307,7 @@ mark.trace{background:none;color:inherit;transition:background .4s,color .4s;pad
 .landing h1,.landing h2,.landing h3{font-family:var(--disp)}
 /* 1 — nav (no CTA button here — the single wide Enter Flamme button lives in the hero) */
 .l-nav{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:20px;padding:20px 40px;background:linear-gradient(180deg,rgba(13,16,22,.85),transparent)}
-.l-wordmark{display:flex;align-items:center;gap:10px;font:700 15px/1 var(--disp);letter-spacing:.01em;color:#fff}
+.l-wordmark{display:flex;align-items:center;gap:10px;font:700 20px/1 var(--disp);letter-spacing:.01em;color:#fff}
 .l-wordmark .brand-flame{width:34px;height:34px}
 .l-wordmark .brand-flame svg{width:34px;height:34px}
 
