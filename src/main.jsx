@@ -39,7 +39,7 @@ function Landing({onEnter}){
       <div className="l-hero-overlay"/>
       <div className="l-hero-inner">
         <div className="l-hero-text">
-          <h1>Fire evidence,<br/>without the guesswork.</h1>
+          <h1><span className="l-h1-line">Fire evidence,</span><br/><span className="l-h1-line">without the guesswork.</span></h1>
           <p>An interactive microgravity flame lab and a source-linked evidence explorer for NASA's combustion data.</p>
           <div className="l-cta-row">
             <button className="l-btn-primary l-btn-wide" onClick={onEnter}>Enter Flamme <ArrowRight size={16}/></button>

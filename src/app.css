@@ -315,8 +315,9 @@ mark.trace{background:none;color:inherit;transition:background .4s,color .4s;pad
 @keyframes heroDrift{0%{background-position:30% 10%,0 0,0 0}100%{background-position:55% 30%,0 0,0 0}}
 .l-hero-inner{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:70px;max-width:1320px;width:100%;margin:0 auto;animation:heroRise .9s cubic-bezier(.2,.8,.2,1) both}
 @keyframes heroRise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
-.l-hero-text{flex:1;min-width:0;max-width:540px}
-.l-hero-text h1{font:600 clamp(36px,4.6vw,56px)/1.12 var(--disp);letter-spacing:-.02em;color:#fff;margin:0 0 16px}
+.l-hero-text{flex:1;min-width:0;max-width:620px}
+.l-hero-text h1{font:600 clamp(32px,4.4vw,54px)/1.12 var(--disp);letter-spacing:-.02em;color:#fff;margin:0 0 16px}
+.l-h1-line{white-space:nowrap}
 .l-hero-text>p{font:400 16px/1.65 var(--sans);color:var(--d-text2);max-width:460px;margin:0 0 32px}
 .l-cta-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
 .l-btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--d-blue);color:#fff;font:600 13.5px var(--disp);padding:13px 22px;border-radius:0;box-shadow:0 10px 26px -8px rgba(36,91,255,.65);transition:filter .2s,transform .15s}
