@@ -10,7 +10,8 @@
   font-family:var(--sans);color:var(--ink);background:var(--bg);color-scheme:dark;-webkit-font-smoothing:antialiased;font-synthesis:none
 }
 *{box-sizing:border-box}html{scroll-behavior:smooth}
-body{margin:0;background:radial-gradient(120% 80% at 15% -10%,#0d1428 0%,#080c18 45%,#030408 100%) fixed;min-height:100vh}
+body{margin:0;background:radial-gradient(120% 80% at 15% -10%,#0d1428 0%,#080c18 45%,#030408 100%) fixed;background-size:160% 160%;animation:bgDrift 24s ease-in-out infinite alternate;min-height:100vh}
+@keyframes bgDrift{0%{background-position:0% 0%}100%{background-position:35% 20%}}
 button,input,select{font:inherit;color:inherit}button{cursor:pointer;background:none;border:0;padding:0}
 button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,[role=slider]:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
 a{color:var(--cyan);text-decoration:none}svg{vertical-align:middle;flex-shrink:0}h1,h2,h3,p{margin-top:0}small{font-size:11px}
@@ -288,9 +289,10 @@ mark.trace{background:none;color:inherit;transition:background .4s,color .4s;pad
 .l-hero{position:relative;min-height:92vh;display:flex;align-items:center;justify-content:center;padding:40px 24px 60px;margin-top:-68px}
 .l-hero-bg{position:absolute;inset:0;z-index:0}
 .l-hero-bg img{width:100%;height:100%;object-fit:cover;filter:saturate(1.05) contrast(1.05) brightness(.9)}
-.l-hero-overlay{position:absolute;inset:0;background:
+.l-hero-overlay{position:absolute;inset:0;background-size:150% 150%;animation:heroDrift 20s ease-in-out infinite alternate;background:
   radial-gradient(60% 50% at 50% 18%,rgba(22,77,255,.22),transparent 65%),
   linear-gradient(180deg,rgba(5,6,8,.55) 0%,rgba(5,6,8,.72) 38%,rgba(5,6,8,.93) 78%,#050608 100%)}
+@keyframes heroDrift{0%{background-position:30% 10%,0 0}100%{background-position:60% 35%,0 0}}
 .l-hero-content{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;max-width:820px;margin:68px auto 0}
 .l-eyebrow{display:inline-flex;align-items:center;gap:8px;font:600 12px var(--disp);letter-spacing:.1em;color:#bcd0ff;background:rgba(36,91,255,.14);border:1px solid rgba(36,91,255,.35);padding:8px 16px;border-radius:999px}
 .l-hero-content h1{font:600 clamp(36px,5.6vw,58px)/1.12 var(--disp);letter-spacing:-.02em;color:#fff;margin:24px 0 16px}
@@ -351,7 +353,7 @@ mark.trace{background:none;color:inherit;transition:background .4s,color .4s;pad
 
 /* 5 — workspace + metrics */
 .l-workspace{position:relative}
-.l-workspace::before{content:'';position:absolute;inset:-10% -20% auto -20%;height:120%;background:radial-gradient(55% 55% at 50% 20%,rgba(22,77,255,.16),transparent 70%);pointer-events:none;z-index:0}
+.l-workspace::before{content:'';position:absolute;inset:-10% -20% auto -20%;height:120%;background:radial-gradient(55% 55% at 50% 20%,rgba(22,77,255,.16),transparent 70%);pointer-events:none;z-index:0;animation:driftA 18s ease-in-out infinite alternate;will-change:transform}
 .l-wide-shot{position:relative;z-index:1;max-width:1040px;margin:0 auto;border-radius:16px;overflow:hidden;border:1px solid var(--d-border);box-shadow:0 0 0 1px rgba(36,91,255,.1),0 50px 100px -35px rgba(22,77,255,.45)}
 .l-wide-shot img{display:block;width:100%;height:clamp(220px,34vw,420px);object-fit:cover}
 .l-wide-shot figcaption{position:absolute;left:16px;bottom:14px;font:600 10px var(--mono);letter-spacing:.08em;color:#cfdaf7;background:rgba(6,9,18,.65);border:1px solid rgba(36,91,255,.3);padding:7px 11px;border-radius:7px;backdrop-filter:blur(6px)}
@@ -370,7 +372,7 @@ mark.trace{background:none;color:inherit;transition:background .4s,color .4s;pad
 
 /* 7 — real data quotes (testimonial slot) */
 .l-quotes{position:relative}
-.l-quotes::before{content:'';position:absolute;inset:-15% -25% auto -25%;height:130%;background:radial-gradient(55% 60% at 50% 25%,rgba(22,77,255,.18),transparent 70%);pointer-events:none;z-index:0}
+.l-quotes::before{content:'';position:absolute;inset:-15% -25% auto -25%;height:130%;background:radial-gradient(55% 60% at 50% 25%,rgba(22,77,255,.18),transparent 70%);pointer-events:none;z-index:0;animation:driftB 21s ease-in-out infinite alternate;will-change:transform}
 .l-quote-card{position:relative;z-index:1;max-width:760px;margin:0 auto;background:rgba(10,14,26,.6);backdrop-filter:blur(16px);border:1px solid var(--d-border);border-radius:16px;padding:40px 44px}
 .l-quote-card p{font:400 18px/1.7 var(--disp);color:#e8ecf6;margin:0 0 24px;text-align:left}
 .l-quote-who{display:flex;align-items:center;gap:12px;text-align:left}
@@ -398,7 +400,9 @@ mark.trace{background:none;color:inherit;transition:background .4s,color .4s;pad
 
 /* 9 — final CTA + oversized wordmark footer */
 .l-final{position:relative;margin-top:110px;padding-top:90px;overflow:hidden;background:linear-gradient(180deg,transparent,var(--d-navy) 40%,#030408 100%)}
-.l-final-glow{position:absolute;inset:-20% -10% auto -10%;height:70%;background:radial-gradient(55% 60% at 50% 10%,rgba(22,77,255,.3),transparent 70%);pointer-events:none;z-index:0}
+.l-final-glow{position:absolute;inset:-20% -10% auto -10%;height:70%;background:radial-gradient(55% 60% at 50% 10%,rgba(22,77,255,.3),transparent 70%);pointer-events:none;z-index:0;animation:driftA 19s ease-in-out infinite alternate;will-change:transform}
+@keyframes driftA{0%{transform:translate(-3%,-2%) scale(1)}100%{transform:translate(4%,4%) scale(1.12)}}
+@keyframes driftB{0%{transform:translate(3%,-3%) scale(1.05);opacity:.9}100%{transform:translate(-4%,3%) scale(1);opacity:.65}}
 .l-final-inner{position:relative;z-index:1;max-width:1240px;margin:0 auto;padding:0 24px 60px;display:grid;grid-template-columns:1.2fr 1fr;gap:40px;text-align:left}
 .l-final-left h2{font:600 clamp(26px,3.2vw,36px)/1.2 var(--disp);color:#fff;letter-spacing:-.015em;margin:0 0 14px}
 .l-final-left p{font:400 14px/1.7 var(--sans);color:var(--d-text2);max-width:440px;margin:0 0 26px}
@@ -427,4 +431,4 @@ mark.trace{background:none;color:inherit;transition:background .4s,color .4s;pad
   .l-final-links{grid-template-columns:repeat(3,1fr);gap:14px}
   .l-quote-card{padding:28px 22px}
 }
-@media(prefers-reduced-motion:reduce){.l-preview-flame{animation:none}}
+@media(prefers-reduced-motion:reduce){.l-preview-flame{animation:none}.l-hero-overlay,body{animation:none}.l-workspace::before,.l-quotes::before,.l-final-glow{animation:none}}
