@@ -10,14 +10,7 @@ import './app.css';
 const value = f => f?.status === 'ambiguous' ? `${display(f)} · verify` : display(f);
 const stat = (n,label) => <div className="mini-stat"><strong>{n}</strong><span>{label}</span></div>;
 
-const sourceQuotes = [experiments[0], experiments[4]].map(e=>({
-  text:e.source.notes,
-  who:investigations.find(i=>i.id===e.investigationId)?.name,
-  file:`${e.source.file} · row ${e.source.row}`
-}));
-
 function Landing({onEnter}){
-  const [qi,setQi]=useState(0);
   const jump=v=>{onEnter();setTimeout(()=>document.dispatchEvent(new CustomEvent('flamme-nav',{detail:v})),0)};
   const scrollTo=id=>e=>{e.preventDefault();document.getElementById(id)?.scrollIntoView({behavior:'smooth'})};
   return <div className="landing">
@@ -26,8 +19,6 @@ function Landing({onEnter}){
       <span className="l-wordmark"><span className="brand-flame"><Flame/></span>Flamme</span>
       <div className="l-navlinks">
         <a href="#features" onClick={scrollTo('features')}>Features</a>
-        <a href="#how" onClick={scrollTo('how')}>How It Works</a>
-        <a href="#access" onClick={scrollTo('access')}>Access</a>
         <a href="#cta" onClick={scrollTo('cta')}>Team</a>
       </div>
       <button className="l-navcta" onClick={onEnter}>Enter Flamme <ArrowRight size={14}/></button>
@@ -105,72 +96,7 @@ function Landing({onEnter}){
       </div>
     </section>
 
-    {/* SECTION 5 — workspace showcase + metrics */}
-    <section className="l-section l-workspace">
-      <small className="l-section-eyebrow">THE WORKSPACE</small>
-      <h2>One workspace that brings the evidence together</h2>
-      <p className="l-section-sub">No separate tools, no exporting — ask, inspect, and trace a record back to its source without leaving the page.</p>
-      <figure className="l-wide-shot">
-        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Jsc2023e046631.jpg?width=1800" alt="A row of bright combustion flames photographed against a black background at NASA Johnson Space Center"/>
-        <figcaption>NASA · Johnson Space Center combustion test imagery</figcaption>
-      </figure>
-      <div className="l-metrics">
-        <div><strong>{investigations.length}</strong><span>NASA investigations</span></div>
-        <div><strong>{experiments.length}</strong><span>curated experiment rows</span></div>
-        <div><strong>10</strong><span>controlled parameters</span></div>
-        <div><strong>0</strong><span>AI model calls</span></div>
-      </div>
-    </section>
-
-    {/* SECTION 6 — how it works */}
-    <section className="l-section" id="how">
-      <small className="l-section-eyebrow">GET STARTED</small>
-      <h2>Three steps from question to evidence</h2>
-      <div className="l-steps">
-        <div className="l-step"><em>1</em><h3>Ask Flame</h3><p>Type a scenario in plain language; a deterministic keyword parser reads back the conditions it recognized.</p></div>
-        <div className="l-step"><em>2</em><h3>Follow the evidence</h3><p>Review matched NASA records, ranked by how closely their conditions compare to yours.</p></div>
-        <div className="l-step"><em>3</em><h3>Explore Flame Lab</h3><p>Drag or type the controlled variables yourself and watch the illustrative chamber respond.</p></div>
-      </div>
-    </section>
-
-    {/* SECTION 7 — real excerpts from the dataset, in place of testimonials */}
-    <section className="l-section l-quotes">
-      <small className="l-section-eyebrow">FROM THE DATA</small>
-      <h2>Real notes from the source files</h2>
-      <p className="l-section-sub">No invented testimonials — these are the actual caveats attached to the rows Flamme cites.</p>
-      <div className="l-quote-card">
-        <p>&ldquo;{sourceQuotes[qi].text}&rdquo;</p>
-        <div className="l-quote-who"><span className="l-quote-avatar"><Flame size={14}/></span><div><b>{sourceQuotes[qi].who}</b><small>{sourceQuotes[qi].file}</small></div></div>
-      </div>
-      <div className="l-quote-dots">{sourceQuotes.map((_,idx)=><button key={idx} className={idx===qi?'on':''} aria-label={`Show note ${idx+1}`} onClick={()=>setQi(idx)}/>)}</div>
-    </section>
-
-    {/* SECTION 8 — honesty guarantees, in place of pricing */}
-    <section className="l-section" id="access">
-      <small className="l-section-eyebrow">WHAT YOU GET</small>
-      <h2>No black boxes, by design</h2>
-      <p className="l-section-sub">Flamme is a free research prototype, not a product with tiers — these are the three guarantees it holds itself to instead.</p>
-      <div className="l-promise-grid">
-        <div className="l-promise-card">
-          <h3>Illustrative</h3><div className="l-promise-tag">Flame Lab</div>
-          <ul>{['Not a CFD simulation','Not a validated flame prediction','Reacts to real parameter values'].map(t=><li key={t}><Check size={13}/>{t}</li>)}</ul>
-          <button className="l-btn-secondary-full" onClick={()=>jump('Lab')}>Open the Lab</button>
-        </div>
-        <div className="l-promise-card featured">
-          <span className="l-badge">Core promise</span>
-          <h3>Source-linked</h3><div className="l-promise-tag">Every evidence card</div>
-          <ul>{['Traces to a NASA investigation ID','Shows file, row, and raw notes','No NASA endorsement implied'].map(t=><li key={t}><Check size={13}/>{t}</li>)}</ul>
-          <button className="l-btn-primary-full" onClick={()=>jump('Evidence')}>Follow the evidence</button>
-        </div>
-        <div className="l-promise-card">
-          <h3>Deterministic</h3><div className="l-promise-tag">Ask Flame</div>
-          <ul>{['Regex/keyword parsing only','No AI model is ever called','Every match is editable, nothing hidden'].map(t=><li key={t}><Check size={13}/>{t}</li>)}</ul>
-          <button className="l-btn-secondary-full" onClick={()=>jump('Ask')}>Ask a question</button>
-        </div>
-      </div>
-    </section>
-
-    {/* SECTION 9 — final CTA + footer with oversized wordmark */}
+    {/* SECTION 5 — final CTA + footer */}
     <section className="l-final" id="cta">
       <div className="l-final-glow"/>
       <div className="l-final-inner">
@@ -185,10 +111,8 @@ function Landing({onEnter}){
         <div className="l-final-links">
           <div><b>Product</b><a onClick={()=>jump('Lab')}>Lab</a><a onClick={()=>jump('Ask')}>Ask</a><a onClick={()=>jump('Evidence')}>Evidence</a><a onClick={()=>jump('Compare')}>Compare</a></div>
           <div><b>Sources</b><a href="https://psi.nasa.gov" target="_blank" rel="noreferrer">NASA PSI</a><a href="https://github.com/farhanlabibahan/flamme" target="_blank" rel="noreferrer">GitHub</a></div>
-          <div><b>Team</b><span>Team Flamme</span><span>NASA Space Apps 2026</span></div>
         </div>
       </div>
-      <div className="l-wordmark-huge" aria-hidden="true">FLAMME</div>
       <footer className="landing-foot">Flame photography: NASA (public domain) · No NASA endorsement · No safety certification · No validated flame prediction</footer>
     </section>
   </div>;
@@ -253,11 +177,8 @@ function App(){
     </aside>
     <main className="workspace">
       <header className="topbar"><span>FLAMME <b>/</b> {view==='Lab'?'Flame Lab':view==='Ask'?'Ask Flame':view==='Compare'?'Comparison':'Evidence explorer'}</span><div><span className="offline-badge">● LOCAL SOURCE EXCERPTS</span></div></header>
-      <div className="workspace-inner">
-        {view==='Lab'&&<>
-          <section className="evidence-heading lab-heading"><div><h2>Flame Lab</h2></div><span>10 controlled parameters · illustrative chamber</span></section>
-          <section className="studio-wrap" id="lab"><Lab ref={labRef} scenario={scenario} mode={mode} onMode={setMode} reduced={reduced} onReduced={setReduced}/></section>
-        </>}
+      <div className={`workspace-inner ${view==='Lab'?'lab-inner':''}`}>
+        {view==='Lab'&&<section className="studio-wrap" id="lab"><Lab ref={labRef} scenario={scenario} mode={mode} onMode={setMode} reduced={reduced} onReduced={setReduced}/></section>}
         {view==='Ask'&&<section className="surface ask-panel ask-page" id="ask"><div className="section-top"><h2><Sparkles size={18}/> Ask Flame</h2><p>Describe a scenario in plain language. Flame parses it into the controlled conditions below — nothing is ever silently assumed.</p></div>
             <div className="ask-row">
               <input value={prompt} onChange={e=>setPrompt(e.target.value)} onKeyDown={e=>{if(e.key==='Enter')askFlame()}} placeholder="e.g. cotton-fiberglass at 22% oxygen with 20 cm/s opposed airflow" aria-label="Ask Flame a question"/>
@@ -278,7 +199,7 @@ function App(){
             </div>}
           </section>}
         {view==='Evidence'?<>
-          <section className="mission" id="mission"><div className="eyebrow">EVIDENCE EXPLORER</div><h1>Fire evidence, <span>without the guesswork.</span></h1><p>Find relevant microgravity experiments, compare conditions, and trace each observation to its source.</p><div className="mission-meta">{stat(investigations.length,'investigations')}{stat(experiments.length,'curated experiment rows')}{stat('0','measured videos bundled')}</div></section>
+          <section className="mission" id="mission"><h1>Fire evidence, <span>without the guesswork.</span></h1><p>Find relevant microgravity experiments, compare conditions, and trace each observation to its source.</p><div className="mission-meta">{stat(investigations.length,'investigations')}{stat(experiments.length,'curated experiment rows')}{stat('0','measured videos bundled')}</div></section>
           <section id="evidence" className="evidence-block"><div className="evidence-heading"><div><h2>Follow the evidence</h2></div><span>{results.length} records · transparent condition matching</span></div><div className="evidence-grid"><section className="surface scenario-panel" id="scenario"><div className="section-top"><h2>Set the question</h2><p>Only controls that affect evidence ranking appear here.</p></div>
               {select('Material','material',[['Cotton–fiberglass (SIBAL)','Cotton–fiberglass (SIBAL)'],['Silicone','Silicone'],['PMMA','PMMA'],['','Any material']],'Source-reported sample material.')}
               <div className="field-pair">{select('Oxygen · vol %','oxygen',[['22.1','22.1'],['21.5','21.5'],['22.2','22.2'],['','Any']],'Matched within ±0.5 percentage points; approximate source values stay approximate.')}{select('Flow · cm/s','airflow',[['20','20'],['10','10'],['5','5'],['','Any']],'Matched within ±2 cm/s. BASS instrument readings are not airflow speeds.')}</div>
