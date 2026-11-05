@@ -11,27 +11,20 @@
 }
 *{box-sizing:border-box}html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);min-height:100vh}
-/* wallpaper: a slow-drifting wash of 4 blurred colour blobs behind the glass panels (same technique as ahansPortal's body::before wash, retuned to the blue/violet/cyan palette) */
-body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.5;filter:blur(70px);
+/* wallpaper: one calm drifting blue glow over near-black, not a loud multi-colour wash — subtle like ahansPortal's dark mode */
+body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.4;filter:blur(90px);
   background:
-    radial-gradient(42vw 46vh at var(--g1x) var(--g1y),var(--blue) 0%,transparent 70%),
-    radial-gradient(34vw 40vh at var(--g2x) var(--g2y),var(--violet),transparent 70%),
-    radial-gradient(30vw 34vh at var(--g3x) var(--g3y),var(--cyan),transparent 70%),
-    radial-gradient(26vw 30vh at var(--g4x) var(--g4y),var(--amber),transparent 70%);
-  animation:flow 28s ease-in-out infinite alternate}
-@property --g1x{syntax:'<percentage>';inherits:false;initial-value:85%}
-@property --g1y{syntax:'<percentage>';inherits:false;initial-value:10%}
-@property --g2x{syntax:'<percentage>';inherits:false;initial-value:15%}
-@property --g2y{syntax:'<percentage>';inherits:false;initial-value:85%}
-@property --g3x{syntax:'<percentage>';inherits:false;initial-value:70%}
-@property --g3y{syntax:'<percentage>';inherits:false;initial-value:75%}
-@property --g4x{syntax:'<percentage>';inherits:false;initial-value:30%}
-@property --g4y{syntax:'<percentage>';inherits:false;initial-value:15%}
+    radial-gradient(48vw 52vh at var(--g1x) var(--g1y),var(--blue) 0%,transparent 72%),
+    radial-gradient(32vw 36vh at var(--g2x) var(--g2y),var(--cyan),transparent 74%);
+  animation:flow 34s ease-in-out infinite alternate}
+@property --g1x{syntax:'<percentage>';inherits:false;initial-value:78%}
+@property --g1y{syntax:'<percentage>';inherits:false;initial-value:14%}
+@property --g2x{syntax:'<percentage>';inherits:false;initial-value:20%}
+@property --g2y{syntax:'<percentage>';inherits:false;initial-value:70%}
 @keyframes flow{
-  0%{--g1x:85%;--g1y:10%;--g2x:15%;--g2y:85%;--g3x:70%;--g3y:75%;--g4x:30%;--g4y:15%}
-  33%{--g1x:60%;--g1y:40%;--g2x:40%;--g2y:60%;--g3x:90%;--g3y:20%;--g4x:10%;--g4y:70%}
-  66%{--g1x:30%;--g1y:70%;--g2x:75%;--g2y:25%;--g3x:20%;--g3y:85%;--g4x:80%;--g4y:40%}
-  100%{--g1x:55%;--g1y:85%;--g2x:85%;--g2y:15%;--g3x:45%;--g3y:10%;--g4x:60%;--g4y:80%}
+  0%{--g1x:78%;--g1y:14%;--g2x:20%;--g2y:70%}
+  50%{--g1x:55%;--g1y:40%;--g2x:40%;--g2y:30%}
+  100%{--g1x:70%;--g1y:60%;--g2x:15%;--g2y:50%}
 }
 button,input,select{font:inherit;color:inherit}button{cursor:pointer;background:none;border:0;padding:0}
 button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,[role=slider]:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
