@@ -10,8 +10,29 @@
   font-family:var(--sans);color:var(--ink);background:var(--bg);color-scheme:dark;-webkit-font-smoothing:antialiased;font-synthesis:none
 }
 *{box-sizing:border-box}html{scroll-behavior:smooth}
-body{margin:0;background:radial-gradient(120% 80% at 15% -10%,#202a4a 0%,#181e2e 45%,#10131b 100%) fixed;background-size:160% 160%;animation:bgDrift 24s ease-in-out infinite alternate;min-height:100vh}
-@keyframes bgDrift{0%{background-position:0% 0%}100%{background-position:35% 20%}}
+body{margin:0;background:var(--bg);min-height:100vh}
+/* wallpaper: a slow-drifting wash of 4 blurred colour blobs behind the glass panels (same technique as ahansPortal's body::before wash, retuned to the blue/violet/cyan palette) */
+body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.5;filter:blur(70px);
+  background:
+    radial-gradient(42vw 46vh at var(--g1x) var(--g1y),var(--blue) 0%,transparent 70%),
+    radial-gradient(34vw 40vh at var(--g2x) var(--g2y),var(--violet),transparent 70%),
+    radial-gradient(30vw 34vh at var(--g3x) var(--g3y),var(--cyan),transparent 70%),
+    radial-gradient(26vw 30vh at var(--g4x) var(--g4y),var(--amber),transparent 70%);
+  animation:flow 28s ease-in-out infinite alternate}
+@property --g1x{syntax:'<percentage>';inherits:false;initial-value:85%}
+@property --g1y{syntax:'<percentage>';inherits:false;initial-value:10%}
+@property --g2x{syntax:'<percentage>';inherits:false;initial-value:15%}
+@property --g2y{syntax:'<percentage>';inherits:false;initial-value:85%}
+@property --g3x{syntax:'<percentage>';inherits:false;initial-value:70%}
+@property --g3y{syntax:'<percentage>';inherits:false;initial-value:75%}
+@property --g4x{syntax:'<percentage>';inherits:false;initial-value:30%}
+@property --g4y{syntax:'<percentage>';inherits:false;initial-value:15%}
+@keyframes flow{
+  0%{--g1x:85%;--g1y:10%;--g2x:15%;--g2y:85%;--g3x:70%;--g3y:75%;--g4x:30%;--g4y:15%}
+  33%{--g1x:60%;--g1y:40%;--g2x:40%;--g2y:60%;--g3x:90%;--g3y:20%;--g4x:10%;--g4y:70%}
+  66%{--g1x:30%;--g1y:70%;--g2x:75%;--g2y:25%;--g3x:20%;--g3y:85%;--g4x:80%;--g4y:40%}
+  100%{--g1x:55%;--g1y:85%;--g2x:85%;--g2y:15%;--g3x:45%;--g3y:10%;--g4x:60%;--g4y:80%}
+}
 button,input,select{font:inherit;color:inherit}button{cursor:pointer;background:none;border:0;padding:0}
 button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,[role=slider]:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
 a{color:var(--cyan);text-decoration:none}svg{vertical-align:middle;flex-shrink:0}h1,h2,h3,p{margin-top:0}small{font-size:11px}
@@ -276,7 +297,7 @@ a{color:var(--cyan);text-decoration:none}svg{vertical-align:middle;flex-shrink:0
   .evidence-split,.compare-cards{grid-template-columns:1fr}.mission h1{font-size:32px}
   .evidence-heading>span{display:none}.page-foot{flex-direction:column}
 }
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.vp-cap{animation:none}.side-nav .nav-link,.side-nav .nav-link>svg,.side-nav .side-foot button{transition:none}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.vp-cap{animation:none}.side-nav .nav-link,.side-nav .nav-link>svg,.side-nav .side-foot button{transition:none}body::before{animation:none}}
 #mission,#scenario,#comparison{scroll-margin-top:110px}
 
 .evidence-segment{transition:background .4s,box-shadow .4s}
