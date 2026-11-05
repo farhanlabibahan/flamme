@@ -10,29 +10,13 @@ import './app.css';
 const value = f => f?.status === 'ambiguous' ? `${display(f)} · verify` : display(f);
 const stat = (n,label) => <div className="mini-stat"><strong>{n}</strong><span>{label}</span></div>;
 
-/* a flame matching the lab's own render: thin blue reaction shell + a warm soot cap */
-const MicroFlame = ({size=18}) => <svg width={size} height={size} viewBox="0 0 32 32" className="micro-flame" aria-hidden="true">
-  <defs>
-    <radialGradient id="mfGlow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stopColor="#5f8cff" stopOpacity=".5"/>
-      <stop offset="100%" stopColor="#5f8cff" stopOpacity="0"/>
-    </radialGradient>
-    <radialGradient id="mfCap" cx="63%" cy="68%" r="46%">
-      <stop offset="0%" stopColor="#ffdba3"/>
-      <stop offset="40%" stopColor="#ff9a3d"/>
-      <stop offset="100%" stopColor="#ff9a3d" stopOpacity="0"/>
-    </radialGradient>
-    <radialGradient id="mfShell" cx="48%" cy="42%" r="54%">
-      <stop offset="0%" stopColor="#dce8ff" stopOpacity="0"/>
-      <stop offset="76%" stopColor="#dce8ff" stopOpacity="0"/>
-      <stop offset="87%" stopColor="#7fa8ff" stopOpacity=".95"/>
-      <stop offset="100%" stopColor="#2f5bdb" stopOpacity="0"/>
-    </radialGradient>
-  </defs>
-  <circle cx="16" cy="16" r="15" fill="url(#mfGlow)"/>
-  <circle cx="16" cy="16" r="11" fill="url(#mfCap)"/>
-  <circle cx="16" cy="16" r="11" fill="url(#mfShell)"/>
-  <circle cx="12" cy="11.5" r="1.5" fill="#fff" opacity=".9"/>
+/* layered blue flame mark — flat nested bands (deep navy outer shell down to a near-white core), same family as the app's flat/no-glow design language */
+const FLAME_D = "M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z";
+const MicroFlame = ({size=18}) => <svg width={size} height={size} viewBox="0 0 24 24" className="micro-flame" aria-hidden="true">
+  <g transform="translate(12 12) scale(1) translate(-12 -12)"><path d={FLAME_D} fill="#15317a"/></g>
+  <g transform="translate(12 12) scale(.76) translate(-12 -12)"><path d={FLAME_D} fill="#2f62e0"/></g>
+  <g transform="translate(12 12) scale(.52) translate(-12 -12)"><path d={FLAME_D} fill="#6fb8f5"/></g>
+  <g transform="translate(12 12) scale(.27) translate(-12 -12)"><path d={FLAME_D} fill="#eaf9ff"/></g>
 </svg>;
 
 const TRACE_STEPS = [
