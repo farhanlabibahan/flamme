@@ -152,20 +152,17 @@ const Lab = forwardRef(function Lab({scenario, mode, onMode, reduced, onReduced}
   const regime = ui.out ? (d?.spray ? 'SUPPRESSED · EXTINGUISHED' : 'FLAME OUT · RE-FIRE IGNITER') : ui.igOK < .5 ? 'IGNITION FAILED' : d?.regime;
 
   return <div ref={root} className={`studio ${full ? 'is-full' : ''} ${side ? '' : 'no-side'} ${hud ? '' : 'no-hud'}`}>
-    <header className="st-bar">
-      <div className="st-name"><span className="pip"/><b>Microgravity Flame Lab</b><small>ILLUSTRATIVE · NOT A CFD SIMULATION</small></div>
-      <div className="st-actions">
-        <button className="st-iconbtn" title="Reset" onClick={resetLab}><RotateCcw size={15}/></button>
-        <button className="st-iconbtn" title={side ? 'Hide parameters (N)' : 'Show parameters (N)'} onClick={() => setSide(v => !v)}>{side ? <EyeOff size={15}/> : <Eye size={15}/>}</button>
-        <button className={`st-iconbtn ${pulseFull && !full ? 'flash' : ''}`} title="Full screen (F)" onClick={toggleFull}>{full ? <Minimize2 size={15}/> : <Maximize2 size={15}/>}</button>
-      </div>
-    </header>
-
     <div className="st-body">
       <div className="vp-canvas">
         <div className="vp-gl" ref={host} role="img" aria-label="Interactive 3D chamber. The flame and airflow are an illustrative visualization, not measured imagery or a validated simulation."/>
         {error && <div className="vp-empty">3D view unavailable on this device. The sourced evidence below remains accessible.</div>}
         <div className="vp-overlay">
+          <div className="vp-title"><span className="vp-hint-key"><Mouse size={13}/></span><span className="vp-title-text"><span className="vp-title-main">Lab Simulation</span><span className="vp-title-sub">Illustrative · not a CFD simulation</span></span></div>
+          <div className="vp-actions">
+            <button className="st-iconbtn" title="Reset" onClick={resetLab}><RotateCcw size={15}/></button>
+            <button className="st-iconbtn" title={side ? 'Hide parameters (N)' : 'Show parameters (N)'} onClick={() => setSide(v => !v)}>{side ? <EyeOff size={15}/> : <Eye size={15}/>}</button>
+            <button className={`st-iconbtn ${pulseFull && !full ? 'flash' : ''}`} title="Full screen (F)" onClick={toggleFull}>{full ? <Minimize2 size={15}/> : <Maximize2 size={15}/>}</button>
+          </div>
           {regime && <span className="vp-regime" data-tone={ui.out ? 'none' : d?.tone}>{regime}</span>}
           {!error && <div className="vp-hint"><span className="vp-hint-key"><Mouse size={14}/></span><span className="vp-hint-text">Hover to look around</span></div>}
         </div>
