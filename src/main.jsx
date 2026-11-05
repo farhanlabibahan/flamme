@@ -243,7 +243,7 @@ function App(){
 
   return <div className="app-shell">
     <aside className="side-nav">
-      <button className="identity" onClick={()=>{setView('Evidence');window.scrollTo({top:0,behavior:'smooth'})}} aria-label="Flamme home"><span className="brand-flame"><Flame/></span><span className="identity-wordmark">Flamme<small>MICROGRAVITY EVIDENCE</small></span></button>
+      <button className="identity" onClick={()=>{setView('Evidence');window.scrollTo({top:0,behavior:'smooth'})}} aria-label="Flamme home"><span className="brand-flame"><Flame/></span><span className="identity-wordmark">Flamme</span></button>
       <div className="nav-overline">WORKSPACE</div>
       {[[FlaskConical,'Lab'],[Sparkles,'Ask'],[Compass,'Evidence'],[Layers,'Compare'],[BookOpen,'Sources']].map(([Icon,name])=><button key={name} className={`nav-link ${view===name?'active':''}`} onClick={()=>{
         if(name==='Sources')return setDrawer('all');
