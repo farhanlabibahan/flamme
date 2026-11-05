@@ -174,7 +174,6 @@ function App(){
         if(name==='Sources')return setDrawer(drawer==='all'?null:'all');
         setDrawer(null);setView(name);
       }}><Icon size={19}/>{name}{name==='Compare'&&<em>{compare.length}</em>}</button>)}
-      <div className="side-foot"><span>Team Flamme · 2026</span><button onClick={()=>setDrawer(drawer==='about'?null:'about')}><Info size={15}/> Scope & limitations</button></div>
     </aside>
     <main className="workspace">
       <header className="topbar"><span className="topbar-brand"><MicroFlame size={16}/> FLAMME <b>/</b> <em key={view} className="topbar-label">{view==='Lab'?'Flame Lab':view==='Ask'?'Ask Flame':view==='Compare'?'Comparison':'Evidence explorer'}</em></span></header>
