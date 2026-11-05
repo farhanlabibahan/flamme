@@ -1,6 +1,6 @@
-# Fire Navigator
+# Flamme
 
-Fire Navigator is a source-linked concept prototype for the **Flame in Freefall: AI-Powered Fire Safety Insights from Microgravity Combustion Data** challenge. It explores how researchers and students could find comparable NASA combustion experiments, inspect the conditions behind each observation, and trace a displayed result back to its source.
+Flamme is a source-linked concept prototype for the **Flame in Freefall: AI-Powered Fire Safety Insights from Microgravity Combustion Data** challenge. It explores how researchers and students could find comparable NASA combustion experiments, inspect the conditions behind each observation, and trace a displayed result back to its source.
 
 The project is developed by **Team Flamme**. It is not a NASA product, is not NASA-endorsed, and must not be used to certify a material, predict a spacecraft fire, or make an operational safety decision.
 
@@ -14,7 +14,7 @@ That creates three practical difficulties:
 2. Comparing records without hiding differences or treating missing values as equivalent.
 3. Turning observations into understandable conclusions without losing provenance, uncertainty, or scientific limitations.
 
-Fire Navigator treats those as an evidence-management problem before treating them as an intelligence problem.
+Flamme treats those as an evidence-management problem before treating them as an intelligence problem.
 
 ## Solution in one view
 
@@ -89,9 +89,9 @@ These counts describe the current repository snapshot, not the number of records
 
 The interface is a plain, directly-clickable web app — there is no scripted walkthrough or narrated playback. A typical path:
 
-1. Type a plain-language question into **Ask Flame** (e.g. "cotton-fiberglass at 22% oxygen with 20 cm/s opposed airflow"). A deterministic keyword/regex parser (`src/prompt.js`) — not an AI model — reads back what it recognized as removable chips and fills the Define panel below; anything it doesn't recognize is left for you to set manually. No call ever happens automatically; everything you see traces to a rule you can read in the source.
-2. Inspect the selected material, oxygen, flow, and other reported or unavailable conditions in the Define panel.
-3. Use the Flame Lab to explore the controlled variables by dragging or typing values; the chamber reacts live. Its flame is illustrative.
+1. Open the **Ask** tab and type a plain-language question (e.g. "cotton-fiberglass at 22% oxygen with 20 cm/s opposed airflow"). A deterministic keyword/regex parser (`src/prompt.js`) — not an AI model — reads back what it recognized as removable chips; anything it doesn't recognize is left for you to set manually on the Evidence tab. No call ever happens automatically; everything you see traces to a rule you can read in the source. Click "View matching evidence" to carry those conditions over.
+2. On the **Evidence** tab, inspect the selected material, oxygen, flow, and other reported or unavailable conditions in the Define panel.
+3. Switch to the **Lab** tab to explore the controlled variables by dragging or typing values; the chamber reacts live. Its flame is illustrative.
 4. Rank the bundled records using transparent condition matching.
 5. Open Saffire II sample 2-5 and inspect its observation and limitations.
 6. Trace the record to the NASA PSI investigation, DOI, source CSV, and original row.
@@ -365,4 +365,4 @@ The repository does not yet contain automated browser, visual-regression, Three.
 - [NASA Physical Sciences Informatics](https://psi.nasa.gov/)
 - [NASA Technical Reports Server](https://ntrs.nasa.gov/)
 
-NASA names, investigation identifiers, and links are used for source attribution. Team Flamme and Fire Navigator remain separate from NASA's identity.
+NASA names, investigation identifiers, and links are used for source attribution only; this prototype and Team Flamme remain separate from NASA's identity.
