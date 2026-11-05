@@ -50,6 +50,17 @@ function Landing({onEnter}){
       </div>
     </header>
 
+    {/* SECTION 2.5 — abstract animated blue blade art, companion visual to the hero */}
+    <section className="l-art-section">
+      <div className="l-art-text">
+        <h2>Real fire, real data.</h2>
+        <p>Every flame on this page traces back to an actual NASA microgravity experiment — not a stock photo, not a render.</p>
+      </div>
+      <div className="l-blade-group" aria-hidden="true">
+        {[-90,-60,-30,0,30,60,90].map((off,i)=><span key={i} className="l-blade" style={{height:(190-Math.abs(off)*0.9)+'px',transform:`translate(-50%,-50%) rotate(45deg) translateX(${off}px)`,animationDelay:`${i*0.3}s`}}/>)}
+      </div>
+    </section>
+
     {/* SECTION 3 — trusted-by / sourced-from */}
     <section className="l-logos">
       <span>Evidence sourced from</span>
