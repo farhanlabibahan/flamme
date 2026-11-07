@@ -16,7 +16,7 @@ export default function EvidencePage() {
     <select value={scenario[key]} onChange={e => update(key, e.target.value)}>{items.map(([v, t]) => <option value={v} key={v}>{t}</option>)}</select>
   </label>;
 
-  return <>
+  return <div className="reveal">
     <section className="mission" id="mission"><h1>Fire evidence, <span>without the guesswork.</span></h1></section>
     <section id="evidence" className="evidence-block">
       <div className="evidence-heading"><h2>Follow the evidence</h2><span>{results.length} records</span></div>
@@ -79,5 +79,5 @@ export default function EvidencePage() {
         </section>
       </div>
     </section>
-  </>;
+  </div>;
 }

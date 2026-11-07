@@ -5,7 +5,7 @@ import {useFlamme, value} from '../context/FlammeContext.jsx';
 /* Real route: /compare. */
 export default function ComparePage() {
   const {compare, experiments, openSource} = useFlamme();
-  return <section className="comparison-page" id="comparison">
+  return <section className="comparison-page reveal" id="comparison">
     <div className="comparison-intro"><h1>Compare observations.<br/><span>Keep the differences visible.</span></h1></div>
     <div className="compare-warning"><Info size={18}/><span>An unknown value is never treated as equal.</span></div>
     {compare.length < 2 ? <div className="empty-result">Choose at least two records in Evidence to compare them.</div> : <div className="compare-cards">

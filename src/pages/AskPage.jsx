@@ -15,7 +15,7 @@ export default function AskPage() {
     requestAnimationFrame(() => window.scrollTo({top: 0, behavior: reduced ? 'instant' : 'smooth'}));
   };
 
-  return <section className="surface ask-panel ask-page" id="ask">
+  return <section className="surface ask-panel ask-page reveal" id="ask">
     <div className="section-top"><h2><Sparkles size={18}/> Ask Flame</h2></div>
     <div className="ask-row">
       <input value={prompt} onChange={e => setPrompt(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') askFlame(); }} placeholder="e.g. cotton-fiberglass at 22% oxygen with 20 cm/s opposed airflow" aria-label="Ask Flame a question"/>

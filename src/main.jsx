@@ -5,7 +5,9 @@ import {FlammeProvider} from './context/FlammeContext.jsx';
 import Shell from './components/Shell.jsx';
 import LandingPage from './pages/LandingPage.jsx';
 import CubeLoader from './components/ui/CubeLoader.jsx';
+import {AskSkeleton, CompareSkeleton, EvidenceSkeleton} from './components/ui/Skeleton.jsx';
 import './app.css';
+import './components/ui/Skeleton.css';
 
 /* Each sidebar app now lives at its own endpoint and its own lazy chunk:
    /lab, /ask, /evidence, /compare. Previously the whole app was one
@@ -28,9 +30,9 @@ function App() {
         <Route path="/" element={<LandingPage/>}/>
         <Route element={<Shell/>}>
           <Route path="/lab" element={<Suspense fallback={<CubeLoader message="Loading lab…" fullHeight/>}><LabPage/></Suspense>}/>
-          <Route path="/ask" element={<Suspense fallback={<CubeLoader message="Loading ask…"/>}><AskPage/></Suspense>}/>
-          <Route path="/evidence" element={<Suspense fallback={<CubeLoader message="Loading evidence…"/>}><EvidencePage/></Suspense>}/>
-          <Route path="/compare" element={<Suspense fallback={<CubeLoader message="Loading compare…"/>}><ComparePage/></Suspense>}/>
+          <Route path="/ask" element={<Suspense fallback={<AskSkeleton/>}><AskPage/></Suspense>}/>
+          <Route path="/evidence" element={<Suspense fallback={<EvidenceSkeleton/>}><EvidencePage/></Suspense>}/>
+          <Route path="/compare" element={<Suspense fallback={<CompareSkeleton/>}><ComparePage/></Suspense>}/>
         </Route>
         <Route path="/lab/view" element={<Suspense fallback={<CubeLoader message="Loading lab…" fullHeight/>}><LabViewPage/></Suspense>}/>
         <Route path="*" element={<Navigate to="/" replace/>}/>

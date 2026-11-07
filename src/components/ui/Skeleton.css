@@ -1,0 +1,38 @@
+/* Skeleton placeholders. Square corners to match the rest of the UI. The
+   shimmer is a single gradient sweep; it stops under reduced-motion. */
+
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.sk{display:block;position:relative;overflow:hidden;background:#e3e7ee;max-width:100%;flex:none}
+.sk::after{content:"";position:absolute;inset:0;transform:translateX(-100%);background:linear-gradient(90deg,transparent,rgba(255,255,255,.75),transparent);animation:skSweep 1.25s ease-in-out infinite}
+@keyframes skSweep{to{transform:translateX(100%)}}
+
+.sk-page{display:flex;flex-direction:column;gap:16px;width:100%;animation:skIn .25s ease both}
+@keyframes skIn{from{opacity:0}to{opacity:1}}
+
+.sk-panel,.sk-list,.sk-detail,.sk-compare-card{background:#fff;border:1px solid var(--line);padding:18px;display:flex;flex-direction:column;gap:14px}
+.sk-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.sk-row .sk-input{flex:1}
+.sk-chips{display:flex;gap:8px;flex-wrap:wrap}
+.sk-mission{display:flex;flex-direction:column;gap:12px;padding:12px 0 6px}
+.sk-filters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) auto;gap:10px;align-items:center}
+.sk-split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:14px}
+.sk-search{width:100%}
+.sk-item{display:flex;align-items:center;gap:12px;padding:10px 4px;border-top:1px solid var(--line)}
+.sk-item-text{display:flex;flex-direction:column;gap:7px;flex:1;min-width:0}
+.sk-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:6px}
+.sk-stats>div{display:flex;flex-direction:column;gap:8px}
+.sk-compare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.sk-line{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-top:1px solid var(--line)}
+.sk-sources{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;padding:8px 0}
+.sk-source{display:flex;flex-direction:column;gap:10px;background:#fff;border:1px solid var(--line);padding:16px}
+
+/* content that replaces the skeleton rises in softly, section by section */
+.reveal{animation:revealIn .38s var(--ease) both}
+.reveal>*:nth-child(2){animation:revealIn .38s var(--ease) .05s both}
+.reveal>*:nth-child(3){animation:revealIn .38s var(--ease) .1s both}
+.reveal>*:nth-child(4){animation:revealIn .38s var(--ease) .15s both}
+@keyframes revealIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+@media(max-width:800px){.sk-split,.sk-compare{grid-template-columns:1fr}.sk-filters{grid-template-columns:1fr 1fr}}
+@media (prefers-reduced-motion:reduce){.sk::after{animation:none;display:none}.sk-page,.reveal,.reveal>*{animation:none}}
