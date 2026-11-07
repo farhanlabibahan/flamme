@@ -8,7 +8,7 @@ import CubeLoader from './components/ui/CubeLoader.jsx';
    Inputs are the ten controlled parameters of the evidence catalogue; the
    flame's response is qualitative and never a measured or simulated result. */
 
-const PANELS = [
+export const PANELS = [
   {n: 1, id: 'material', title: 'Material / fuel', icon: Layers, keys: ['material']},
   {n: 2, id: 'geometry', title: 'Sample geometry', icon: Box, keys: ['length', 'width', 'thickness']},
   {n: 3, id: 'gravity', title: 'Gravity condition', icon: Globe, keys: ['g']},
@@ -36,7 +36,7 @@ function fromScenario(s, base) {
 }
 
 /* ---------------------------------------------------------------- fields */
-function NumField({k, value, onChange, ks}) {
+export function NumField({k, value, onChange, ks}) {
   const f = FIELDS[k];
   const [edit, setEdit] = useState(false);
   const drag = useRef(null);
@@ -56,7 +56,7 @@ function NumField({k, value, onChange, ks}) {
     <span className="bf-lab">{f.label}</span><span className="bf-val">{fmt(k, value)} <small>{f.unit}</small></span>
   </div>;
 }
-function Enum({k, value, options, onChange, ks, label}) {
+export function Enum({k, value, options, onChange, ks, label}) {
   return <label className={`be ${ks || ''}`}><span>{label}</span><select value={value} onChange={e => onChange(k, e.target.value)}>{options.map(o => { const [v, t] = Array.isArray(o) ? o : [o, o]; return <option key={v} value={v}>{t}</option>; })}</select><ChevronDown size={12}/></label>;
 }
 /* Parameter panel. Memoised so it only re-renders when its own inputs change
