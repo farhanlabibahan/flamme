@@ -288,7 +288,7 @@ export function createLab(host, initial) {
   const glassTop = add(new THREE.PlaneGeometry(L, Z), glassMat, 0, DUCT.y1, 0, duct); glassTop.rotation.x = Math.PI / 2; glassTop.renderOrder = 3;
   // dark interior: an unlit box whose far faces show through the glass, so the
   // inside of the enclosure reads dark while the room outside is untouched
-  { const dark = own(new THREE.MeshBasicMaterial({color: 0x0a0f16, side: THREE.BackSide})); add(new THREE.BoxGeometry(L - .02, H - .02, Z - .02), dark, 0, cy, 0, duct).renderOrder = 1; }
+  { const dark = own(new THREE.MeshBasicMaterial({color: 0x0a0f16, side: THREE.BackSide, transparent: true, opacity: .92, depthWrite: false})); add(new THREE.BoxGeometry(L - .02, H - .02, Z - .02), dark, 0, cy, 0, duct).renderOrder = -1; }
   add(new THREE.BoxGeometry(L, .05, Z), darkMetal, 0, DUCT.y0, 0, duct);
   // frame bars
   const bar = (w, h, d, x, y, z) => add(new THREE.BoxGeometry(w, h, d), metal, x, y, z, duct);
