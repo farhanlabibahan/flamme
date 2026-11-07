@@ -556,7 +556,12 @@ export function createLab(host, initial) {
     camera.aspect = w / h; camera.fov = w / h < 1 ? 52 : 38; camera.updateProjectionMatrix();
     renderer.setSize(w, h, false); composer.setSize(w, h); bloom.resolution.set(w / 2, h / 2);
   };
-  const ro = new ResizeObserver(fit); ro.observe(host); fit();
+  // throttle: ResizeObserver/fullscreen/drag-resize can fire many times per
+  // second — coalesce to one fit() per animation frame instead of re-sizing
+  // the renderer/composer/bloom buffers on every single callback.
+  let fitTimer = 0;
+  const scheduleFit = () => { clearTimeout(fitTimer); fitTimer = setTimeout(fit, 140); };
+  const ro = new ResizeObserver(scheduleFit); ro.observe(host); fit();
 
   /* ----- camera choreography ----- */
   let tween = null, lastInput = -10;

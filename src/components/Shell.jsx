@@ -1,0 +1,86 @@
+import React, {useState} from 'react';
+import {NavLink, Outlet, useLocation, useNavigate} from 'react-router-dom';
+import {BookOpen, ChevronsLeft, ChevronsRight, Compass, ExternalLink, FlaskConical, Layers, Sparkles, X} from 'lucide-react';
+import {useFlamme} from '../context/FlammeContext.jsx';
+import MicroFlame from './MicroFlame.jsx';
+
+const NAV = [
+  {to: '/lab', label: 'Lab', icon: FlaskConical, prefetch: () => import('../pages/LabPage.jsx')},
+  {to: '/ask', label: 'Ask', icon: Sparkles, prefetch: () => import('../pages/AskPage.jsx')},
+  {to: '/evidence', label: 'Evidence', icon: Compass, prefetch: () => import('../pages/EvidencePage.jsx')},
+  {to: '/compare', label: 'Compare', icon: Layers, prefetch: () => import('../pages/ComparePage.jsx')},
+];
+
+const warmed = new Set();
+function warm(to, loader) {
+  if (warmed.has(to)) return;
+  warmed.add(to);
+  loader().catch(() => { warmed.delete(to); });
+}
+
+/* Persistent app frame: sidebar + source drawer + <Outlet/>. Each sidebar
+   item is a real react-router route (/lab, /ask, /evidence, /compare) — not
+   a client-state flag — so every section is its own code-split bundle,
+   the URL/back-button work, and the heavy Lab (Three.js) chunk only loads
+   when its route is actually visited. Hovering/focusing a link warms that
+   route's module ahead of the click (like Next's <Link prefetch>), and a
+   150ms click-throttle guards the sidebar's slide/sweep animation from being
+   re-triggered by an accidental double click mid-transition. */
+export default function Shell() {
+  const {drawer, setDrawer, compare, record, source, investigations} = useFlamme();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [navCollapsed, setNavCollapsed] = useState(() => { try { return localStorage.getItem('flamme-nav-collapsed') === '1'; } catch { return false; } });
+  const toggleNav = () => setNavCollapsed(c => { const n = !c; try { localStorage.setItem('flamme-nav-collapsed', n ? '1' : '0'); } catch {} return n; });
+
+  return <div className={`app-shell ${navCollapsed ? 'nav-collapsed' : ''}`}>
+    <aside className="side-nav">
+      <div className="side-head">
+        <button className="identity" onClick={() => navigate('/evidence')} aria-label="Flamme home">
+          <span className="brand-flame"><MicroFlame/></span><span className="identity-wordmark">Flamme</span>
+        </button>
+        <button className="nav-collapse-btn" onClick={toggleNav} aria-label={navCollapsed ? 'Expand sidebar' : 'Collapse sidebar'} title={navCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}>
+          {navCollapsed ? <ChevronsRight size={18}/> : <ChevronsLeft size={18}/>}
+        </button>
+      </div>
+      <div className="nav-overline">WORKSPACE</div>
+      {NAV.map(({to, label, icon: Icon, prefetch}) =>
+        <NavLink key={to} to={to}
+          onMouseEnter={() => warm(to, prefetch)}
+          onFocus={() => warm(to, prefetch)}
+          onClick={() => setDrawer(null)}
+          className={({isActive}) => `nav-link ${isActive ? 'active' : ''}`}
+          title={navCollapsed ? label : undefined}>
+          <Icon size={19}/><span className="nav-link-text">{label}</span>{label === 'Compare' && <em>{compare.length}</em>}
+        </NavLink>
+      )}
+      <button className={`nav-link ${drawer === 'all' ? 'active' : ''}`} onClick={() => setDrawer(d => d === 'all' ? null : 'all')} title={navCollapsed ? 'Sources' : undefined}>
+        <BookOpen size={19}/><span className="nav-link-text">Sources</span>
+      </button>
+    </aside>
+    <main className="workspace">
+      <div className="workspace-inner">{/* /lab is now a setup form; the 3D chamber lives at /lab/view */}
+        {drawer && <section className="surface source-panel" role="region" aria-label={drawer === 'all' ? 'Data sources' : 'Source information'}>
+          <button className="drawer-close" aria-label="Close" onClick={() => setDrawer(null)}><X/></button>
+          {drawer === 'all'
+            ? <><small>DATA SOURCES</small><h2>Curated NASA PSI investigations</h2>
+              <div className="drawer-source-grid">{investigations.map(i => <div className="drawer-source" key={i.id}>
+                <strong>{i.name}</strong><p>{i.title} · {i.platform}</p>
+                <a href={i.url} target="_blank" rel="noreferrer">Open {i.id} <ExternalLink size={14}/></a>
+                <a href={`https://doi.org/${i.doi}`} target="_blank" rel="noreferrer">DOI {i.doi} <ExternalLink size={14}/></a>
+              </div>)}</div></>
+            : <><small>DATA LINEAGE</small><h2>{source.name} · sample {record.id}</h2>
+              <p>{source.title} on {source.platform}. The displayed values come from local CSV <strong>{record.source.file}</strong>, <mark className="trace">row {record.source.row}</mark> (header is row 1).</p>
+              <div className="lineage-box">Source table → experiment {record.id} → observed card → cautious interpretation</div>
+              <p>{record.source.notes}</p>
+              <a href={source.url} target="_blank" rel="noreferrer">Open NASA PSI investigation <ExternalLink size={15}/></a>
+              <a href={`https://doi.org/${source.doi}`} target="_blank" rel="noreferrer">DOI {source.doi} <ExternalLink size={15}/></a></>}
+        </section>}
+        <div className="view-transition" key={location.pathname}>
+          <Outlet/>
+        </div>
+        <footer className="page-foot">NASA PSI source excerpts · Flamme by Team Flamme <span>No NASA endorsement · No safety certification · No validated flame prediction</span></footer>
+      </div>
+    </main>
+  </div>;
+}

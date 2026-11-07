@@ -1,7 +1,8 @@
-import React, {forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState} from 'react';
-import {ArrowDownToLine, ArrowUpFromLine, Box, ChevronDown, Circle, Eye, EyeOff, Fan, Flame, Globe, Layers, Maximize2, Minimize2, Mouse, Orbit, RectangleHorizontal, RotateCcw, Scan, ShieldAlert, Thermometer, Video, Wind, Zap} from 'lucide-react';
-import {createLab} from './labScene.js';
+import {ArrowDownToLine, ArrowLeft, ArrowRight, ArrowUpFromLine, Box, ChevronDown, Circle, Fan, Flame, Globe, Layers, Maximize2, Minimize2, Mouse, Orbit, RectangleHorizontal, RotateCcw, Scan, ShieldAlert, Thermometer, Video, Wind, Zap} from 'lucide-react';
+import React, {forwardRef, memo, useCallback, useEffect, useImperativeHandle, useRef, useState} from 'react';
 import {AGENTS, DEFAULT_PARAMS, DIRECTIONS, FIELDS, GRAVITY, MATERIALS, SIBAL} from './labModel.js';
+import {rafThrottle} from './hooks/useRafThrottle.js';
+import CubeLoader from './components/ui/CubeLoader.jsx';
 
 /* Blender-style workspace around an ILLUSTRATIVE chamber visualization.
    Inputs are the ten controlled parameters of the evidence catalogue; the
@@ -41,11 +42,15 @@ function NumField({k, value, onChange, ks}) {
   const drag = useRef(null);
   const pct = (value - f.min) / (f.max - f.min) * 100;
   const set = v => onChange(k, Math.min(f.max, Math.max(f.min, Math.round(v / f.step) * f.step)));
+  // throttle: pointermove fires far faster than React/Three.js need to react
+  // to — coalesce drag updates to once per animation frame instead of once
+  // per raw pointer event, so dragging a slider doesn't flood setParams.
+  const throttledSet = useRef(rafThrottle(set));
   if (edit) return <input className="bf-input" autoFocus defaultValue={fmt(k, value)} onBlur={e => { const v = parseFloat(e.target.value); if (Number.isFinite(v)) set(v); setEdit(false); }} onKeyDown={e => { if (e.key === 'Enter') e.currentTarget.blur(); if (e.key === 'Escape') setEdit(false); }}/>;
   return <div className={`bf ${ks || ''}`} role="slider" tabIndex={0} aria-label={f.label} aria-valuemin={f.min} aria-valuemax={f.max} aria-valuenow={value}
     onKeyDown={e => { if (e.key === 'ArrowRight' || e.key === 'ArrowUp') { e.preventDefault(); set(value + f.step * 10); } if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') { e.preventDefault(); set(value - f.step * 10); } if (e.key === 'Enter') setEdit(true); }}
     onPointerDown={e => { e.currentTarget.setPointerCapture(e.pointerId); drag.current = {x: e.clientX, v: value, w: e.currentTarget.clientWidth, moved: false}; }}
-    onPointerMove={e => { const d = drag.current; if (!d) return; const dx = e.clientX - d.x; if (Math.abs(dx) > 2) d.moved = true; if (d.moved) set(d.v + dx / d.w * (f.max - f.min) * (e.shiftKey ? .1 : 1)); }}
+    onPointerMove={e => { const d = drag.current; if (!d) return; const dx = e.clientX - d.x; if (Math.abs(dx) > 2) d.moved = true; if (d.moved) throttledSet.current(d.v + dx / d.w * (f.max - f.min) * (e.shiftKey ? .1 : 1)); }}
     onPointerUp={() => { const d = drag.current; drag.current = null; if (d && !d.moved) setEdit(true); }}>
     <i className="bf-fill" style={{width: `${pct}%`}}/>
     <span className="bf-lab">{f.label}</span><span className="bf-val">{fmt(k, value)} <small>{f.unit}</small></span>
@@ -54,12 +59,37 @@ function NumField({k, value, onChange, ks}) {
 function Enum({k, value, options, onChange, ks, label}) {
   return <label className={`be ${ks || ''}`}><span>{label}</span><select value={value} onChange={e => onChange(k, e.target.value)}>{options.map(o => { const [v, t] = Array.isArray(o) ? o : [o, o]; return <option key={v} value={v}>{t}</option>; })}</select><ChevronDown size={12}/></label>;
 }
+/* Parameter panel. Memoised so it only re-renders when its own inputs change
+   (the parameter values or which section is open) — not on every frame-driven
+   state update from the 3D scene, which is what made opening/closing lag. */
+export const ParamPanel = memo(function ParamPanel({params, open, setOpen, change, onReignite, className = 'st-side'}) {
+  const live = params;
+  return <aside className={className}>
+    <div className="pr-body">
+      <div className="pr-title">Parameters <small>DRAG OR CLICK TO EDIT</small></div>
+      {PANELS.map(p => <div key={p.id} data-panel={p.id} className={`pn ${open[p.id] ? '' : 'closed'}`}>
+        <button className="pn-head" onClick={() => setOpen(o => ({...o, [p.id]: !o[p.id]}))} aria-expanded={!!open[p.id]}><em>{String(p.n).padStart(2, '0')}</em>{p.title}<ChevronDown size={13} className="pn-chevron"/></button>
+        {open[p.id] && <div className="pn-body">{p.keys.map(k => {
+          if (k === 'material') return <Enum key={k} k={k} label="Material" value={live.material} onChange={change} options={Object.entries(MATERIALS).map(([v, m]) => [v, `${m.short} · ${m.note}`])}/>;
+          if (k === 'direction') return <Enum key={k} k={k} label="Direction" value={live.direction} onChange={change} options={DIRECTIONS}/>;
+          if (k === 'agent') return <Enum key={k} k={k} label="Agent" value={live.agent} onChange={change} options={AGENTS}/>;
+          if (k === 'discharge') return <button key={k} className={`bt ${live.discharge ? 'on' : ''}`} onClick={() => change('discharge', !live.discharge)} disabled={live.agent === 'None'}><i/>{live.discharge ? 'Discharging' : 'Discharge agent'}</button>;
+          return <NumField key={k} k={k} value={live[k]} onChange={change}/>;
+        })}
+          {p.id === 'gravity' && <div className="pills">{GRAVITY.map(g => <button key={g.name} className={nearestG(live.g).name === g.name ? 'on' : ''} onClick={() => change('g', g.g)}>{g.name}</button>)}</div>}
+          {p.id === 'ignition' && <button className="bt fire" onClick={() => onReignite?.()}><Zap size={12}/> Fire igniter</button>}
+        </div>}
+      </div>)}
+    </div>
+  </aside>;
+});
+
 /* ---------------------------------------------------------------- studio */
-const Lab = forwardRef(function Lab({scenario, mode, onMode, reduced, onReduced}, ref) {
+const Lab = forwardRef(function Lab({scenario, mode, onMode, reduced, onReduced, initialParams}, ref) {
   const root = useRef(null), host = useRef(null), world = useRef(null);
   const callouts = useRef({}), gizmo = useRef(null), spark = useRef(null), sparkData = useRef([]);
   const props = useRef(null), track = useRef(null);
-  const [params, setParams] = useState(() => fromScenario(scenario, DEFAULT_PARAMS));
+  const [params, setParams] = useState(() => initialParams || fromScenario(scenario, DEFAULT_PARAMS));
   const [ui, setUi] = useState({d: null, fps: 60, igOK: 1, out: false});
   const [full, setFull] = useState(() => typeof location !== 'undefined' && location.hash.startsWith('#studio'));
   const [hud, setHud] = useState(true);
@@ -69,6 +99,9 @@ const Lab = forwardRef(function Lab({scenario, mode, onMode, reduced, onReduced}
   const [vis, setVis] = useState(() => Object.fromEntries(OUTLINER.map(o => [o[0], true])));
   const [cam, setCam] = useState('hero');
   const [error, setError] = useState(false);
+  // loading state: the overlay stays up until the chamber has rendered its first frames
+  const [ready, setReady] = useState(false);
+  const [loadMsg, setLoadMsg] = useState('Building the chamber…');
   const [pulseFull, setPulseFull] = useState(true);
   const [toast, setToast] = useState('in');
   useEffect(() => {
@@ -78,21 +111,38 @@ const Lab = forwardRef(function Lab({scenario, mode, onMode, reduced, onReduced}
   }, []);
   const live = params;
 
-  /* world lifecycle */
+  /* world lifecycle — the three.js scene is loaded on demand here, so the
+     parameter panel (and the rest of the page) render immediately while the
+     chamber's bundle is fetched; only the canvas shows the cube loader. */
   useEffect(() => {
-    let api;
-    try { api = createLab(host.current, {params, mode, reduced}); } catch (e) { console.error(e); setError(true); return; }
-    world.current = api;
-    let last = 0, frames = 0, fpsT = performance.now(), fps = 60;
-    api.state.onFrame = f => {
-      frames++; const now = performance.now();
-      if (now - fpsT > 500) { fps = Math.round(frames * 1000 / (now - fpsT)); frames = 0; fpsT = now; }
-      for (const key in f.anchors) { const el = callouts.current[key], a = f.anchors[key]; if (el) { el.style.transform = `translate(${a.x}px,${a.y}px)`; el.style.opacity = a.vis ? 1 : 0; } }
-      drawGizmo(gizmo.current, f.quat);
-      const sd = sparkData.current; sd.push(f.lum); if (sd.length > 160) sd.shift(); drawSpark(spark.current, sd);
-      if (now - last > 45) { last = now; setUi({d: f.d, sm: f.sm, fps, igOK: f.igOK, out: f.out}); }
+    let api = null, cancelled = false, tMsg = 0, tFail = 0;
+    import('./labScene.js').then(({createLab}) => {
+      if (cancelled) return;
+      try { api = createLab(host.current, {params, mode, reduced}); } catch (e) { console.error(e); setError(true); return; }
+      world.current = api;
+      let last = 0, frames = 0, fpsT = performance.now(), fps = 60;
+      // ready after a few real frames (shaders compiled and drawn); a timeout
+      // guarantees the overlay can never stick on a slow device
+      let rendered = 0, isReady = false;
+      const markReady = () => { if (!isReady) { isReady = true; setReady(true); } };
+      tMsg = window.setTimeout(() => setLoadMsg('Igniting the flame…'), 1200);
+      tFail = window.setTimeout(markReady, 15000);
+      api.state.onFrame = f => {
+        rendered++; if (rendered >= 3) markReady();
+        frames++; const now = performance.now();
+        if (now - fpsT > 500) { fps = Math.round(frames * 1000 / (now - fpsT)); frames = 0; fpsT = now; }
+        for (const key in f.anchors) { const el = callouts.current[key], a = f.anchors[key]; if (el) { el.style.transform = `translate(${a.x}px,${a.y}px)`; el.style.opacity = a.vis ? 1 : 0; } }
+        drawGizmo(gizmo.current, f.quat);
+        const sd = sparkData.current; sd.push(f.lum); if (sd.length > 160) sd.shift(); drawSpark(spark.current, sd);
+        if (now - last > 45) { last = now; setUi({d: f.d, sm: f.sm, fps, igOK: f.igOK, out: f.out}); }
+      };
+    }).catch((e) => { console.error(e); setError(true); });
+    return () => {
+      cancelled = true;
+      window.clearTimeout(tMsg); window.clearTimeout(tFail);
+      if (api) api.dispose();
+      world.current = null;
     };
-    return () => { api.dispose(); world.current = null; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => { const s = world.current?.state; if (s) { s.params = params; } }, [params]);
@@ -128,6 +178,7 @@ const Lab = forwardRef(function Lab({scenario, mode, onMode, reduced, onReduced}
   const change = useCallback((k, v) => {
     setParams(p => ({...p, [k]: v}));
   }, []);
+  const reigniteLab = useCallback(() => world.current?.reignite(), []);
   const toggleFull = useCallback(() => {
     setPulseFull(false);
     const el = root.current; if (!el) return;
@@ -159,35 +210,19 @@ const Lab = forwardRef(function Lab({scenario, mode, onMode, reduced, onReduced}
       <div className="vp-canvas">
         <div className="vp-gl" ref={host} role="img" aria-label="Interactive 3D chamber. The flame and airflow are an illustrative visualization, not measured imagery or a validated simulation."/>
         {error && <div className="vp-empty">3D view unavailable on this device. The sourced evidence below remains accessible.</div>}
+        {!ready && !error && <CubeLoader overlay message={loadMsg}/>}
         <div className="vp-overlay">
           {toast && <div className={`vp-toast ${toast === 'out' ? 'is-out' : ''}`}><span className="vp-hint-key"><Mouse size={13}/></span><span className="vp-toast-text"><span className="vp-toast-main">Okay, you can use your mouse to drag over and do things.</span><span className="vp-toast-sub">Illustrative simulation · not a CFD simulation</span></span></div>}
           <div className="vp-actions">
             <button className="st-iconbtn" title="Reset" onClick={resetLab}><RotateCcw size={15}/></button>
-            <button className="st-iconbtn" title={side ? 'Hide parameters (N)' : 'Show parameters (N)'} onClick={() => setSide(v => !v)}>{side ? <EyeOff size={15}/> : <Eye size={15}/>}</button>
+            <button className="st-iconbtn" title={side ? 'Hide parameters (N)' : 'Show parameters (N)'} onClick={() => setSide(v => !v)}>{side ? <ArrowRight size={15}/> : <ArrowLeft size={15}/>}</button>
             <button className={`st-iconbtn ${pulseFull && !full ? 'flash' : ''}`} title="Full screen (F)" onClick={toggleFull}>{full ? <Minimize2 size={15}/> : <Maximize2 size={15}/>}</button>
           </div>
           {!error && <div className="vp-hint"><span className="vp-hint-key"><Mouse size={14}/></span><span className="vp-hint-text">Hover to look around</span></div>}
         </div>
       </div>
 
-      <aside className="st-side">
-        <div className="pr-body" ref={props}>
-          <div className="pr-title">Parameters <small>DRAG OR CLICK TO EDIT</small></div>
-          {PANELS.map(p => <div key={p.id} data-panel={p.id} className={`pn ${open[p.id] ? '' : 'closed'}`}>
-            <button className="pn-head" onClick={() => setOpen(o => ({...o, [p.id]: !o[p.id]}))} aria-expanded={!!open[p.id]}><em>{String(p.n).padStart(2, '0')}</em>{p.title}<ChevronDown size={13} className="pn-chevron"/></button>
-            {open[p.id] && <div className="pn-body">{p.keys.map(k => {
-              if (k === 'material') return <Enum key={k} k={k} label="Material" value={live.material} onChange={change} options={Object.entries(MATERIALS).map(([v, m]) => [v, `${m.short} · ${m.note}`])}/>;
-              if (k === 'direction') return <Enum key={k} k={k} label="Direction" value={live.direction} onChange={change} options={DIRECTIONS}/>;
-              if (k === 'agent') return <Enum key={k} k={k} label="Agent" value={live.agent} onChange={change} options={AGENTS}/>;
-              if (k === 'discharge') return <button key={k} className={`bt ${live.discharge ? 'on' : ''}`} onClick={() => change('discharge', !live.discharge)} disabled={live.agent === 'None'}><i/>{live.discharge ? 'Discharging' : 'Discharge agent'}</button>;
-              return <NumField key={k} k={k} value={live[k]} onChange={change}/>;
-            })}
-              {p.id === 'gravity' && <div className="pills">{GRAVITY.map(g => <button key={g.name} className={nearestG(live.g).name === g.name ? 'on' : ''} onClick={() => change('g', g.g)}>{g.name}</button>)}</div>}
-              {p.id === 'ignition' && <button className="bt fire" onClick={() => world.current?.reignite()}><Zap size={12}/> Fire igniter</button>}
-            </div>}
-          </div>)}
-        </div>
-      </aside>
+      <ParamPanel params={live} open={open} setOpen={setOpen} change={change} onReignite={reigniteLab}/>
     </div>
   </div>;
 });
