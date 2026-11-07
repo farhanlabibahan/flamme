@@ -55,6 +55,13 @@ a{color:var(--accent);text-decoration:none}svg{vertical-align:middle;flex-shrink
 /* selected: solid blue */
 .nav-link.active{color:#fff;background:var(--accent)}
 .nav-link.active>svg{color:#fff}
+/* Sources opens a drawer rather than a page, so it gets a quieter open state:
+   a left accent bar and blue text. The solid fill is reserved for the current
+   page, so two items never look selected at the same time. */
+.nav-link.is-open{background:var(--panel2);color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
+.nav-link.is-open>svg{color:var(--accent)}
+.nav-link.is-open:hover{color:#fff;box-shadow:none}
+.nav-link.is-open:hover>svg{color:#fff}
 .nav-link.active:hover{color:#fff;transform:none}
 .nav-link.active:hover>svg{color:#fff}
 .nav-link:active{transform:scale(.98)!important}

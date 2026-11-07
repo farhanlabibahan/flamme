@@ -54,7 +54,7 @@ export default function Shell() {
           <Icon size={19}/><span className="nav-link-text">{label}</span>{label === 'Compare' && <em>{compare.length}</em>}
         </NavLink>
       )}
-      <button className={`nav-link ${drawer === 'all' ? 'active' : ''}`} onClick={() => setDrawer(d => d === 'all' ? null : 'all')} title={navCollapsed ? 'Sources' : undefined}>
+      <button className={`nav-link ${drawer === 'all' ? 'is-open' : ''}`} aria-expanded={drawer === 'all'} onClick={() => setDrawer(d => d === 'all' ? null : 'all')} title={navCollapsed ? 'Sources' : undefined}>
         <BookOpen size={19}/><span className="nav-link-text">Sources</span>
       </button>
     </aside>
