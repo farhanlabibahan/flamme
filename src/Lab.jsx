@@ -103,12 +103,6 @@ const Lab = forwardRef(function Lab({scenario, mode, onMode, reduced, onReduced,
   const [ready, setReady] = useState(false);
   const [loadMsg, setLoadMsg] = useState('Building the chamber…');
   const [pulseFull, setPulseFull] = useState(true);
-  const [toast, setToast] = useState('in');
-  useEffect(() => {
-    const t1 = setTimeout(() => setToast('out'), 5000);
-    const t2 = setTimeout(() => setToast(null), 5700);
-    return () => { clearTimeout(t1); clearTimeout(t2); };
-  }, []);
   const live = params;
 
   /* world lifecycle — the three.js scene is loaded on demand here, so the
@@ -212,13 +206,13 @@ const Lab = forwardRef(function Lab({scenario, mode, onMode, reduced, onReduced,
         {error && <div className="vp-empty">3D view unavailable on this device. The sourced evidence below remains accessible.</div>}
         {!ready && !error && <CubeLoader overlay message={loadMsg}/>}
         <div className="vp-overlay">
-          {toast && <div className={`vp-toast ${toast === 'out' ? 'is-out' : ''}`}><span className="vp-hint-key"><Mouse size={13}/></span><span className="vp-toast-text"><span className="vp-toast-main">Okay, you can use your mouse to drag over and do things.</span><span className="vp-toast-sub">Illustrative simulation · not a CFD simulation</span></span></div>}
           <div className="vp-actions">
             <button className="st-iconbtn" title="Reset" onClick={resetLab}><RotateCcw size={15}/></button>
             <button className="st-iconbtn" title={side ? 'Hide parameters (N)' : 'Show parameters (N)'} onClick={() => setSide(v => !v)}>{side ? <ArrowRight size={15}/> : <ArrowLeft size={15}/>}</button>
             <button className={`st-iconbtn ${pulseFull && !full ? 'flash' : ''}`} title="Full screen (F)" onClick={toggleFull}>{full ? <Minimize2 size={15}/> : <Maximize2 size={15}/>}</button>
           </div>
-          {!error && <div className="vp-hint"><span className="vp-hint-key"><Mouse size={14}/></span><span className="vp-hint-text">Hover to look around</span></div>}
+          {!error && <div className="vp-hint"><span className="vp-hint-key"><Mouse size={18}/></span><span className="vp-hint-text">Hover to look around</span></div>}
+          <div className="vp-note">Illustrative visualization · not a CFD simulation</div>
         </div>
       </div>
 

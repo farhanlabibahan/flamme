@@ -133,18 +133,11 @@ a{color:var(--accent);text-decoration:none}svg{vertical-align:middle;flex-shrink
 .vp-overlay{position:absolute;inset:0;pointer-events:none;z-index:2}
 .vp-actions{position:absolute;right:18px;top:14px;z-index:3;pointer-events:auto;display:flex;gap:8px}
 /* one-time toast — fades in, lingers, fades out for good */
-.vp-toast{position:absolute;left:22px;top:20px;z-index:5;display:flex;align-items:center;gap:14px;max-width:min(520px,calc(100% - 140px));background:none;border:0;padding:0;color:#fff;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text',system-ui,sans-serif;text-shadow:0 1px 14px rgba(0,0,0,.55),0 0 2px rgba(0,0,0,.35);animation:toastIn .5s var(--ease) both}
-.vp-toast.is-out{animation:toastOut .7s ease both}
-.vp-toast .vp-hint-key{margin-top:1px;animation:none}
-.vp-toast-text{display:flex;flex-direction:column;gap:6px}
-.vp-toast-main{font:600 22px/1.25 -apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text',system-ui,sans-serif;letter-spacing:-.01em;color:#fff}
-.vp-toast-sub{font:500 13px/1.3 -apple-system,BlinkMacSystemFont,'SF Pro Text',system-ui,sans-serif;letter-spacing:.01em;color:rgba(255,255,255,.82)}
 @keyframes toastIn{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:translateX(0)}}
-@keyframes toastOut{to{opacity:0;transform:translateX(-14px)}}
-@media(prefers-reduced-motion:reduce){.vp-toast,.vp-toast.is-out{animation:none}}
 .vp-hint{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);z-index:4;display:flex;align-items:center;gap:10px;white-space:nowrap;pointer-events:none}
-.vp-hint-key{display:grid;place-items:center;width:28px;height:28px;flex:none;border:1.5px solid var(--ink);background:var(--paper);color:var(--ink);box-shadow:0 2px 0 rgba(11,11,13,.12);animation:keyBob 1.7s ease-in-out infinite}
-.vp-hint-text{font:700 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
+.vp-hint-key{display:grid;place-items:center;flex:none;color:#fff;background:none;border:0;filter:drop-shadow(0 1px 3px rgba(0,0,0,.5));animation:keyBob 1.7s ease-in-out infinite}
+.vp-hint-text{font:500 14px/1 -apple-system,BlinkMacSystemFont,'SF Pro Text',system-ui,sans-serif;letter-spacing:-.005em;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.55)}
+.vp-note{position:absolute;left:16px;bottom:14px;z-index:4;pointer-events:none;font:500 11px/1 -apple-system,BlinkMacSystemFont,'SF Pro Text',system-ui,sans-serif;color:rgba(255,255,255,.6);text-shadow:0 1px 4px rgba(0,0,0,.5)}
 @keyframes keyBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 @media(prefers-reduced-motion:reduce){.vp-hint-key{animation:none}}
 .vp-cap{position:absolute;left:50%;bottom:40px;transform:translateX(-50%);width:min(820px,84%);text-align:center;animation:capIn .8s var(--ease)}
@@ -319,7 +312,7 @@ mark.trace{background:none;color:inherit;padding:1px 4px;border-bottom:2px solid
   .st-side{position:relative;top:auto;right:auto;bottom:auto;width:auto;max-height:520px;border-left:0;border-top:1px solid var(--line);transform:none!important;transition:none}
   .studio.no-side .st-side{display:none}
   .studio:not(.no-side) .vp-actions,.vp-actions{transform:none!important}
-  .vp-toast-sub{display:none}.vp-cap p{font-size:17px}.vp-cap{bottom:20px;width:92%}
+  .vp-cap p{font-size:17px}.vp-cap{bottom:20px;width:92%}
   .evidence-split,.compare-cards{grid-template-columns:1fr}.mission h1{font-size:32px}
   .evidence-heading>span{display:none}.page-foot{flex-direction:column}
 }
