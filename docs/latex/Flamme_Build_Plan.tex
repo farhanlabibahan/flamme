@@ -1,0 +1,445 @@
+\documentclass[11pt,a4paper]{article}
+
+% ---------- Packages ----------
+\usepackage{fontspec}
+\usepackage[margin=2.2cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs,tabularx,array,longtable}
+\usepackage{enumitem}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{listings}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{tcolorbox}
+\usepackage{parskip}
+\usepackage{hyperref}
+
+% ---------- Colours ----------
+\definecolor{flame}{HTML}{E4572E}
+\definecolor{ember}{HTML}{F3A712}
+\definecolor{ink}{HTML}{1F2933}
+\definecolor{soft}{HTML}{FFF4EC}
+\definecolor{codebg}{HTML}{F6F7F9}
+
+\hypersetup{colorlinks=true,linkcolor=flame,urlcolor=flame,
+  pdftitle={Flamme Build Plan},pdfauthor={Team Flamme}}
+
+% ---------- Headings ----------
+\titleformat{\section}{\Large\bfseries\color{flame}}{\thesection}{0.8em}{}[\vspace{-0.4em}{\color{ember}\rule{\linewidth}{0.8pt}}]
+\titleformat{\subsection}{\large\bfseries\color{ink}}{\thesubsection}{0.7em}{}
+\titlespacing*{\section}{0pt}{1.6em}{0.9em}
+\titlespacing*{\subsection}{0pt}{1.2em}{0.5em}
+
+% ---------- Header / footer ----------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{gray}Flamme --- Build Plan}
+\fancyhead[R]{\small\color{gray}Team Flamme}
+\fancyfoot[C]{\small\thepage}
+\fancyfoot[R]{\scriptsize\color{gray}Not a NASA product}
+\renewcommand{\headrulewidth}{0.3pt}
+
+% ---------- Lists, tables, code ----------
+\setlist{itemsep=2pt,topsep=4pt}
+\renewcommand{\arraystretch}{1.25}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\lstset{basicstyle=\ttfamily\small,backgroundcolor=\color{codebg},frame=single,
+  rulecolor=\color{gray!40},breaklines=true,columns=fixed,keepspaces=true,basewidth=0.52em,
+  keywordstyle=\color{flame}\bfseries,commentstyle=\color{gray},xleftmargin=4pt,xrightmargin=4pt}
+
+% ---------- Helpers ----------
+\newcommand{\Otwo}{\ensuremath{\mathrm{O_2}}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newtcolorbox{donebox}{colback=soft,colframe=ember,boxrule=0.6pt,arc=2pt,
+  left=6pt,right=6pt,top=3pt,bottom=3pt}
+\newcommand{\done}[1]{\begin{donebox}\textbf{Done when:} #1\end{donebox}}
+\newtcolorbox{keybox}{colback=soft,colframe=flame,boxrule=0.8pt,arc=2pt,left=8pt,right=8pt}
+
+\setlength{\emergencystretch}{3em}\tolerance=2000
+\begin{document}
+
+% ================= Title =================
+\begin{titlepage}
+\centering
+\vspace*{3cm}
+{\color{flame}\rule{\linewidth}{1.5pt}}\\[1em]
+{\fontsize{34}{40}\selectfont\bfseries\color{ink} Flamme\par}
+\vspace{0.4em}
+{\LARGE Build Plan\par}
+\vspace{0.8em}
+{\large From prototype to evidence platform:\\ stack, architecture and step-by-step build\par}
+{\color{flame}\rule{\linewidth}{1.5pt}}\\[2.5em]
+{\large Team Flamme\par}
+\vspace{0.3em}
+NASA Space Apps Challenge $\cdot$ \emph{Flame in Freefall}\par
+\vspace{0.3em}
+October 2026\par
+\vfill
+\begin{keybox}
+\small\textbf{Guiding rule.} Every value shown is either \textbf{Observed} (cited source row or page),
+\textbf{Predicted} (named model version with uncertainty) or \textbf{Unknown}.
+Nothing is ever silently filled in. Flamme is not a NASA product and must not be used for
+material certification or operational safety decisions.
+\end{keybox}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+% ================= 0 =================
+\section{What we are building}
+
+The plan document defines six deliverables on top of the existing prototype.
+
+\begin{tabularx}{\linewidth}{@{}c p{3.6cm} L@{}}
+\toprule
+\# & \textbf{Deliverable} & \textbf{What it means technically}\\
+\midrule
+1 & Evidence database & Every NASA experiment stored in the ten-condition schema, with a source link and a per-field ``not reported'' flag\\
+2 & Search and compare & Filter by any condition (``PMMA, $<21\%$ \Otwo, opposed flow $<10$ cm/s''); side-by-side view in standard units\\
+3 & Gap map & Coverage plot of tested versus untested condition combinations\\
+4 & Data-grounded 3D lab & Replace the hand-tuned curves in \code{labModel.js} with relationships fitted to the database; show the nearest real experiments beside the simulation\\
+5 & Reporting template & The ten-condition format published as a JSON Schema and a fillable template\\
+6 & Outreach mode & Keep the 92-second guided Simulate sweep for classrooms and the public\\
+\bottomrule
+\end{tabularx}
+
+\subsection*{Reused from the current repository (not rewritten)}
+\begin{itemize}
+  \item \code{src/Lab.jsx}, \code{src/labScene.js}, \code{src/labModel.js} --- the Three.js flame lab and 92-second timeline.
+  \item \code{src/data.js}, \code{src/science.js} --- the field model (\code{source / unit / normalized / status}) and transparent matching. This field model becomes the database schema.
+  \item \code{flame\_in\_freefall\_data/psi\_scraper.py}, \code{download\_ntrs.py} --- PSI and NTRS harvesting (24 investigations, about 3{,}000 table rows, 36 PDFs).
+  \item \code{findings/} --- table-to-finding extraction and the PDF extraction utility.
+  \item \code{parameter\_catalog/} --- the ten-condition reference.
+\end{itemize}
+
+% ================= 1 =================
+\section{The stack}
+
+\begin{tabularx}{\linewidth}{@{}p{3.2cm} p{4.6cm} L@{}}
+\toprule
+\textbf{Layer} & \textbf{Choice} & \textbf{Why}\\
+\midrule
+Frontend & React 19 + Vite 7 + TypeScript & Already used; TypeScript catches API/UI schema mismatches. Migrate gradually (\code{allowJs})\\
+3D & Three.js (existing \code{labScene.js}) & Already built; no rewrite needed\\
+Routing / fetching & TanStack Router + TanStack Query & Typed, shareable search URLs; caching\\
+Lab state & Zustand & Small; readable from the Three.js render loop\\
+Tables & TanStack Table & Sortable, filterable compare view\\
+Charts & Observable Plot (or ECharts) & Heatmaps and scatter plots with little code\\
+Icons / style & Lucide, existing \code{app.css} as CSS variables & Keep the current look\\
+\midrule
+API & Python 3.12 + FastAPI + Pydantic v2 & Pipeline and ML are already Python; Pydantic generates the JSON Schema for deliverable 5\\
+ORM / migrations & SQLAlchemy 2 + Alembic & Versioned schema changes\\
+Database & PostgreSQL 16 on Neon or Supabase & Relational, range queries, JSONB for raw source rows\\
+Units & \code{pint} & Safe atm/psi/kPa, \%/mole-fraction, mm/cm, \textdegree C/K conversion\\
+\midrule
+Wrangling & pandas (or polars) + pandera & Per-investigation adapters with schema checks\\
+PDF extraction & PyMuPDF + pdfplumber + LLM structured output & Pull conditions from NTRS reports with page and quote; human review required\\
+ML & scikit-learn, statsmodels, optional PyMC & Small data: simple, interpretable, calibrated models\\
+Tracking & MLflow or versioned JSON in \code{models/} & Every fit has a version the UI can cite\\
+Data versioning & DVC (Drive / S3 / R2 remote) & 239 MB of raw data must not live in git\\
+\midrule
+Auth & Supabase Auth (or Clerk) & Public site is read-only; only reviewers log in\\
+Tests & Vitest, Playwright, pytest & Unit, browser and pipeline coverage\\
+CI & GitHub Actions & Lint, test, build and data validation on every PR\\
+Hosting & Vercel (web), Render/Fly/Railway (API), Neon (DB) & Free tiers, push-to-deploy\\
+\bottomrule
+\end{tabularx}
+
+\begin{keybox}
+\textbf{Cheaper alternative for a hackathon window.} Skip the live API. Run the pipeline at build time,
+export \code{experiments.json} and \code{models/*.json}, and query in the browser with
+\textbf{DuckDB-WASM}. Same schema, same pipeline, no server. Move to FastAPI + Postgres when
+the reviewer workflow (Step~4) is needed.
+\end{keybox}
+
+% ================= 2 =================
+\section{Repository layout (target)}
+
+\begin{lstlisting}
+flamme/
+|-- apps/
+|   |-- web/                  React + Vite + TS (moved from src/)
+|   |   |-- src/lab/          Lab.tsx, labScene.ts, labModel.ts
+|   |   |-- src/search/       filter bar, results, compare view
+|   |   |-- src/gaps/         gap map
+|   |   `-- src/api/          generated types + TanStack Query hooks
+|   `-- api/                  FastAPI
+|       |-- flamme_api/
+|       |   |-- models.py     SQLAlchemy tables
+|       |   |-- schemas.py    Pydantic: source of truth for the 10 conditions
+|       |   |-- routes/       experiments, search, gaps, models, review
+|       |   `-- query.py      filter -> SQL
+|       `-- alembic/
+|-- pipeline/
+|   |-- harvest/              psi_scraper.py, download_ntrs.py (moved)
+|   |-- adapters/             one per investigation: saffire2.py, bass2.py ...
+|   |-- extract_pdf/          NTRS report extraction (LLM + quote + page)
+|   |-- normalize.py          units via pint, vocabularies, status flags
+|   |-- validate.py           pandera checks
+|   `-- load.py               upsert into Postgres
+|-- ml/
+|   |-- features.py
+|   |-- fit_flammability.py
+|   |-- fit_spread.py
+|   |-- fit_suppression.py
+|   `-- export.py             -> models/<name>@<version>.json for the lab
+|-- schema/
+|   `-- flamme-experiment.schema.json    (generated; deliverable 5)
+|-- data/                     DVC-tracked raw + processed
+`-- docs/
+\end{lstlisting}
+
+% ================= 3 =================
+\section{The core data model}
+
+\emph{Build this first --- everything else depends on it.} Every condition value is a
+\textbf{Field}, exactly the shape already used in \code{src/data.js}:
+
+\begin{lstlisting}[language=Python]
+class Field(BaseModel):
+    source: str | None          # verbatim: "~ 22.1", "037 mm", "Insignificant"
+    value: float | str | None   # normalized, only when defensible
+    unit: str | None            # standard unit (table below)
+    status: Literal["reported", "approximate", "qualitative",
+                    "ambiguous", "not_reported", "not_applicable", "derived"]
+    note: str | None = None
+\end{lstlisting}
+
+\subsection{The ten conditions}
+
+\begin{tabularx}{\linewidth}{@{}c p{3.4cm} L@{}}
+\toprule
+\# & \textbf{Condition} & \textbf{Fields (standard unit)}\\
+\midrule
+1 & Material / fuel & name, material class (cellulosic, PMMA, silicone, fabric composite, liquid droplet, gas, \dots), formulation, coating, substrate\\
+2 & Geometry & length, width, thickness (mm); thermally thin/thick flag (derived)\\
+3 & Gravity & regime (Earth, lunar, Martian, microgravity), $g$ level ($g_0$), platform (ISS, Cygnus, drop tower, parabolic)\\
+4 & Oxygen & $X_{\mathrm{O_2}}$ (\% vol)\\
+5 & Pressure & $P$ (kPa)\\
+6 & Forced airflow & $u$ (cm/s)\\
+7 & Flow direction & concurrent, opposed, cross, quiescent\\
+8 & Ignition & igniter type, power (W), duration (s), position\\
+9 & Initial temperature & $T_0$ (K)\\
+10 & Suppression & agent, concentration (\% vol), flow rate, timing (s after ignition)\\
+\bottomrule
+\end{tabularx}
+
+\medskip
+\noindent\textbf{Derived column.} Oxygen partial pressure, because the plan states that it, not percentage alone,
+drives burning:
+\[
+  p_{\mathrm{O_2}} \;=\; \dfrac{X_{\mathrm{O_2}}}{100}\, P
+\]
+It is stored with status \code{derived} and only when \emph{both} inputs are reported.
+
+\subsection{Database tables}
+
+\begin{tabularx}{\linewidth}{@{}p{3.4cm} L@{}}
+\toprule
+\textbf{Table} & \textbf{Key columns}\\
+\midrule
+\code{investigation} & psi\_id, name, platform, doi, url\\
+\code{source\_document} & id, investigation\_id, kind (table / report / image), filename, url, sha256, version\\
+\code{experiment} & id, investigation\_id, source\_document\_id, source\_row or page, quote, ten condition columns (each \code{value}, \code{unit}, \code{status}, \code{source}), raw\_row JSONB\\
+\code{outcome} & experiment\_id, metric (spread\_rate, burn\_time, extinction, ignited, flame\_length, \dots), value, unit, status, source\\
+\code{review} & experiment\_id, reviewer, decision (approved / corrected / rejected), diff JSONB, timestamp\\
+\code{model\_version} & name, version, trained\_on (dataset hash), metrics JSONB, domain JSONB, created\_at\\
+\code{audit\_log} & every normalization decision and correction --- the auditable ``agentic memory'' from the README\\
+\bottomrule
+\end{tabularx}
+
+\medskip
+Store condition columns \emph{flat} (\code{oxygen\_value}, \code{oxygen\_status}, \code{oxygen\_source})
+rather than as one JSON blob. Flat columns make range search and the gap map fast and simple.
+
+% ================= 4 =================
+\section{Step-by-step build}
+
+Each step ends with a \textbf{Done when} check. Sizing assumes a team of 2--4 people.
+
+\subsection{Step 1 --- Clean up the repository and set up tooling \hfill\normalfont\small ($\tfrac{1}{2}$ week)}
+\begin{enumerate}
+  \item Create \code{apps/web}, \code{apps/api}, \code{pipeline}, \code{ml}, \code{schema}; move files with \code{git mv} to keep history.
+  \item Web: add TypeScript (\code{allowJs: true}), Vitest, ESLint and Prettier.
+  \item API: \code{uv init apps/api}; add \code{fastapi uvicorn sqlalchemy alembic psycopg pydantic pint pandas pandera}.
+  \item \code{dvc init}; move \code{psi\_data} and \code{ntrs\_pdfs} into \code{data/raw}, \code{dvc add} it, configure a remote.
+  \item Add a \code{LICENSE} (the README notes there is none) and \code{.env.example}.
+  \item GitHub Actions: \code{web.yml} (lint, Vitest, build) and \code{api.yml} (ruff, pytest).
+\end{enumerate}
+\done{\code{npm run dev}, \code{npm test}, \code{uv run pytest} and CI all pass on a clean clone; the existing five science tests stay green.}
+
+\subsection{Step 2 --- Define the schema in code \hfill\normalfont\small ($\tfrac{1}{2}$ week)}
+\begin{enumerate}
+  \item Write \code{schemas.py} (Pydantic) for \code{Field}, the ten conditions, \code{Outcome} and \code{Experiment}.
+  \item Write SQLAlchemy models and the first Alembic migration.
+  \item Generate \code{schema/flamme-experiment.schema.json} with \code{Experiment.model\_json\_schema()}.
+  \item Generate TypeScript types from the OpenAPI spec with \code{openapi-typescript}.
+  \item Port the five curated records in \code{src/data.js} into a seed file. They are the golden test set.
+\end{enumerate}
+\done{the five seed records round-trip DB $\rightarrow$ API $\rightarrow$ UI unchanged, including \code{037 mm} staying \code{ambiguous} and pressure staying \code{not\_reported}.}
+
+\subsection{Step 3 --- Table ingestion pipeline \hfill\normalfont\small ($1\tfrac{1}{2}$ weeks, deliverable 1)}
+PSI experimental tables all have different columns, so write \textbf{one adapter per investigation}, not one generic parser.
+\begin{enumerate}
+  \item For each of the 22 table files, write \code{pipeline/adapters/<investigation>.py} with a \code{COLUMN\_MAP} (source column $\rightarrow$ condition) and a \code{parse\_row()} that keeps \code{source} verbatim.
+  \item \code{normalize.py}: convert units with pint; map vocabularies (``co-current'', ``cocurrent'' $\rightarrow$ \code{concurrent}); set status (\code{\textasciitilde} $\rightarrow$ approximate, words $\rightarrow$ qualitative, unparseable $\rightarrow$ ambiguous, blank $\rightarrow$ not\_reported).
+  \item \code{validate.py} (pandera): $0 \le X_{\mathrm{O_2}} \le 100$, $0 \le P \le 200$ kPa, $u \ge 0$, thickness $>0$, and every row has a source file and row number.
+  \item \code{load.py}: idempotent upsert keyed on (source document, source row).
+  \item Lift the parsing logic already in \code{findings/build\_findings.py} into the adapters.
+\end{enumerate}
+Priority: the investigations the plan names --- \textbf{Saffire} (PSI-99 etc.), \textbf{BASS / BASS-II} (PSI-25), \textbf{FLEX} (PSI-69) --- then the rest.
+\done{\code{make ingest} loads every table investigation; each adapter has a pytest checking row counts and three hand-verified rows; a validation report shows the ``not reported'' rate per field.}
+
+\subsection{Step 4 --- Report extraction with human review \hfill\normalfont\small ($1\tfrac{1}{2}$ weeks, deliverable 1)}
+Many conditions (pressure, ignition energy, flow direction) appear only in NTRS reports, drop-tower and parabolic-flight papers, and NASA-STD-6001 test reports.
+\begin{enumerate}
+  \item \code{extract\_pdf/}: PyMuPDF for text, pdfplumber for tables; chunk by page.
+  \item Ask an LLM for \textbf{structured output} matching the Pydantic \code{Experiment} schema, with a \code{page} and verbatim \code{quote} for every non-null field. Reject any field whose quote is not found in the page text (string match in code).
+  \item Everything extracted lands as \code{pending}; nothing pending is shown publicly.
+  \item Build a \code{/review} screen (reviewer login): PDF page on the left, extracted fields on the right; approve, correct or reject. Corrections go to \code{audit\_log}.
+\end{enumerate}
+\done{all 36 downloaded NTRS PDFs are processed; at least one reviewer has approved records from each; a test confirms unapproved rows never appear in public API responses.}
+
+\subsection{Step 5 --- Search and compare \hfill\normalfont\small (1 week, deliverable 2)}
+\begin{enumerate}
+  \item API: \code{GET /experiments?material\_class=PMMA\&o2\_lt=21\&direction=opposed\&flow\_lt=10}; each filter maps to SQL on the flat columns.
+  \item Show how unknowns behave: a row with oxygen \code{not\_reported} is excluded from an \Otwo{} filter but counted in a ``12 more records have unknown \Otwo'' link.
+  \item Free-text bar: a deterministic parser (regex + vocabulary) turns the plan's example query into a filter object shown back as editable chips. An optional LLM fallback may \emph{propose} filters; the user always sees the chips first.
+  \item Keep the \code{science.js} similarity ranking as ``closest experiments'', now server-side over the whole database.
+  \item Compare view: up to four experiments as columns, the ten conditions as rows, standard units, unknown cells visibly marked, each cell linked to its source row or page.
+  \item Filters live in the URL so searches can be shared.
+\end{enumerate}
+\done{the plan's example query returns the right rows; a Playwright test covers search $\rightarrow$ compare $\rightarrow$ open source link.}
+
+\subsection{Step 6 --- Gap map \hfill\normalfont\small (1 week, deliverable 3)}
+\begin{enumerate}
+  \item API \code{GET /gaps?x=oxygen\&y=flow\&facet=gravity} returns counts per bin. Default bins: \Otwo{} 2 percentage points, flow 5 cm/s, pressure 10 kPa.
+  \item Heatmap: coloured cells are tested (count shown), outlined empty cells are \textbf{gaps}, hatched cells contain only approximate values.
+  \item Clicking a cell opens the search results for that bin. Facets: gravity, flow direction, material class.
+  \item Overlay the fitted flammability boundary from Step 7, so users see conditions that are untested \emph{and} near the boundary --- the most useful place for a next experiment.
+\end{enumerate}
+\done{map counts match a direct SQL query (pytest), and clicking any tested cell returns exactly that many rows.}
+
+\subsection{Step 7 --- Fit models to the data \hfill\normalfont\small (2 weeks, deliverable 4: science)}
+Data is small and heterogeneous, so use simple, physics-informed, interpretable models --- one per question, never one model for everything.
+
+\medskip
+\begin{tabularx}{\linewidth}{@{}p{2.8cm} p{3.6cm} p{3.4cm} L@{}}
+\toprule
+\textbf{Model} & \textbf{Inputs} & \textbf{Target} & \textbf{Method}\\
+\midrule
+Flammability boundary & $p_{\mathrm{O_2}}$, $u$, material class, gravity & ignited and sustained (yes/no) & Logistic regression or Gaussian-process classifier\\
+Spread rate & thickness, $p_{\mathrm{O_2}}$, $u$, direction & spread rate (mm/s), only where sources measure the same quantity & Physics-form regression\\
+Suppression & agent, concentration, $u$ & extinguished (yes/no), time to extinction & Logistic regression or survival model\\
+\bottomrule
+\end{tabularx}
+
+\medskip
+For spread over a \textbf{thermally thin} sample in opposed flow, use the de~Ris result as the model shape instead of a black box:
+\[
+  V_f \;=\; \dfrac{\pi}{4}\,\dfrac{\lambda_g\,(T_f - T_v)}{\rho_s\, c_s\, \tau\,(T_v - T_\infty)}
+\]
+so spread rate should scale as $V_f \propto \dfrac{1}{\tau}$ with sample thickness $\tau$. Fit the coefficient (and any extra oxygen and flow dependence) from data, and report how well the observations follow this shape.
+
+\medskip\noindent\textbf{Rules for every fit}
+\begin{enumerate}
+  \item \textbf{Grouped cross-validation by investigation} (\code{GroupKFold}) so one experiment never sits in both train and test.
+  \item Start with a baseline (mean or single variable); keep a model only if it beats it.
+  \item Report calibrated uncertainty (prediction intervals or calibrated probabilities).
+  \item Record the \textbf{domain} (ranges or convex hull of training inputs). Outside it the UI says ``outside tested conditions'' instead of predicting.
+  \item \code{ml/export.py} writes \code{models/flammability@1.0.json} (coefficients, domain, metrics, dataset hash) and registers it in \code{model\_version}.
+\end{enumerate}
+\done{each model card shows cross-validated metrics against the baseline, the domain and the dataset version; a pytest confirms export $\rightarrow$ reload gives identical predictions.}
+
+\subsection{Step 8 --- Ground the 3D lab in data \hfill\normalfont\small ($1\tfrac{1}{2}$ weeks, deliverable 4: visual)}
+\begin{enumerate}
+  \item Split \code{derive(p)} in \code{labModel.js} into two layers:
+  \begin{itemize}
+    \item \code{predict(p)}: physical quantities from the exported model JSON (ignition probability, spread rate with interval, extinguished or not);
+    \item \code{toVisual(prediction)}: flame size, soot, shell shape and colour, keeping the existing Three.js look.
+  \end{itemize}
+  \item Load models with \code{fetch('/models/flammability@1.0.json')}; logistic and linear models run in a few lines of JavaScript in the browser.
+  \item Out of domain: keep the illustrative curve and show the banner \emph{``Illustrative --- no NASA data for these conditions''}.
+  \item Add a \textbf{Closest real experiments} panel: query the similarity endpoint with the current slider values and show the top three with real outcome and source link.
+  \item Label every on-screen number \textbf{Observed}, \textbf{Predicted (model@version)} or \textbf{Unknown}.
+\end{enumerate}
+\done{for each seed experiment, setting the sliders to its conditions shows it as the closest experiment, and the predicted outcome direction agrees with the observed one --- or the mismatch is shown, not hidden.}
+
+\subsection{Step 9 --- Reporting template \hfill\normalfont\small ($\tfrac{1}{2}$ week, deliverable 5)}
+\begin{enumerate}
+  \item Publish \code{schema/flamme-experiment.schema.json} (generated in Step 2) at \code{/schema}.
+  \item Generate a fillable CSV template and a web form from the same schema (\code{react-jsonschema-form}) that flags missing conditions.
+  \item A ``Validate my file'' page: upload CSV or JSON, receive a completeness report for the ten conditions.
+\end{enumerate}
+\done{a file exported from the database validates against the schema; a file missing pressure gets a clear warning.}
+
+\subsection{Step 10 --- Outreach mode \hfill\normalfont\small ($\tfrac{1}{2}$ week, deliverable 6)}
+\begin{enumerate}
+  \item Keep the 92-second \code{/\#studio-play} sweep; captions now cite real experiments (``Saffire II sample 2-5 at about 22\% \Otwo{} \dots'').
+  \item A classroom route with large text and no admin UI, available offline as a PWA (\code{vite-plugin-pwa}).
+\end{enumerate}
+\done{the sweep runs end to end on a school laptop in Chrome or Firefox at 30 fps or more.}
+
+\subsection{Step 11 --- Quality, accessibility and deployment \hfill\normalfont\small (1 week, overlapping)}
+\begin{enumerate}
+  \item Tests: Vitest for \code{labModel} and \code{science}; Playwright for search $\rightarrow$ compare $\rightarrow$ lab $\rightarrow$ source; pytest for adapters, API and model export; a visual snapshot of the lab.
+  \item Accessibility: keep the keyboard shortcuts, add \code{aria-live} for lab status, audit with axe.
+  \item Performance: lazy-load the Three.js lab chunk; cap device pixel ratio at 2.
+  \item Deploy: web to Vercel (\code{VITE\_API\_URL}); API to Render or Fly (\code{DATABASE\_URL}); database on Neon; a release job runs \code{alembic upgrade head} and \code{make ingest}.
+  \item Footer on every page: ``Not a NASA product. Not for certification or operational safety decisions.''
+\end{enumerate}
+
+% ================= 5 =================
+\section{Timeline}
+
+\begin{tabularx}{\linewidth}{@{}p{2cm} p{3.2cm} L@{}}
+\toprule
+\textbf{Week} & \textbf{Steps} & \textbf{Milestone}\\
+\midrule
+1 & 1, 2 & Tooling, schema, five seed records through the full stack\\
+2--3 & 3 & All PSI tables in the database\\
+3--4 & 4, 5 & Reports extracted and reviewed; search and compare live\\
+5 & 6, 9 & Gap map; reporting template\\
+6--7 & 7 & Fitted models with model cards\\
+7--8 & 8, 10, 11 & Data-grounded lab, outreach mode, deployment\\
+\bottomrule
+\end{tabularx}
+
+\begin{keybox}
+\textbf{48-hour hackathon path.} Steps 1--3 for Saffire, BASS and FLEX only; Steps 5 and 6 with DuckDB-WASM over
+exported JSON; one flammability-boundary model for Steps 7--8; and the closest-experiments panel. That alone
+demonstrates the full idea end to end with real data.
+\end{keybox}
+
+% ================= 6 =================
+\section{Suggested team split}
+
+\begin{tabularx}{\linewidth}{@{}p{3.2cm} L@{}}
+\toprule
+\textbf{Role} & \textbf{Owns}\\
+\midrule
+Data & Steps 3 and 4: adapters, normalization, PDF extraction, review\\
+Backend & Step 2, the APIs for Steps 5 and 6, deployment\\
+Frontend / 3D & The interfaces for Steps 5 and 6, plus Steps 8 and 10\\
+ML / science & Step 7, model cards, checking physics and limitations\\
+\bottomrule
+\end{tabularx}
+
+% ================= 7 =================
+\section{Risks and mitigations}
+
+\begin{tabularx}{\linewidth}{@{}p{5cm} L@{}}
+\toprule
+\textbf{Risk} & \textbf{Mitigation}\\
+\midrule
+Too few comparable outcome measurements for a model & Fit per question and per material class; if data is too thin, show only nearest experiments with ``insufficient data''\\
+LLM extraction invents values & Page and quote required, quote string-matched in code, human approval before publishing\\
+Unit or definition mismatch (e.g.\ Saffire ``Spread Length'' column holding mm/s) & Keep \code{source} verbatim, mark \code{ambiguous}, exclude from fits until reviewed\\
+Leakage inflating model scores & \code{GroupKFold} by investigation\\
+Users treat the lab as a real fire prediction & Observed / Predicted / Unknown labels, out-of-domain banner, disclaimer footer\\
+Raw data size (about 14 TB on PSI) & Tables and reports only; raw downloads stay opt-in and size-capped\\
+\bottomrule
+\end{tabularx}
+
+\end{document}
