@@ -25,6 +25,8 @@ const ComparePage = lazy(() => import('./pages/ComparePage.jsx'));
 const InvestigationsPage = lazy(() => import('./pages/InvestigationsPage.jsx'));
 const EarthPage = lazy(() => import('./pages/EarthPage.jsx'));
 const RankingsPage = lazy(() => import('./pages/RankingsPage.jsx'));
+const GapsPage = lazy(() => import('./pages/GapsPage.jsx'));
+const TemplatePage = lazy(() => import('./pages/TemplatePage.jsx'));
 
 function App() {
   return <BrowserRouter>
@@ -39,6 +41,8 @@ function App() {
           <Route path="/earth" element={<Suspense fallback={<CubeLoader message="Loading…" fullHeight/>}><EarthPage/></Suspense>}/>
           <Route path="/rankings" element={<Suspense fallback={<CubeLoader message="Loading rankings…" fullHeight/>}><RankingsPage/></Suspense>}/>
           <Route path="/compare" element={<Suspense fallback={<CompareSkeleton/>}><ComparePage/></Suspense>}/>
+          <Route path="/gaps" element={<Suspense fallback={<CubeLoader message="Loading gap map…" fullHeight/>}><GapsPage/></Suspense>}/>
+          <Route path="/template" element={<Suspense fallback={<CubeLoader message="Loading template…" fullHeight/>}><TemplatePage/></Suspense>}/>
         </Route>
         <Route path="/lab/view" element={<Suspense fallback={<CubeLoader message="Loading lab…" fullHeight/>}><LabViewPage/></Suspense>}/>
         <Route path="*" element={<Navigate to="/" replace/>}/>

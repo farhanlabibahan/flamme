@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {NavLink, Outlet, useLocation, useNavigate} from 'react-router-dom';
-import {BookOpen, ChevronsLeft, ChevronsRight, Compass, ExternalLink, FlaskConical, Layers, ListOrdered, Table2, Globe, Sparkles, X} from 'lucide-react';
+import {BookOpen, ChevronsLeft, ChevronsRight, Compass, ExternalLink, FileJson, FlaskConical, Grid3x3, Layers, ListOrdered, Table2, Globe, Sparkles, X} from 'lucide-react';
 import {useFlamme} from '../context/FlammeContext.jsx';
 import MicroFlame from './MicroFlame.jsx';
 
@@ -12,6 +12,8 @@ const NAV = [
   {to: '/investigations', label: 'Investigations', icon: Table2, Globe, prefetch: () => import('../pages/InvestigationsPage.jsx')},
   {to: '/earth', label: 'On Earth', icon: Globe, prefetch: () => import('../pages/EarthPage.jsx')},
   {to: '/compare', label: 'Compare', icon: Layers, prefetch: () => import('../pages/ComparePage.jsx')},
+  {to: '/gaps', label: 'Gap map', icon: Grid3x3, prefetch: () => import('../pages/GapsPage.jsx')},
+  {to: '/template', label: 'Template', icon: FileJson, prefetch: () => import('../pages/TemplatePage.jsx')},
 ];
 
 const warmed = new Set();
