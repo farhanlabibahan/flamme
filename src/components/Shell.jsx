@@ -73,7 +73,6 @@ export default function Shell() {
         <div className="view-transition" key={location.pathname}>
           <Outlet/>
         </div>
-        <footer className="page-foot">NASA PSI source excerpts · Flamme by Team Flamme <span>No NASA endorsement · No safety certification · No validated flame prediction</span></footer>
       </div>
     </main>
   </div>;

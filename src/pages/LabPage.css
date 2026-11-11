@@ -1,0 +1,98 @@
+/* ============================================================ lab setup (/lab)
+   Flat editorial layout: hairline rules, ink text, one accent for the
+   active state. No cards, no shadows, no grey body copy. */
+.lp{max-width:1080px;margin:0 auto;padding:12px 0 120px;color:var(--ink)}
+.lp h1{font:600 clamp(30px,3.6vw,42px)/1.08 var(--disp);letter-spacing:-.025em;margin:0;color:var(--ink)}
+.lp h2,.lp h3{font:600 15px var(--disp);letter-spacing:-.005em;margin:0;color:var(--ink)}
+
+.lp-top{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;padding-bottom:28px;border-bottom:1px solid var(--ink)}
+.lp-regime{display:flex;flex-direction:column;gap:6px;align-items:flex-end;text-align:right}
+.lp-regime span{font:600 11px var(--disp);letter-spacing:.08em;text-transform:uppercase;color:var(--ink)}
+.lp-regime strong{font:600 18px var(--disp);letter-spacing:-.01em;color:var(--accent)}
+
+/* presets: a row of five flat tiles, separated by hairlines */
+.lp-presets{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border-bottom:1px solid var(--line2)}
+.lp-preset{display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:20px 18px 22px 0;background:transparent;border:0;border-right:1px solid var(--line);text-align:left;color:var(--ink);cursor:pointer;transition:color .15s}
+.lp-preset:not(:first-child){padding-left:18px}
+.lp-preset:last-child{border-right:0}
+.lp-preset svg{color:var(--ink);margin-bottom:8px;transition:color .15s}
+.lp-preset-name{font:600 14px var(--disp);color:var(--ink)}
+.lp-preset-sub{font:400 12px var(--sans);color:var(--ink)}
+.lp-preset:hover .lp-preset-name{color:var(--accent)}
+.lp-preset.on{background:var(--accent);color:#fff}
+.lp-preset.on svg,.lp-preset.on .lp-preset-name,.lp-preset.on .lp-preset-sub{color:#fff}
+.lp-preset.on{margin-bottom:-1px;padding-bottom:23px}
+.lp-preset:focus-visible{outline-offset:-2px}
+
+/* grounded estimate: plain section, two big numerals */
+.lp-ground{padding:30px 0 32px;border-bottom:1px solid var(--line2)}
+.lp-ground-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px}
+.lp-link{font:600 13px var(--disp);color:var(--accent);background:none;border:0;cursor:pointer;padding:0}
+.lp-link:hover{text-decoration:underline;text-underline-offset:3px}
+.lp-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0}
+.lp-stats>div{display:flex;flex-direction:column;gap:8px;padding-right:24px}
+.lp-stats>div+div{padding-left:24px;border-left:1px solid var(--line2)}
+.lp-stats span{font:500 13px var(--sans);color:var(--ink)}
+.lp-stats b{font:600 40px/1 var(--disp);letter-spacing:-.03em;color:var(--ink)}
+.lp-stats small{font:400 12px var(--mono);color:var(--ink)}
+.lp-oor,.lp-nearest{margin:18px 0 0;font:400 14px/1.55 var(--sans);color:var(--ink)}
+.lp-nearest span{display:inline-block;font:600 11px var(--disp);letter-spacing:.08em;text-transform:uppercase;color:var(--ink);margin-right:10px}
+.lp-nearest a{color:var(--accent)}
+.lp-oor{padding-left:12px;border-left:2px solid var(--ink)}
+
+/* parameter grid: two columns of hairline cells */
+.lp-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-bottom:1px solid var(--line2)}
+.lp-cell{padding:24px 0 26px;border-bottom:1px solid var(--line)}
+.lp-cell:nth-child(odd){padding-right:28px;border-right:1px solid var(--line)}
+.lp-cell:nth-child(even){padding-left:28px}
+.lp-head{display:flex;align-items:baseline;gap:12px;margin-bottom:14px}
+.lp-n{font:600 11px var(--mono);color:var(--accent);letter-spacing:.04em}
+.lp-body{display:flex;flex-direction:column;gap:8px}
+
+/* the shared controls (Enum / NumField) restyled flat inside this page only */
+.lp .be,.lp .bf{background:transparent;border:0;border-bottom:1px solid var(--line2);border-radius:0;height:36px;padding:0}
+.lp .be:hover,.lp .bf:hover{background:transparent;border-bottom-color:var(--ink)}
+.lp .be>span,.lp .bf-lab{font:500 13px var(--sans);color:var(--ink)}
+.lp .be select,.lp .bf-val{font:500 13px var(--mono);color:var(--ink)}
+.lp .be select{padding-right:22px}
+.lp .be svg{color:var(--ink)}
+.lp .bf-fill{background:var(--accent-soft);box-shadow:none}
+.lp .bf-val small{color:var(--ink);font-size:11px}
+.lp .bf-input{background:transparent;border:0;border-bottom:1px solid var(--accent);height:36px}
+.lp .bt{height:36px;background:transparent;border:1px solid var(--line3);color:var(--ink);font:600 13px var(--disp);justify-content:center}
+.lp .bt:hover:not(:disabled){background:var(--ink);color:#fff}
+.lp .bt.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.lp .bt.on:hover:not(:disabled){background:var(--accent-hover);color:#fff}
+.lp .bt:disabled{opacity:.4}
+.lp .pills{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;margin-top:6px;border:1px solid var(--line2)}
+.lp .pills button{height:32px;background:transparent;color:var(--ink);font:600 11px var(--mono);letter-spacing:.04em;border:0;border-right:1px solid var(--line2)}
+.lp .pills button:last-child{border-right:0}
+.lp .pills button:hover{background:var(--ink);color:#fff;transform:none}
+.lp .pills button.on{background:var(--accent);color:#fff}
+
+/* sticky action bar: plain, hairline top rule */
+.lp-bar{position:sticky;bottom:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:28px;padding:16px 0;background:var(--paper);border-top:1px solid var(--ink)}
+.lp-reset{display:inline-flex;align-items:center;gap:8px;height:44px;padding:0;background:transparent;border:0;color:var(--ink);font:600 13px var(--disp);cursor:pointer}
+.lp-reset:hover{color:var(--accent)}
+.lp-enter{display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 24px;background:var(--accent);color:#fff;border:1px solid var(--accent);font:600 14px var(--disp);cursor:pointer;transition:background .15s,transform .15s var(--ease)}
+.lp-enter:hover{background:var(--ink);border-color:var(--ink);transform:translateX(2px)}
+
+@media(max-width:1000px){
+  .lp-presets{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .lp-preset:nth-child(3){border-right:0}
+  .lp-preset:nth-child(4){padding-left:0}
+  .lp-preset:nth-child(n+4){border-top:1px solid var(--line)}
+}
+@media(max-width:760px){
+  .lp-grid{grid-template-columns:1fr}
+  .lp-cell:nth-child(n){padding:22px 0 24px;border-right:0}
+  .lp-cell:nth-child(even){padding-left:0}
+  .lp-presets{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .lp-preset,.lp-preset:not(:first-child){padding:16px 14px 18px 0;border-right:0}
+  .lp-preset:nth-child(even){padding-left:14px;border-left:1px solid var(--line)}
+  .lp-preset:nth-child(n+3){border-top:1px solid var(--line)}
+  .lp-stats{grid-template-columns:1fr}
+  .lp-stats>div+div{padding-left:0;border-left:0;border-top:1px solid var(--line2);padding-top:18px}
+  .lp-regime{align-items:flex-start;text-align:left}
+}
+@media(prefers-reduced-motion:reduce){.lp-enter,.lp-preset{transition:none}}

@@ -7,7 +7,7 @@ import './RankingsPage.css';
    from 24 PSI investigations + NTRS reports) for a chosen crew environment.
    Same formula as findings/rank_findings.py; edit O2 / pressure / gravity or
    the weights and the ranking recomputes live. */
-const PRESETS = {...scenarios, custom: {label: 'Custom conditions', o2_pct: 30, pressure_atm: 0.69, gravity_g: 0}};
+const PRESETS = {...scenarios, custom: {label: 'Custom', o2_pct: 30, pressure_atm: 0.69, gravity_g: 0}};
 const THEMES = ['All', ...[...new Set(findings.map(f => f.theme))].sort()];
 const SEV_LABEL = {3: 'Direct threat', 2: 'Design info', 1: 'Background'};
 const urlOf = s => (s.match(/https?:\/\/\S+/) || [])[0];
@@ -35,66 +35,67 @@ export default function RankingsPage() {
   const setC = (k, v) => { setCustom(c => ({...c, [k]: Number(v)})); setKey('custom'); };
 
   return <div className="rk reveal">
-    <header>
-      <span className="cmp-kicker">Rankings</span>
+    <header className="rk-top">
       <h1>What matters most for this crew environment?</h1>
-      <p className="rk-lede">All {ranked.length} source-linked findings from the full catalog, scored 0–100 for the habitat you choose:
-        condition match, crew-safety severity, and strength of evidence. This is a prescreening aid, not a safety certification.</p>
+      <span className="rk-count"><b>{ranked.length}</b> findings</span>
     </header>
 
-    <section className="surface rk-controls">
+    <section className="rk-controls">
       <div className="rk-presets" role="tablist" aria-label="Crew environment">
         {Object.entries(PRESETS).map(([k, s]) => <button key={k} role="tab" aria-selected={key === k} className={key === k ? 'on' : ''} onClick={() => setKey(k)}>{s.label}</button>)}
       </div>
+
       <div className="rk-sliders">
-        <label>Oxygen <b>{sc.o2_pct}%</b><input type="range" min="15" max="85" value={sc.o2_pct} onChange={e => setC('o2_pct', e.target.value)}/></label>
-        <label>Pressure <b>{sc.pressure_atm} atm · {(sc.pressure_atm * 14.696).toFixed(1)} psi</b><input type="range" min="0.2" max="1.1" step="0.01" value={sc.pressure_atm} onChange={e => setC('pressure_atm', e.target.value)}/></label>
-        <label>Gravity <b>{sc.gravity_g} g</b><input type="range" min="0" max="1" step="0.01" value={sc.gravity_g} onChange={e => setC('gravity_g', e.target.value)}/></label>
+        <label><span>Oxygen</span><b>{sc.o2_pct}%</b><input type="range" min="15" max="85" value={sc.o2_pct} onChange={e => setC('o2_pct', e.target.value)}/></label>
+        <label><span>Pressure</span><b>{sc.pressure_atm} atm · {(sc.pressure_atm * 14.696).toFixed(1)} psi</b><input type="range" min="0.2" max="1.1" step="0.01" value={sc.pressure_atm} onChange={e => setC('pressure_atm', e.target.value)}/></label>
+        <label><span>Gravity</span><b>{sc.gravity_g} g</b><input type="range" min="0" max="1" step="0.01" value={sc.gravity_g} onChange={e => setC('gravity_g', e.target.value)}/></label>
       </div>
+
+      <div className="rk-foot">
+        <div className="rk-themes" aria-label="Theme">{THEMES.map(t => <button key={t} className={theme === t ? 'on' : ''} onClick={() => setTheme(t)}>{t}</button>)}</div>
+        <div className="rk-export">
+          <button onClick={() => download('csv')}><Download size={13}/> CSV</button>
+          <button onClick={() => download('json')}><Download size={13}/> JSON</button>
+        </div>
+      </div>
+
       <details className="rk-weights"><summary>Scoring weights</summary>
         <div className="rk-sliders">
           {[['rel', 'Condition match'], ['sev', 'Severity'], ['evi', 'Evidence strength']].map(([k, l]) =>
-            <label key={k}>{l} <b>{Math.round(w[k] * 100)}%</b><input type="range" min="0" max="1" step="0.05" value={w[k]} onChange={e => setW(x => ({...x, [k]: Number(e.target.value)}))}/></label>)}
+            <label key={k}><span>{l}</span><b>{Math.round(w[k] * 100)}%</b><input type="range" min="0" max="1" step="0.05" value={w[k]} onChange={e => setW(x => ({...x, [k]: Number(e.target.value)}))}/></label>)}
         </div>
-        <p>Weights are normalized to sum to 100%. Defaults 45 / 35 / 20 match <code>findings/RANKING_METHOD.md</code>.
-          <button className="rk-link" onClick={() => setW(DEFAULT_WEIGHTS)}>Reset</button></p>
+        <button className="rk-link" onClick={() => setW(DEFAULT_WEIGHTS)}>Reset weights</button>
       </details>
-      <div className="rk-export"><span>Export these {shown.length} findings with their conditions for modeling:</span>
-        <button onClick={() => download('csv')}><Download size={14}/> CSV</button><button onClick={() => download('json')}><Download size={14}/> JSON</button></div>
-      <div className="rk-themes">{THEMES.map(t => <button key={t} className={theme === t ? 'on' : ''} onClick={() => setTheme(t)}>{t}</button>)}</div>
     </section>
 
-    {sc.gravity_g > 0 && <section className="rk-pg" aria-label="Partial-gravity notice">
-      <h2>No partial-gravity combustion data yet</h2>
-      <p>PSI holds no tests at {sc.gravity_g} g, so these scores extrapolate. Microgravity ({n0} findings) and 1 g ({n1} findings) bound what intermediate gravity is likely to do.
-        ACME E-FIELD Flames (PSI-22) mimics partial gravity with an electric field acting on flame ions. Real data is expected from LUCI and FM2.</p>
-    </section>}
+    {sc.gravity_g > 0 && <p className="rk-note" aria-label="Partial-gravity notice">
+      <b>No partial-gravity data.</b> PSI has no tests at {sc.gravity_g} g. Scores extrapolate between microgravity ({n0}) and 1 g ({n1}).
+    </p>}
     {gaps.length > 0 && <section className="rk-gaps" aria-label="Evidence gaps">
-      <h2><AlertTriangle size={16}/> Evidence gaps for this scenario</h2>
+      <h2><AlertTriangle size={14}/> Evidence gaps</h2>
       {gaps.map(g => <p key={g.finding_id}><b>{g.finding}</b> {g.safety_implication}</p>)}
     </section>}
 
     <ol className="rk-list">
       {shown.map(r => {
         const f = r.f, isOpen = open === f.finding_id, link = urlOf(f.source_file);
-        return <li key={f.finding_id} className={`surface rk-item ${isOpen ? 'open' : ''}`}>
+        return <li key={f.finding_id} className={`rk-item ${isOpen ? 'open' : ''}`}>
           <button className="rk-row" aria-expanded={isOpen} onClick={() => setOpen(isOpen ? null : f.finding_id)}>
-            <span className="rk-rank">{r.rank}</span>
+            <span className="rk-rank">{String(r.rank).padStart(2, '0')}</span>
             <span className="rk-main"><b>{f.finding}</b>
-              <small>{f.experiment} · {f.theme} · <span className={`sev s${f.severity}`}>{SEV_LABEL[f.severity]}</span> · {f.confidence} confidence</small></span>
-            <span className="rk-score">{r.score.toFixed(1)}</span><ChevronDown size={16} className="rk-chev"/>
+              <small>{f.experiment} · {f.theme} · <span className={`sev s${f.severity}`}>{SEV_LABEL[f.severity]}</span> · {f.confidence}</small></span>
+            <span className="rk-score">{r.score.toFixed(1)}</span><ChevronDown size={15} className="rk-chev"/>
           </button>
           {isOpen && <div className="rk-detail">
-            <p><b>Safety implication.</b> {f.safety_implication}</p>
+            <p>{f.safety_implication}</p>
             <div className="rk-parts">
-              <span>O₂ match<Bar v={r.o2}/></span><span>Pressure match<Bar v={r.pr}/></span><span>Gravity match<Bar v={r.gr}/></span>
-              <span>Evidence<Bar v={r.evi}/></span>
+              <span>O₂<Bar v={r.o2}/></span><span>Pressure<Bar v={r.pr}/></span><span>Gravity<Bar v={r.gr}/></span><span>Evidence<Bar v={r.evi}/></span>
             </div>
             <dl>
-              <dt>Tested conditions</dt><dd>{f.material_or_fuel || 'n/a'} · {f.condition || 'n/a'} · O₂ {f.o2_pct_min ?? '?'}–{f.o2_pct_max ?? '?'}% · {f.gravity || 'gravity not stated'}{f.n_tests ? ` · n=${f.n_tests}` : ''}</dd>
-              {f.quote && <><dt>Source quote</dt><dd>“{f.quote}”{f.page ? ` (p. ${f.page})` : ''}</dd></>}
+              <dt>Tested</dt><dd>{f.material_or_fuel || 'n/a'} · {f.condition || 'n/a'} · O₂ {f.o2_pct_min ?? '?'}–{f.o2_pct_max ?? '?'}% · {f.gravity || 'gravity not stated'}{f.n_tests ? ` · n=${f.n_tests}` : ''}</dd>
+              {f.quote && <><dt>Quote</dt><dd>“{f.quote}”{f.page ? ` (p. ${f.page})` : ''}</dd></>}
               {f.caveat && <><dt>Caveat</dt><dd>{f.caveat}</dd></>}
-              <dt>Source</dt><dd>{link ? <a href={link} target="_blank" rel="noreferrer">{f.source_file.replace(link, '').trim() || 'NASA NTRS report'} <ExternalLink size={13}/></a> : f.source_file}{f.psi_id && ` · ${f.psi_id}`}</dd>
+              <dt>Source</dt><dd>{link ? <a href={link} target="_blank" rel="noreferrer">{f.source_file.replace(link, '').trim() || 'NASA NTRS report'} <ExternalLink size={12}/></a> : f.source_file}{f.psi_id && ` · ${f.psi_id}`}</dd>
             </dl>
           </div>}
         </li>;

@@ -1,15 +1,23 @@
 import React from 'react';
 import {useNavigate} from 'react-router-dom';
-import {ArrowRight, ArrowUpRight} from 'lucide-react';
+import {ArrowRight, ArrowUpRight, Atom, BookOpen, Flame, Microscope, Satellite} from 'lucide-react';
 import MicroFlame from '../components/MicroFlame.jsx';
 import FlameOrb from '../components/FlameOrb.jsx';
 import HeroGrid from '../components/HeroGrid.jsx';
 
+const SOURCES = [
+  {name: 'NASA PSI', icon: Satellite},
+  {name: 'NTRS', icon: BookOpen},
+  {name: 'Saffire II', icon: Flame},
+  {name: 'BASS II', icon: Atom},
+  {name: 'FLEX', icon: Microscope},
+];
+
 const TRACE_STEPS = [
-  {k: '01 · ASK', t: 'You ask', d: '"cotton-fiberglass at 22% oxygen, 20 cm/s opposed"'},
-  {k: '02 · READ', t: 'Flame reads it', d: 'material · oxygen · flow — recognized, not assumed'},
-  {k: '03 · MATCH', t: 'Closest record found', d: 'BASS II · sample 2-5 · Cotton–fiberglass (SIBAL)'},
-  {k: '04 · TRACE', t: 'Traced to its source', d: 'NASA PSI · Saffire II · source row 14'},
+  {t: 'You ask', d: 'cotton-fiberglass · 22% O₂ · 20 cm/s opposed'},
+  {t: 'Flame reads it', d: 'material · oxygen · flow'},
+  {t: 'Closest record', d: 'BASS II · sample 2-5'},
+  {t: 'Traced to source', d: 'NASA PSI · Saffire II · row 14'},
 ];
 
 /* Real route: / — the one page outside the app shell. "Enter Flamme" and the
@@ -43,42 +51,35 @@ export default function LandingPage() {
       </div>
     </header>
 
-    <section className="l-logos">
-      <span>Evidence sourced from</span>
-      <div className="l-logos-row"><b>NASA PSI</b><b>NTRS</b><b>Saffire II</b><b>BASS II</b><b>FLEX</b></div>
+    <section className="l-sources" aria-label="Data sources">
+      <ul className="l-sources-row">
+        {SOURCES.map(s => <li key={s.name}><s.icon size={16} strokeWidth={1.75}/><span>{s.name}</span></li>)}
+      </ul>
     </section>
 
     <section className="l-trace">
-      <div className="l-trace-head">
-        <small>How it works</small>
-        <h2>From a question to its NASA source</h2>
-      </div>
-      <div className="l-trace-flow">
-        {TRACE_STEPS.map((n, i) => <React.Fragment key={n.k}>
-          <div className="l-trace-node" style={{animationDelay: `${i * 1.8}s`}}>
-            <small>{n.k}</small><b>{n.t}</b><span>{n.d}</span>
-          </div>
-          {i < TRACE_STEPS.length - 1 && <div className="l-trace-line"><i style={{animationDelay: `${i * 1.8}s`}}/></div>}
-        </React.Fragment>)}
-      </div>
+      <h2>From a question to its NASA source</h2>
+      <ol className="l-steps">
+        {TRACE_STEPS.map((n, i) => <li key={n.t} className="l-step" style={{animationDelay: `${i * 1.8}s`}}>
+          <span className="l-step-n">{String(i + 1).padStart(2, '0')}</span>
+          <b>{n.t}</b>
+          <code>{n.d}</code>
+        </li>)}
+      </ol>
     </section>
 
     <section className="l-final" id="cta">
-      <div className="l-final-glow"/>
-      <div className="l-final-inner">
-        <div className="l-final-left">
-          <h2>Explore the evidence with Flamme</h2>
-          <p>Built for the Flame in Freefall challenge by Team Flamme. No NASA endorsement · no safety certification · no validated flame prediction.</p>
-          <div className="l-cta-row">
-            <a className="l-btn-secondary" href="https://github.com/farhanlabibahan/flamme" target="_blank" rel="noreferrer">View source <ArrowUpRight size={14}/></a>
-          </div>
+      <div className="l-final-card">
+        <h2>Explore the evidence with Flamme</h2>
+        <div className="l-final-actions">
+          <button className="l-final-primary" onClick={() => navigate('/lab')}>Enter Flamme <ArrowRight size={16}/></button>
+          <a className="l-final-ghost" href="https://github.com/farhanlabibahan/flamme" target="_blank" rel="noreferrer">View source <ArrowUpRight size={15}/></a>
         </div>
         <div className="l-final-links">
-          <div><b>Product</b><a onClick={() => jump('Lab')}>Lab</a><a onClick={() => jump('Ask')}>Ask</a><a onClick={() => jump('Evidence')}>Evidence</a><a onClick={() => jump('Compare')}>Compare</a></div>
+          <div><b>Product</b><a onClick={() => jump('Lab')}>Lab</a><a onClick={() => jump('Ask')}>Ask</a><a onClick={() => jump('Evidence')}>Evidence</a><a onClick={() => jump('Rankings')}>Rankings</a></div>
           <div><b>Sources</b><a href="https://psi.nasa.gov" target="_blank" rel="noreferrer">NASA PSI</a><a href="https://github.com/farhanlabibahan/flamme" target="_blank" rel="noreferrer">GitHub</a></div>
         </div>
       </div>
-      <footer className="landing-foot">No NASA endorsement · No safety certification · No validated flame prediction</footer>
     </section>
   </div>;
 }
