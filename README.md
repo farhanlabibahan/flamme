@@ -1,368 +1,227 @@
 # Flamme
 
-Flamme is a source-linked concept prototype for the **Flame in Freefall: AI-Powered Fire Safety Insights from Microgravity Combustion Data** challenge. It explores how researchers and students could find comparable NASA combustion experiments, inspect the conditions behind each observation, and trace a displayed result back to its source.
+Flamme is a source-linked evidence platform for the **Flame in Freefall: AI-Powered Fire
+Safety Insights from Microgravity Combustion Data** NASA Space Apps 2026 challenge. It lets
+anyone describe a microgravity flame experiment in ten standard conditions, search and
+compare real NASA PSI/NTRS records against those conditions, see where the evidence has
+gaps, and run a real model — trained on actual NASA test data — grounding part of the
+interactive 3D flame lab.
 
-The project is developed by **Team Flamme**. It is not a NASA product, is not NASA-endorsed, and must not be used to certify a material, predict a spacecraft fire, or make an operational safety decision.
+Built by **Team Flamme**, University of Dhaka. Not a NASA product, not NASA-endorsed, and
+must not be used to certify a material, predict a spacecraft fire, or make an operational
+safety decision.
+
+**Live:** https://www.flammelab.me · **Source:** this repository
 
 ## The problem
 
-NASA microgravity-combustion evidence is distributed across experimental tables, technical reports, analyzed files, imagery, and investigation pages. The same physical concept may be described with different names or units, and important conditions are often missing or reported only qualitatively.
+NASA microgravity-combustion evidence is scattered across drop towers, parabolic flights,
+ISS experiments (FLEX, BASS) and the Saffire tests on Cygnus. Each source records its test
+conditions differently — one gives oxygen as a percentage but not pressure, another omits
+airflow direction — so two results can't be fairly compared, and it's hard to tell which
+conditions have been tested, which haven't, and why one material burns while another self-
+extinguishes.
 
-That creates three practical difficulties:
+## What's implemented
 
-1. Finding experiments relevant to a specific material, atmosphere, geometry, or airflow condition.
-2. Comparing records without hiding differences or treating missing values as equivalent.
-3. Turning observations into understandable conclusions without losing provenance, uncertainty, or scientific limitations.
-
-Flamme treats those as an evidence-management problem before treating them as an intelligence problem.
-
-## Solution in one view
-
-The implemented prototype follows this path:
-
-```text
-Research question
-    → controlled conditions
-    → transparent similarity matching
-    → source-linked observation
-    → qualified comparison
-    → original NASA investigation, DOI, file, and row
-```
-
-The planned system extends that foundation with Machine Learning, constrained AI reasoning, and structured Agentic Memory:
-
-```text
-Reviewed records
-    → normalized variables and provenance
-    → physics-aware features
-    → trained and cross-validated ML models
-    → uncertainty-aware inference
-    → explainability and applicability checks
-    → AI constraint review
-    → versioned experiment memory
-    → Observed / Predicted / Unknown report
-```
-
-This proposed architecture is **not a RAG implementation**. Source traceability remains mandatory, but the planned intelligence path is based on trained models, explicit scientific constraints, calibrated uncertainty, and persistent structured memory.
-
-## Current implementation status
-
-| Area | Current state |
+| Page | What it does |
 |---|---|
-| Evidence explorer | Implemented in React; searches and compares five curated source-table rows. |
-| Condition matching | Implemented as deterministic, inspectable rules in `src/science.js`. |
-| Evidence explanations | Implemented as deterministic templates; clearly labelled rule-based. |
-| Source trace | Implemented for NASA PSI investigation pages, DOI, local CSV filename, and row number. |
-| Interactive Flame Lab | Implemented with React and Three.js as a qualitative visual model. Parameters are set and read live, not driven by a canned timeline. |
-| Wider research catalog | Collected locally, but not fully integrated into the React interface. |
-| Findings pipeline | Implemented separately in Python; produces findings and mission-scenario rankings. |
-| Machine-learning model | Planned; no trained model is currently executed by the app. |
-| Generative AI reasoning | Planned; no live AI service or model call is present. |
-| Agentic memory | Planned; no persistent memory service is present. |
-| Measured flame media | Not bundled. |
-| Validated combustion or CFD prediction | Not implemented. |
+| **Lab** (`/lab`, `/lab/view`) | Interactive 3D chamber with a hand-built illustrative flame-response model (`src/labModel.js`), plus a **"Grounded in NASA FLEX data"** card driven by a real trained model (see [Machine learning](#machine-learning) below) — shown side by side, never blended. |
+| **Evidence** (`/evidence`) | Search/filter/compare over 5 curated, fully source-traced sample records (Saffire II, BASS II) with explicit provenance (file, row, DOI, caveats). |
+| **Ask** (`/ask`) | Deterministic keyword/regex parser reads a plain-language question into structured conditions — explicitly labelled "not an AI model." |
+| **Rankings** (`/rankings`) | Scores all 111 findings in the full catalog against a chosen crew environment (ISS, transit, Moon, Mars), same formula as `findings/rank_findings.py`. |
+| **Investigations** / **On Earth** | Browse the full 24-investigation NASA PSI/NTRS catalog. |
+| **Gap map** (`/gaps`) | Heatmap of which gravity-regime × oxygen-band combinations the 111-finding catalog actually covers vs. doesn't — plan item "map the gaps." |
+| **Template** (`/template`) | The ten-condition reporting schema, downloadable as JSON Schema + CSV template, so future experiments can report conditions completely from the start. |
+| **Model** (`/model`) | The exact fitted parameters (coefficients, confusion matrix, held-out metrics) of the trained FLEX model, so the "grounded" claim in the Lab is independently checkable. |
+| **Compare** (`/compare`) | Side-by-side table of up to 3 selected records. |
 
-### Verified React demo scope
+## Machine learning
 
-The active interface bundles five curated records from two investigations:
+Everything here is in [`ML/`](ML/) — two small, fully documented, re-runnable pipelines.
+Pushed to the browser as plain coefficients (no backend, no `.pkl`, nothing to load at
+request time): the model trains once offline in Python, and the browser only runs the
+already-fitted arithmetic (standardize → dot product → sigmoid). See `src/flexModel.js`
+for that inference code and [`ML/README.md`](ML/README.md) for the full write-up.
 
-- **Saffire II / PSI-99:** samples 2-1, 2-2, 2-3, and 2-5.
-- **BASS II / PSI-25:** test B1.
+### 1. Data
 
-These rows support a focused prescreening demonstration. They are not sufficient to train or validate a reliable general-purpose ML model.
+Source: NASA PSI investigation **PSI-69 (FLEX)** — Fiber-supported Liquid-fuel/free
+Droplet combustion Experiment — one of 22 raw PSI test-matrix tables already pivoted into a
+single long/tidy export (`flame_in_freefall_data/cleaned/cleaned_values.csv`, ~24,500 rows,
+provenance-preserving: every cell keeps its source file/row). FLEX contributes **274
+individual droplet-flame tests** (methanol and heptane droplets burned across a swept O₂/
+pressure/diluent-gas test matrix) — the richest row-level, numeric source in the catalog,
+and the only one dense enough to fit a model on with an honest held-out test split.
 
-### Wider local research snapshot
+**Data shape going in**: 1 long-format table, ~24,500 rows × 16 columns
+(`record_id, psi_id, source_file, source_row, column_key, raw_value, normalized_value,
+value_type, status, ...`) — one row per (test, reported field).
 
-The repository also contains a broader data catalog harvested on 2026-10-01:
+**Data shape after pivoting** (`ML/build_flex_model.py`, step 1): 274 rows × 10 columns,
+one row per test: `fuel, o2_frac, n2_frac, co2_frac, he_frac, pressure_mmhg,
+droplet_diameter_mm, burn_time_s, burning_rate_mm, extinction_diameter_mm` (+ raw/type
+companion columns kept for provenance). One row is later dropped for a bad pressure reading
+(below), leaving 273 usable for nearest-test lookup and modeling.
 
-- 24 PSI combustion investigations.
-- 22 experimental-table references and 24 downloaded table files.
-- Approximately 3,000 experimental-table rows across the catalog.
-- 765 non-raw PSI files in the curated manifest.
-- 40 selected NTRS report records and 36 locally downloaded PDFs.
-- 111 normalized finding rows.
-- Rankings for four mission scenarios.
+### 2. Cleaning
 
-These counts describe the current repository snapshot, not the number of records currently searchable in the React app.
+- **Unit conversion**: ambient pressure `mmHg → atm`; O₂/N₂/He mole fractions `→ percent`.
+- **Target derivation, not assumption**: `self_extinguished` = 1 if the source reports a
+  numeric extinction diameter (flame went out before the droplet burned out), 0 if the
+  source explicitly marks no early extinction (a literal `–`), and **left as missing** —
+  excluded from training, not guessed — when the column wasn't reported for that test at
+  all (49 of 274 rows).
+- **Caught a real data-quality bug**: one row had a literal `0 mmHg` ambient-pressure
+  reading — physically impossible for a sealed test chamber (it isn't a vacuum). Treated as
+  missing rather than a valid near-vacuum test. Fixing this single bad row improved the
+  burning-rate regression's R² from 0.45 to 0.58 — concrete evidence the cleaning step
+  mattered, not cosmetic.
+- **Explicit `*_missing` flags** paired with every numeric column, so "not reported" is
+  never silently read as zero.
 
-## Using the site
+Output: `ML/flex_tests_clean.csv` (274 rows), `ML/flex_feature_dictionary.md` (column
+reference, auto-generated so it can't drift out of sync with the code).
 
-The interface is a plain, directly-clickable web app — there is no scripted walkthrough or narrated playback. A typical path:
+### 3. Feature engineering
 
-1. Open the **Ask** tab and type a plain-language question (e.g. "cotton-fiberglass at 22% oxygen with 20 cm/s opposed airflow"). A deterministic keyword/regex parser (`src/prompt.js`) — not an AI model — reads back what it recognized as removable chips; anything it doesn't recognize is left for you to set manually on the Evidence tab. No call ever happens automatically; everything you see traces to a rule you can read in the source. Click "View matching evidence" to carry those conditions over.
-2. On the **Evidence** tab, inspect the selected material, oxygen, flow, and other reported or unavailable conditions in the Define panel.
-3. Switch to the **Lab** tab to explore the controlled variables by dragging or typing values; the chamber reacts live. Its flame is illustrative.
-4. Rank the bundled records using transparent condition matching.
-5. Open Saffire II sample 2-5 and inspect its observation and limitations.
-6. Trace the record to the NASA PSI investigation, DOI, source CSV, and original row.
-7. Compare it with another record while keeping material, thickness, and missing conditions visible.
+| Feature | Why |
+|---|---|
+| `o2_pct` | The primary driver of flammability — direct oxidizer availability. |
+| `pressure_atm` | Total ambient pressure; affects flame temperature and mass-transfer rate. |
+| `o2_partial_pressure_atm` (= `o2_frac × pressure_atm`) | A derived, physically meaningful term — combustion literature cares about oxidizer *partial pressure*, not O₂% and total pressure independently; this single feature lets a linear model capture that interaction without needing an explicit cross-term. |
+| `droplet_diameter_mm` | Governs the d²-law burning-rate relationship (classic droplet-combustion theory) and total fuel available before burnout. |
+| `fuel_methanol` (binary: methanol vs heptane) | The two fuels have different flame chemistry and sooting behavior; a binary flag lets the small feature set distinguish them without one-hot blowing up the parameter count at n=273. |
 
-This should establish traceability and responsible comparison. It should not be read as claiming that the prototype identifies the safest material or predicts a real fire.
+Standardization (zero mean, unit variance) is fit once on the training split and reused —
+the exact `scaler_mean`/`scaler_scale` are published in `src/flexModel.json` and rendered on
+the `/model` page.
 
-## Controlled parameter model
+### 4. Algorithm and why
 
-The Flame Lab organizes the experimental context into ten parameter groups:
+Two models, both intentionally simple:
 
-1. Material or fuel.
-2. Sample geometry: length, width, and thickness.
-3. Gravity condition.
-4. Oxygen concentration.
-5. Ambient pressure.
-6. Forced airflow.
-7. Flow direction.
-8. Ignition power and duration.
-9. Initial temperature.
-10. Suppression agent, concentration, and discharge state.
+- **Logistic regression** → P(self-extinguish). Chosen because: n=273 (222 after dropping
+  missing-target rows) is far too small for anything with more capacity (tree ensembles,
+  neural nets) to generalize honestly; coefficients are directly interpretable (sign and
+  magnitude per feature, shown on `/model`); and the Lab needs a *calibrated probability*,
+  which logistic regression gives natively.
+- **Linear regression** → burning-rate constant K. Same reasoning, plus K is a continuous
+  physical quantity (mm²/s) with a roughly linear dependence on these standardized features
+  in the d²-law regime FLEX tests.
 
-The complete editable reference is in [`parameter_catalog/microgravity_fire_parameter_catalog.md`](parameter_catalog/microgravity_fire_parameter_catalog.md). The generated PDF and its regeneration instructions are in [`parameter_catalog/`](parameter_catalog/).
+No gradient boosting, no deep learning — a bigger model on 273 rows would mostly be fitting
+noise, and an uninterpretable model would fail the "show your training data, features, and
+an honest accuracy figure" bar this challenge is explicitly judged on.
+
+### 5. Training and validation
+
+- 75/25 train/test split (`random_state=0`, stratified for the classifier so both classes
+  appear in the test set despite the 88%/12% imbalance).
+- **Classifier**: 166 train / 56 test. Test accuracy 88%, but the base rate is already 88%
+  self-extinguish — so accuracy alone is not informative, which is why **test AUC = 0.895**
+  is the number actually reported in the UI: it shows real separation between the two
+  outcomes, not just majority-class prediction.
+- **Regressor**: 192 train / 65 test. Test **R² = 0.582**, MAE = 0.068 mm²/s.
+- **Never extrapolate silently**: the min/max of every feature actually seen in training is
+  recorded (`training_range` in `flexModel.json`). At inference, a scenario outside that
+  envelope gets no prediction at all — the Lab shows an explicit "outside the tested
+  envelope" message instead of guessing (verified: pushing O₂ to 40%, outside FLEX's tested
+  12–34%, correctly blocks the prediction).
+- Every prediction also surfaces the single closest real FLEX test by feature distance,
+  with a link to its NASA PSI source — the "closest real experiment next to the simulation"
+  the challenge brief asks for.
+
+### 6. Where it's reproducible
+
+```sh
+cd ML
+python3 build_flex_model.py        # re-pivots, re-cleans, re-fits, re-exports
+```
+
+Re-running it regenerates `src/flexModel.json` from scratch and will reproduce the same
+metrics reported above and on `/model`.
+
+### 7. Honest scope
+
+FLEX is **free-floating liquid-droplet combustion** (methanol/heptane droplets burning in
+air) — a different physical regime from the Lab's illustrative solid-sample model
+(SIBAL/PMMA/silicone sheets, `src/labModel.js`). That's why the trained model is wired in as
+a clearly labelled, separate card rather than replacing the solid-sample curves — doing
+that would misrepresent the physics. Grounding the solid-sample model itself would need the
+same pipeline applied to BASS/BASS-II/Saffire row-level data instead — not done here, and
+explicitly flagged as the natural next step in `ML/README.md`.
+
+A second pipeline, `ML/build_notebook.py` → `ML/feature_engineering.ipynb`, applies the same
+cleaning/feature-engineering discipline to the 111-row curated `findings.csv` (used by
+Rankings/Gap map), independently of the FLEX model above.
 
 ## How evidence is represented
 
-The code intentionally separates four concepts:
+Every record separates four concepts so the interface never invents precision the source
+doesn't have:
 
-- **Source value:** the original string as reported by the table.
-- **Normalized value:** a numeric or canonical value used only when normalization is defensible.
-- **Status:** reported, approximate, qualitative, ambiguous, not reported, or not applicable.
-- **Provenance:** investigation, source file, source row, DOI, and notes.
+- **Source value** — the original string as reported.
+- **Normalized value** — a numeric/canonical value, only when normalization is defensible.
+- **Status** — reported, approximate, qualitative, ambiguous, not reported, or not applicable.
+- **Provenance** — investigation, source file, source row, DOI, notes.
 
-This prevents the interface from silently converting incomplete source material into false precision.
-
-Examples preserved by the current data model include:
-
-- Saffire II sample 2-5 contains the thickness string `037 mm`; it is retained as ambiguous and excluded from numeric matching.
-- The Saffire II source column is named “Spread Length,” while the sample 2-5 value uses `mm/s`; the interface calls it a source spread-column entry pending verification.
-- `Insignificant` is preserved as a qualitative burn-time entry, not displayed as seconds.
-- BASS II fan and air display values are not treated as calibrated airflow speeds.
-- Pressure remains unknown for the bundled records and is never inferred.
-
-## Current matching logic
-
-The React evidence explorer uses transparent rule-based matching, not an ML score. The implementation is in [`src/science.js`](src/science.js).
-
-The current checks are:
-
-- Material: exact canonical match.
-- Oxygen: within ±0.5 percentage points.
-- Airflow: within ±2 cm/s.
-- Gravity: exact canonical match.
-- Pressure: within ±2 kPa when both values exist.
-- Geometry: exact sample-width match when requested.
-- Outcome: whether the requested source field is available.
-
-Unspecified query fields and unreported record fields do not count as matches. Results expose matched, different, and unknown conditions separately. This score indicates similarity inside the small bundled set; it is not a validated risk score.
-
-## Separate findings and mission-ranking pipeline
-
-The [`findings/`](findings/) directory is a broader research pipeline and is not the same ranking system as the five-row React explorer.
-
-It:
-
-1. Derives structured findings from PSI test tables.
-2. Converts reviewed report excerpts into normalized rows.
-3. Merges table and report findings.
-4. Ranks non-gap findings for ISS, transit, Moon, and Mars scenarios.
-5. Builds a standalone findings dashboard.
-
-The mission-ranking formula is documented in [`findings/RANKING_METHOD.md`](findings/RANKING_METHOD.md):
-
-```text
-score = 100 × (0.45 × relevance + 0.35 × severity + 0.20 × evidence)
-```
-
-Its severity ratings and weights are team-defined analytical choices. Evidence gaps are displayed rather than assigned a score. Report-extracted rows must be checked against the cited page and quotation before presentation as fact.
-
-## Planned ML, AI, and agentic-memory architecture
-
-The proposed intelligence layer should be built only after the evidence model and reviewed corpus are sufficiently mature.
-
-### 1. Dataset preparation
-
-- Expand beyond the five demo rows.
-- Preserve raw values alongside transformations.
-- Define canonical units, controlled vocabularies, missing-value semantics, and data-quality flags.
-- Prevent records from the same experiment or document from leaking across train and evaluation partitions.
-- Attach provenance to every feature and target.
-
-### 2. Physics-aware feature engineering
-
-Candidate inputs include material class, geometry, gravity, oxygen concentration and partial pressure, ambient pressure, forced flow, flow direction, ignition energy, initial temperature, and suppression conditions.
-
-Targets must be selected only where the source defines a comparable measurement, such as flame-spread rate, extinction outcome, burn duration, detector response, or gas concentration. Incompatible metrics should not be forced into one target.
-
-### 3. Model development
-
-- Establish simple statistical baselines before complex models.
-- Compare candidate models with grouped cross-validation.
-- Calibrate predicted uncertainty.
-- Evaluate performance by investigation, material family, and atmospheric regime.
-- Detect out-of-domain requests instead of returning confident extrapolations.
-- Keep similarity, evidence quality, and predicted outcome as separate signals.
-
-### 4. AI reasoning layer
-
-The AI layer should consume structured model outputs, reviewed observations, constraints, and provenance. Its role is to explain the result, identify applicable evidence, expose conflicts, and refuse unsupported conclusions. It must not invent missing measurements or convert a model estimate into an observed fact.
-
-### 5. Agentic memory
-
-Agentic memory is planned as a versioned, auditable store of:
-
-- Experiment identity and source lineage.
-- Normalization decisions and unresolved ambiguities.
-- Feature definitions and transformations.
-- Dataset, model, and validation versions.
-- Applicability checks and previous reviewed outcomes.
-- Human corrections and approval status.
-
-Memory must not overwrite source records or silently treat user interaction as training data.
-
-### 6. Output contract
-
-Every future analysis should separate:
-
-- **Observed:** directly supported by a cited source.
-- **Predicted:** produced by a named model version with uncertainty and applicability limits.
-- **Unknown:** absent, ambiguous, incompatible, or outside the validated domain.
+Example: Saffire II sample 2-5's thickness string `037 mm` is retained as ambiguous and
+excluded from numeric matching rather than silently parsed as `0.37mm`.
 
 ## Repository structure
 
 ```text
 .
-├── src/
-│   ├── main.jsx              React evidence explorer (Explore / Compare)
-│   ├── Lab.jsx                Flame Lab UI, live parameter controls, and accessibility
-│   ├── labScene.js           Three.js room, chamber, flame, airflow, and rendering
-│   ├── labModel.js           Qualitative response model and 92-second timeline
-│   ├── data.js               Five curated source records and provenance
-│   ├── science.js            Deterministic matching and explanation logic
-│   ├── science.test.js       Data-handling and ranking tests
-│   └── app.css               Active application styles
-├── flame_in_freefall_data/   PSI/NTRS catalog, manifests, downloaded tables, reports
-├── findings/                 Finding extraction, normalization, ranking, and outputs
-├── dashboard/                Generator and standalone findings-dashboard artifacts
-├── parameter_catalog/        Editable parameter reference and PDF generator
-├── AI_Flow.html              Concept animation for the planned intelligence workflow
-├── Solution.html             Cinematic concept demo with explicitly labelled demo content
-├── Flame in Freefall.html    Standalone findings-dashboard artifact
-├── data_calalogue.md         Short catalog orientation
-├── package.json              JavaScript dependencies and commands
-└── vite.config.js            Vite build configuration
+├── src/                       React app (Vite)
+│   ├── pages/                 One file per route: Lab, Evidence, Ask, Rankings,
+│   │                          Investigations, Earth, Gaps, Template, Model, Compare
+│   ├── labModel.js            Illustrative solid-sample flame-response model
+│   ├── flexModel.js           Client-side inference for the trained FLEX model
+│   ├── flexModel.json         Exported model parameters (generated by ML/)
+│   ├── science.js             Deterministic 5-row matching/explanation logic
+│   └── ranking.js             JS port of findings/rank_findings.py
+├── ML/                        Data cleaning + feature engineering + model training
+│   ├── build_flex_model.py    FLEX pipeline → src/flexModel.json
+│   ├── build_notebook.py      Generates feature_engineering.ipynb
+│   └── README.md              Full pipeline write-up
+├── flame_in_freefall_data/    PSI/NTRS catalog, manifests, downloaded tables, reports
+├── findings/                  Finding extraction, normalization, ranking pipeline
+├── parameter_catalog/         Editable ten-condition parameter reference + PDF generator
+├── package.json
+└── vite.config.js
 ```
-
-Standalone HTML artifacts are presentation or research outputs. Their presence does not mean their features are integrated into the React application. In particular, `Solution.html` contains cinematic demo scores, telemetry, timings, and AI text; those elements are presentation content rather than implemented analytical results.
 
 ## Local development
 
-### Requirements
-
-- Node.js compatible with Vite 7. The current repository was checked with Node.js 24.16.0 and npm 11.13.0.
-- Python 3 for data-processing and document-generation utilities.
-- Internet access only when following external NASA links or refreshing/downloading source data.
-
-### Install and run
-
 ```sh
 npm install
-npm run dev
-```
-
-Vite normally serves the project at `http://localhost:5173/`.
-
-Useful views:
-
-- `/` — evidence explorer and embedded Flame Lab.
-- `/#studio` — full-window Flame Lab.
-
-### Test and build
-
-```sh
-npm test
-npm run build
+npm run dev          # http://localhost:5173
+npm test             # vitest
+npm run build         # production build
 npm run preview
 ```
 
-Current verification:
-
-- `npm test`: **5/5 tests passing**.
-- `npm run build`: **passing** — the Vite entry `index.html` loads `/src/main.jsx` into a `#root` element.
-
-## Flame Lab controls
-
-The Flame Lab is an interactive explanatory model, not a scientific simulation. There is no auto-playing timeline — every parameter is set directly and the chamber responds live.
-
-- Drag a numeric field horizontally to adjust it.
-- Click a numeric field to type a value.
-- `F` — toggle full screen.
-- `N` — show or hide the parameter panel.
-- `T` — show or hide viewport tools.
-- `H` — show or hide the status overlay.
-- `R` — re-fire the igniter.
-- `0`, `1`, `3`, `7` — switch to hero, flame, side, or top camera.
-
-The response model in [`src/labModel.js`](src/labModel.js) (`derive()`) computes the flame's qualitative reaction to whatever parameters are currently set. It is a hand-designed explanatory relationship, not fitted to NASA measurements.
-
-## Data refresh and derived artifacts
-
-### PSI catalog
-
-The scraper uses the public NASA PSI web API. Raw data is approximately 14 TB, so downloads are opt-in and size-limited.
-
-```sh
-cd flame_in_freefall_data
-python3 psi_scraper.py manifest
-python3 psi_scraper.py download --tables
-python3 psi_scraper.py download --ids PSI-69 --categories "Raw Data" --ext csv,txt --max-gb 5
-```
-
-Review [`flame_in_freefall_data/README.md`](flame_in_freefall_data/README.md) before downloading data.
-
-### Findings and rankings
-
-```sh
-python3 findings/build_findings.py
-python3 findings/report_rows_to_csv.py
-python3 findings/merge_findings.py
-python3 findings/rank_findings.py
-python3 dashboard/build_dashboard.py
-```
-
-The optional PDF extraction utility requires additional dependencies and an external model API. Its output must be reviewed before use.
-
-### Parameter PDF
-
-```sh
-python3 parameter_catalog/generate_parameter_pdf.py
-```
-
-Edit the Markdown catalog first; the PDF is generated output.
-
-## Testing scope
-
-The existing tests verify that:
-
-- The closest SIBAL row ranks first for the default scenario without being falsely labelled an exact match.
-- Unspecified inputs do not count as matches.
-- Qualitative and unavailable source values do not receive fabricated numeric units.
-- Ambiguous thickness and the spread-column conflict remain disclosed.
-- Bundled rows retain their expected source-row provenance.
-
-The repository does not yet contain automated browser, visual-regression, Three.js performance, accessibility, data-pipeline, or ML-evaluation tests.
+Python tooling (data pipelines, `ML/`) needs Python 3 with `pandas`, `numpy`,
+`scikit-learn` (`pip install pandas numpy scikit-learn jupyter nbformat`).
 
 ## Limitations and responsible-use boundaries
 
-- The active demo covers only five curated experiment rows.
-- The wider catalog has heterogeneous schemas and cannot be treated as a single clean training table.
-- The current matching logic is heuristic and unvalidated as a safety-risk score.
-- The mission-ranking pipeline includes team-defined severity judgments and weights.
-- Report-derived findings require human verification against the cited source pages.
-- The visual flame, airflow, soot, ignition, and suppression effects are qualitative.
-- No measured video is bundled.
-- No backend, authentication, database, telemetry, live AI service, or persistent memory service is implemented.
-- External PSI and DOI links require internet access.
-- There is currently no repository license file; do not assume redistribution rights.
+- The Evidence/Compare demo covers 5 curated records; Rankings/Investigations/Gap map cover
+  the full 111-finding catalog, which is itself a curated subset of the ~24,500-row raw PSI
+  export.
+- The Lab's solid-sample flame response is illustrative, not fitted to data — only the
+  separate FLEX card is a trained model, and only within its tested envelope.
+- The FLEX model's n=274 (222–257 after dropping missing targets) is honestly small;
+  metrics are reported with that context rather than presented as more certain than they are.
+- Report-derived findings require verification against their cited source pages.
+- No backend, authentication, database, or live AI service is implemented — everything
+  ships as a static site.
 
 ## Source domains
 
 - [NASA Physical Sciences Informatics](https://psi.nasa.gov/)
 - [NASA Technical Reports Server](https://ntrs.nasa.gov/)
 
-NASA names, investigation identifiers, and links are used for source attribution only; this prototype and Team Flamme remain separate from NASA's identity.
+NASA names, investigation identifiers, and links are used for source attribution only;
+this prototype and Team Flamme remain separate from NASA's identity.
