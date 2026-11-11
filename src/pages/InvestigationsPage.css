@@ -44,6 +44,5 @@
 .iv-compare tr.diff th,.iv-compare tr.diff td{background:var(--accent-soft)}
 .iv-compare tr.diff th{box-shadow:inset 3px 0 0 var(--accent)}
 .iv-compare tbody tr:last-child th,.iv-compare tbody tr:last-child td{border-bottom:0}
-.iv-note{font:400 12px/1.5 var(--sans);color:var(--muted);margin:0;padding:14px 24px 18px;border-top:1px solid var(--line2)}
 
 @media(max-width:900px){.iv-compare-float{width:calc(100vw - 32px)}.iv-float-compare{right:16px}}

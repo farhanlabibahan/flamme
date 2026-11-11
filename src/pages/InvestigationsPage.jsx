@@ -94,7 +94,6 @@ export default function InvestigationsPage() {
           return <tr key={l} className={diff ? 'diff' : ''}><th scope="row">{l}</th>{vals.map((v, k) => <td key={k}>{v}</td>)}</tr>;
         })}</tbody>
       </table></div>
-      <p className="iv-note">Highlighted rows differ between the selected investigations. Pillars, hardware and fuel grouping are curated from the challenge brief; scores use the same method as Rankings, and an investigation with no linked findings has no score.</p>
     </section>, document.body)}
   </div>;
 }
