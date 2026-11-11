@@ -26,7 +26,6 @@ const InvestigationsPage = lazy(() => import('./pages/InvestigationsPage.jsx'));
 const EarthPage = lazy(() => import('./pages/EarthPage.jsx'));
 const RankingsPage = lazy(() => import('./pages/RankingsPage.jsx'));
 const GapsPage = lazy(() => import('./pages/GapsPage.jsx'));
-const TemplatePage = lazy(() => import('./pages/TemplatePage.jsx'));
 const ModelPage = lazy(() => import('./pages/ModelPage.jsx'));
 const SourcesPage = lazy(() => import('./pages/SourcesPage.jsx'));
 
@@ -44,7 +43,6 @@ function App() {
           <Route path="/rankings" element={<Suspense fallback={<CubeLoader message="Loading rankings…" fullHeight/>}><RankingsPage/></Suspense>}/>
           <Route path="/compare" element={<Suspense fallback={<CompareSkeleton/>}><ComparePage/></Suspense>}/>
           <Route path="/gaps" element={<Suspense fallback={<CubeLoader message="Loading gap map…" fullHeight/>}><GapsPage/></Suspense>}/>
-          <Route path="/template" element={<Suspense fallback={<CubeLoader message="Loading template…" fullHeight/>}><TemplatePage/></Suspense>}/>
           <Route path="/model" element={<Suspense fallback={<CubeLoader message="Loading model…" fullHeight/>}><ModelPage/></Suspense>}/>
           <Route path="/sources" element={<Suspense fallback={<CubeLoader message="Loading sources…" fullHeight/>}><SourcesPage/></Suspense>}/>
         </Route>

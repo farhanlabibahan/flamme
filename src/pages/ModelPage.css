@@ -20,6 +20,9 @@
 .md-summary b{color:var(--accent);font-weight:700}
 .md-caption{font-size:14px!important;color:var(--muted)!important;margin-top:16px!important}
 .md-rules{margin:4px 0 14px;padding-left:20px;display:grid;gap:6px;font-size:16px;color:var(--ink2);max-width:72ch}
+.md-dl{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 4px}
+.md-dl button{border:1px solid var(--line2);padding:9px 16px;display:inline-flex;gap:8px;align-items:center;font-size:14px;color:var(--ink);background:var(--panel2)}
+.md-dl button:hover{background:var(--hover);border-color:var(--accent)}
 
 /* real tables, properly spaced */
 .md-table{width:100%;border-collapse:collapse;margin-top:14px;font-size:16px}

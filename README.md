@@ -32,8 +32,7 @@ extinguishes.
 | **Rankings** (`/rankings`) | Scores all 111 findings in the full catalog against a chosen crew environment (ISS, transit, Moon, Mars), same formula as `findings/rank_findings.py`. |
 | **Investigations** / **On Earth** | Browse the full 24-investigation NASA PSI/NTRS catalog. |
 | **Gap map** (`/gaps`) | Heatmap of which gravity-regime × oxygen-band combinations the 111-finding catalog actually covers vs. doesn't — plan item "map the gaps." |
-| **Template** (`/template`) | The ten-condition reporting schema, downloadable as JSON Schema + CSV template, so future experiments can report conditions completely from the start. |
-| **Model** (`/model`) | The exact fitted parameters (coefficients, confusion matrix, held-out metrics) of the trained FLEX model, so the "grounded" claim in the Lab is independently checkable. |
+| **Model** (`/model`) | The exact fitted parameters (coefficients, confusion matrix, held-out metrics) of the trained FLEX model, plus the ten-condition reporting schema (downloadable JSON Schema + CSV template) every page's data follows, so the "grounded" claim in the Lab is independently checkable. |
 | **Compare** (`/compare`) | Side-by-side table of up to 3 selected records. |
 
 ## Machine learning
