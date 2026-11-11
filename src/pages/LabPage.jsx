@@ -93,10 +93,10 @@ export default function LabPage() {
       </header>
       <div className="gr-body">
         <p className="gr-scope">The panels below are an <b>illustrative</b> solid-sample model (not fitted to data). This card is a genuine
-          data-driven estimate from the 274 real FLEX (PSI-69) liquid-droplet tests at your current oxygen ({params.oxygen}%) and
+          data-driven estimate from the 273 real FLEX (PSI-69) liquid-droplet tests at your current oxygen ({params.oxygen}%) and
           pressure ({grounded.pressureAtm.toFixed(2)} atm) — a different physical regime (free-floating droplet, not a solid sheet),
           shown side by side rather than blended into the simulation below.</p>
-        <div className="gr-stats">
+        {grounded.pred ? <div className="gr-stats">
           <div className="gr-stat">
             <span>Predicted self-extinguish probability</span>
             <b>{Math.round(grounded.pred.selfExtinguishProbability * 100)}%</b>
@@ -107,14 +107,20 @@ export default function LabPage() {
             <b>{grounded.pred.burningRateK.toFixed(2)} mm²/s</b>
             <small>linear regression, test R² {flexModelMeta.regressorMetrics.r2}</small>
           </div>
-        </div>
+        </div> : <div className="gr-oor">
+          <span>Outside the tested envelope</span>
+          <p>No prediction shown — FLEX only tested O₂ {flexModelMeta.trainingRange.o2_pct[0]}–{flexModelMeta.trainingRange.o2_pct[1]}%
+            and pressure {flexModelMeta.trainingRange.pressure_atm[0].toFixed(2)}–{flexModelMeta.trainingRange.pressure_atm[1].toFixed(2)} atm.
+            Extrapolating beyond measured data would be a guess, not a grounded estimate.</p>
+        </div>}
         {grounded.nearest && <div className="gr-nearest">
           <span>Closest real FLEX test</span>
           <p><b>{grounded.nearest.fuel}</b> droplet · {grounded.nearest.o2_pct}% O₂ · {grounded.nearest.pressure_atm} atm
             {grounded.nearest.droplet_diameter_mm != null && <> · {grounded.nearest.droplet_diameter_mm} mm initial diameter</>}
             {' — '}{grounded.nearest.self_extinguished == null ? 'extinction outcome not reported'
               : grounded.nearest.self_extinguished ? `self-extinguished at ${grounded.nearest.extinction_diameter_mm ?? '?'} mm diameter` : 'burned to completion'}
-            {grounded.nearest.burning_rate_k_mm2_s != null && <>, measured K = {grounded.nearest.burning_rate_k_mm2_s} mm²/s</>}.</p>
+            {grounded.nearest.burning_rate_k_mm2_s != null && <>, measured K = {grounded.nearest.burning_rate_k_mm2_s} mm²/s</>}.
+            {' '}<a href={grounded.nearest.source_url} target="_blank" rel="noreferrer">{grounded.nearest.report_id} · NASA PSI source</a></p>
         </div>}
       </div>
     </article>

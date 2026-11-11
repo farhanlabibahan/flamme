@@ -25,10 +25,24 @@ function featuresFor({o2Pct, pressureAtm, dropletDiameterMm, fuelMethanol}) {
   return [o2Pct, pressureAtm, o2PartialPressureAtm, dropletDiameterMm, fuelMethanol ? 1 : 0];
 }
 
+/** "Never extrapolate silently" (Space Apps 2026 Build Guide, Flame in
+ * Freefall, hard rule). Returns false the moment any feature falls outside
+ * the span the model actually saw in the 273 training rows -- callers must
+ * refuse to show a prediction rather than guess beyond it. */
+export function inTrainingRange(scenario) {
+  const x = featuresFor({dropletDiameterMm: 1.7, fuelMethanol: true, ...scenario});
+  return model.features.every((name, i) => {
+    const [lo, hi] = model.training_range[name];
+    return x[i] >= lo && x[i] <= hi;
+  });
+}
+
 /** Predicted self-extinguish probability + burning-rate constant for a
  * hypothetical droplet test at the given conditions, from the fitted FLEX
- * models (not a lookup -- genuine model inference). */
+ * models (not a lookup -- genuine model inference). Returns null, never a
+ * guessed number, when the scenario falls outside the training envelope. */
 export function predictFlex({o2Pct, pressureAtm, dropletDiameterMm = 1.7, fuelMethanol = true}) {
+  if (!inTrainingRange({o2Pct, pressureAtm, dropletDiameterMm, fuelMethanol})) return null;
   const x = featuresFor({o2Pct, pressureAtm, dropletDiameterMm, fuelMethanol});
   const c = model.classifier, r = model.regressor;
   const pExtinguish = sigmoid(dot(standardize(x, c.scaler_mean, c.scaler_scale), c.coef) + c.intercept);
@@ -49,8 +63,10 @@ export function nearestFlexTest({o2Pct, pressureAtm}) {
 
 export const flexModelMeta = {
   source: model.source,
+  sourceUrl: model.source_url,
   scopeNote: model.scope_note,
   classifierMetrics: model.classifier.metrics,
   regressorMetrics: model.regressor.metrics,
+  trainingRange: model.training_range,
   nTests: model.tests.length,
 };

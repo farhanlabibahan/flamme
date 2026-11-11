@@ -477,6 +477,10 @@ mark.trace{background:none;color:inherit;padding:1px 4px;border-bottom:2px solid
 .gr-nearest{padding:10px 12px;border:1px solid var(--line);border-left:3px solid var(--accent);background:var(--panel2)}
 .gr-nearest span{font:600 10px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .gr-nearest p{margin:6px 0 0;font-size:13px;color:var(--ink2);line-height:1.5}
+.gr-nearest a{color:var(--accent);margin-left:4px}
+.gr-oor{padding:10px 12px;border:1px solid var(--amber,var(--line));border-left:3px solid #B77400;background:var(--panel2);margin-bottom:12px}
+.gr-oor span{font:600 10px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:#B77400}
+.gr-oor p{margin:6px 0 0;font-size:13px;color:var(--ink2);line-height:1.5}
 
 /* ============================================================ evidence (/evidence) */
 .ev{display:flex;flex-direction:column;gap:22px;max-width:1120px;padding:8px 0 80px}

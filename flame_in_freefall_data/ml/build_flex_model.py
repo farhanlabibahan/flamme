@@ -62,6 +62,12 @@ df['self_extinguished'] = np.where(
     np.where(df['extinction_diameter_mm__type'] == 'qualitative', 0, np.nan))
 
 df['pressure_atm'] = pd.to_numeric(df['pressure_mmhg'], errors='coerce') / 760.0
+# Data-quality fix: ambient pressure of exactly 0 mmHg is physically impossible
+# for an ambient test condition (it is a sealed chamber, never a vacuum) -- one
+# FLEX row (source_row 115) carries a literal "0" in the source table. Treat
+# it as a bad reading, not a valid near-vacuum test: drop to missing rather
+# than letting it silently set the training-range floor to 0 atm.
+df.loc[df['pressure_atm'] <= 0, 'pressure_atm'] = np.nan
 df['o2_pct'] = pd.to_numeric(df['o2_frac'], errors='coerce') * 100
 df['n2_pct'] = pd.to_numeric(df['n2_frac'], errors='coerce') * 100
 df['he_pct'] = pd.to_numeric(df['he_frac'], errors='coerce') * 100
@@ -69,7 +75,7 @@ df['droplet_diameter_mm'] = pd.to_numeric(df['droplet_diameter_mm'], errors='coe
 df['burning_rate_k_mm2_s'] = pd.to_numeric(df['burning_rate_k_mm2_s'], errors='coerce')
 df['fuel'] = df['fuel__raw']
 df['fuel_methanol'] = (df['fuel'] == 'Methanol').astype(int)
-# physically meaningful combined feature: partial pressure of O2
+# physically meaningful combined feature: partial pressure of O2 (after the pressure fix above)
 df['o2_partial_pressure_atm'] = (df['o2_frac'].astype(float)) * df['pressure_atm']
 
 for c in ['o2_pct', 'pressure_atm', 'droplet_diameter_mm', 'burning_rate_k_mm2_s', 'self_extinguished']:
@@ -126,12 +132,25 @@ def fit_regressor():
 clf_scaler, clf_model, clf_metrics = fit_classifier()
 reg_scaler, reg_model, reg_metrics = fit_regressor()
 
+# ------------------------------------------------- 3b. training range guard
+# "Never extrapolate silently": record the min/max of every feature actually
+# seen in training so the UI can refuse to predict outside the tested envelope
+# instead of guessing (Build Guide, Flame in Freefall, hard rule).
+range_rows = clean.dropna(subset=FEATURES + ['self_extinguished'])
+training_range = {f: [round(float(range_rows[f].min()), 3), round(float(range_rows[f].max()), 3)] for f in FEATURES}
+print('training range (self-extinguish range_rows):', training_range)
+
 # ---------------------------------------------------------------- 4. export
+PSI_URL = 'https://psi.nasa.gov/physci/repo/data/investigations/PSI-69'
+SOURCE_FILE = 'PSI-69_Experimental table_FLEX.csv'
 export = {
     'source': 'NASA PSI PSI-69 (FLEX), 274 individual droplet-flame tests, cleaned from flame_in_freefall_data/cleaned/cleaned_values.csv',
+    'source_url': PSI_URL,
+    'source_file': SOURCE_FILE,
     'generated_by': 'flame_in_freefall_data/ml/build_flex_model.py',
     'scope_note': 'Fitted on free-floating liquid-droplet flames (methanol/heptane). Physically distinct from the solid-sample lab model (labModel.js derive()) -- use as nearest-evidence comparison, not a drop-in replacement for the solid-sample curves.',
     'features': FEATURES,
+    'training_range': training_range,
     'classifier': {
         'target': 'self_extinguished (1 = flame went out before fuel was consumed, 0 = burned to completion)',
         'scaler_mean': clf_scaler.mean_.tolist(), 'scaler_scale': clf_scaler.scale_.tolist(),
@@ -146,6 +165,7 @@ export = {
     },
     'tests': clean.dropna(subset=['o2_pct', 'pressure_atm']).apply(lambda r: {
         'source_row': int(r.source_row), 'fuel': r.fuel,
+        'report_id': f'PSI-69 row {int(r.source_row)}', 'source_url': PSI_URL,
         'o2_pct': round(float(r.o2_pct), 2), 'pressure_atm': round(float(r.pressure_atm), 3),
         'droplet_diameter_mm': None if pd.isna(r.droplet_diameter_mm) else round(float(r.droplet_diameter_mm), 2),
         'self_extinguished': None if pd.isna(r.self_extinguished) else bool(r.self_extinguished),
@@ -163,7 +183,7 @@ lines = ['# Feature dictionary -- flex_tests_clean.csv (PSI-69 FLEX, 274 droplet
          '| fuel_methanol | 1 = Methanol, 0 = Heptane |',
          '| o2_pct | ambient O2 by volume, % (swept 12-34% across the test matrix) |',
          '| n2_pct / he_pct | diluent gas composition; He varies Lewis number/thermal conductivity in some sub-series |',
-         '| pressure_atm | ambient pressure, converted from source mmHg |',
+         '| pressure_atm | ambient pressure, converted from source mmHg; one row (source_row 115) had a literal 0 mmHg reading, physically impossible for a sealed ambient test, and is set to missing rather than treated as near-vacuum |',
          '| o2_partial_pressure_atm | o2_frac * pressure_atm -- combines O2% and total pressure into one physically meaningful term |',
          '| droplet_diameter_mm | initial droplet diameter |',
          '| burning_rate_k_mm2_s | measured d^2-law burning-rate constant K |',

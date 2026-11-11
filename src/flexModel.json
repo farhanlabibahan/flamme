@@ -1,5 +1,7 @@
 {
  "source": "NASA PSI PSI-69 (FLEX), 274 individual droplet-flame tests, cleaned from flame_in_freefall_data/cleaned/cleaned_values.csv",
+ "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
+ "source_file": "PSI-69_Experimental table_FLEX.csv",
  "generated_by": "flame_in_freefall_data/ml/build_flex_model.py",
  "scope_note": "Fitted on free-floating liquid-droplet flames (methanol/heptane). Physically distinct from the solid-sample lab model (labModel.js derive()) -- use as nearest-evidence comparison, not a drop-in replacement for the solid-sample curves.",
  "features": [
@@ -9,35 +11,57 @@
   "droplet_diameter_mm",
   "fuel_methanol"
  ],
+ "training_range": {
+  "o2_pct": [
+   12.0,
+   34.0
+  ],
+  "pressure_atm": [
+   0.692,
+   2.726
+  ],
+  "o2_partial_pressure_atm": [
+   0.105,
+   0.573
+  ],
+  "droplet_diameter_mm": [
+   1.1,
+   4.67
+  ],
+  "fuel_methanol": [
+   0.0,
+   1.0
+  ]
+ },
  "classifier": {
   "target": "self_extinguished (1 = flame went out before fuel was consumed, 0 = burned to completion)",
   "scaler_mean": [
-   19.664670658682635,
-   0.894377560668137,
-   0.17380917901040022,
-   3.101377245508982,
-   0.592814371257485
+   19.632530120481928,
+   0.8998383005707038,
+   0.17460178344958768,
+   3.0294578313253013,
+   0.5783132530120482
   ],
   "scaler_scale": [
-   4.240679499335594,
-   0.23330258847679444,
-   0.05447109068981468,
-   0.648405613579767,
-   0.4913099759704436
+   4.247312642463195,
+   0.22345655012168691,
+   0.05289182411229474,
+   0.6806554743244388,
+   0.49382895257636605
   ],
   "coef": [
-   -0.6173760360707822,
-   0.23696506098030004,
-   -0.2075121956082604,
-   -0.28622886911508677,
-   -0.05173808540248475
+   -0.5905002263877883,
+   0.2623893357853816,
+   -0.22121937162367955,
+   -0.37681188170425006,
+   -0.05530227438409292
   ],
-  "intercept": 2.3201256818636002,
+  "intercept": 2.342216649066155,
   "metrics": {
-   "n_train": 167,
+   "n_train": 166,
    "n_test": 56,
    "accuracy": 0.875,
-   "auc": 0.913,
+   "auc": 0.895,
    "confusion_matrix": [
     [
      0,
@@ -54,38 +78,40 @@
  "regressor": {
   "target": "burning_rate_k_mm2_s (d^2-law burning-rate constant K, mm^2/s)",
   "scaler_mean": [
-   20.424870466321245,
-   0.8986398963730573,
-   0.1808500681756205,
-   3.008963730569949,
-   0.5854922279792746
+   20.276041666666668,
+   0.905050027412281,
+   0.18076912691885968,
+   3.024947916666669,
+   0.5729166666666666
   ],
   "scaler_scale": [
-   4.732842271582372,
-   0.2921992335263745,
-   0.0663995890833271,
-   0.6976934342662308,
-   0.4926368631711797
+   4.812294255161867,
+   0.28535842862309346,
+   0.06558840729887064,
+   0.686915658787399,
+   0.49465458627432357
   ],
   "coef": [
-   0.0688184115221741,
-   -0.026366225953149212,
-   0.012251119062761048,
-   -0.06539860939583748,
-   -0.02242482530499582
+   0.07826190837093161,
+   -0.014074526572078434,
+   -0.00012935413203707014,
+   -0.06260129935285966,
+   -0.019614589324444504
   ],
-  "intercept": 0.5115025906735751,
+  "intercept": 0.5092187499999998,
   "metrics": {
-   "n_train": 193,
+   "n_train": 192,
    "n_test": 65,
-   "r2": 0.448,
-   "mae_mm2_s": 0.0755
+   "r2": 0.582,
+   "mae_mm2_s": 0.0681
   }
  },
  "tests": [
   {
    "source_row": 2,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 2",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 0.997,
    "droplet_diameter_mm": 1.69,
@@ -96,6 +122,8 @@
   {
    "source_row": 3,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 3",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 1.003,
    "droplet_diameter_mm": 1.86,
@@ -106,6 +134,8 @@
   {
    "source_row": 4,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 4",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 1.006,
    "droplet_diameter_mm": 1.61,
@@ -116,6 +146,8 @@
   {
    "source_row": 5,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 5",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 1.0,
    "droplet_diameter_mm": 2.06,
@@ -126,6 +158,8 @@
   {
    "source_row": 6,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 6",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 1.0,
    "droplet_diameter_mm": 1.92,
@@ -136,6 +170,8 @@
   {
    "source_row": 7,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 7",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 1.0,
    "droplet_diameter_mm": 2.54,
@@ -146,6 +182,8 @@
   {
    "source_row": 8,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 8",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 1.002,
    "droplet_diameter_mm": 1.87,
@@ -156,6 +194,8 @@
   {
    "source_row": 9,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 9",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 1.003,
    "droplet_diameter_mm": 2.95,
@@ -166,6 +206,8 @@
   {
    "source_row": 10,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 10",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 1.0,
    "droplet_diameter_mm": null,
@@ -176,6 +218,8 @@
   {
    "source_row": 11,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 11",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 3.052,
    "droplet_diameter_mm": 3.86,
@@ -186,6 +230,8 @@
   {
    "source_row": 12,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 12",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 3.051,
    "droplet_diameter_mm": 3.03,
@@ -196,6 +242,8 @@
   {
    "source_row": 13,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 13",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 3.053,
    "droplet_diameter_mm": 2.74,
@@ -206,6 +254,8 @@
   {
    "source_row": 14,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 14",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 2.729,
    "droplet_diameter_mm": 2.59,
@@ -216,6 +266,8 @@
   {
    "source_row": 15,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 15",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 2.705,
    "droplet_diameter_mm": 3.7,
@@ -226,6 +278,8 @@
   {
    "source_row": 16,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 16",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 2.719,
    "droplet_diameter_mm": 4.42,
@@ -236,6 +290,8 @@
   {
    "source_row": 17,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 17",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 2.726,
    "droplet_diameter_mm": 1.66,
@@ -246,6 +302,8 @@
   {
    "source_row": 18,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 18",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 2.034,
    "droplet_diameter_mm": 2.67,
@@ -256,6 +314,8 @@
   {
    "source_row": 19,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 19",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 2.044,
    "droplet_diameter_mm": 2.74,
@@ -266,6 +326,8 @@
   {
    "source_row": 20,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 20",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 34.0,
    "pressure_atm": 0.709,
    "droplet_diameter_mm": 3.39,
@@ -276,6 +338,8 @@
   {
    "source_row": 21,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 21",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 34.0,
    "pressure_atm": 0.71,
    "droplet_diameter_mm": 3.4,
@@ -286,6 +350,8 @@
   {
    "source_row": 22,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 22",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 34.0,
    "pressure_atm": 0.711,
    "droplet_diameter_mm": 3.49,
@@ -296,6 +362,8 @@
   {
    "source_row": 23,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 23",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 34.0,
    "pressure_atm": 0.711,
    "droplet_diameter_mm": 3.5,
@@ -306,6 +374,8 @@
   {
    "source_row": 24,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 24",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 34.0,
    "pressure_atm": 0.713,
    "droplet_diameter_mm": 3.01,
@@ -316,6 +386,8 @@
   {
    "source_row": 25,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 25",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 34.0,
    "pressure_atm": 0.714,
    "droplet_diameter_mm": null,
@@ -326,6 +398,8 @@
   {
    "source_row": 26,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 26",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 30.0,
    "pressure_atm": 0.707,
    "droplet_diameter_mm": 2.6,
@@ -336,6 +410,8 @@
   {
    "source_row": 27,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 27",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 30.0,
    "pressure_atm": 0.708,
    "droplet_diameter_mm": 3.63,
@@ -346,6 +422,8 @@
   {
    "source_row": 28,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 28",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 30.0,
    "pressure_atm": 0.711,
    "droplet_diameter_mm": 3.87,
@@ -356,6 +434,8 @@
   {
    "source_row": 29,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 29",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 30.0,
    "pressure_atm": 0.71,
    "droplet_diameter_mm": 3.36,
@@ -366,6 +446,8 @@
   {
    "source_row": 30,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 30",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 30.0,
    "pressure_atm": 1.009,
    "droplet_diameter_mm": 2.57,
@@ -376,6 +458,8 @@
   {
    "source_row": 31,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 31",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 30.0,
    "pressure_atm": 1.012,
    "droplet_diameter_mm": 3.26,
@@ -386,6 +470,8 @@
   {
    "source_row": 32,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 32",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 30.0,
    "pressure_atm": 1.014,
    "droplet_diameter_mm": 3.39,
@@ -396,6 +482,8 @@
   {
    "source_row": 33,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 33",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 30.0,
    "pressure_atm": 1.014,
    "droplet_diameter_mm": 3.07,
@@ -406,6 +494,8 @@
   {
    "source_row": 34,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 34",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 1.006,
    "droplet_diameter_mm": 2.62,
@@ -416,6 +506,8 @@
   {
    "source_row": 35,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 35",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 1.01,
    "droplet_diameter_mm": 3.89,
@@ -426,6 +518,8 @@
   {
    "source_row": 36,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 36",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 1.011,
    "droplet_diameter_mm": 3.85,
@@ -436,6 +530,8 @@
   {
    "source_row": 37,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 37",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 20.0,
    "pressure_atm": 0.709,
    "droplet_diameter_mm": 2.4,
@@ -446,6 +542,8 @@
   {
    "source_row": 38,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 38",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 34.0,
    "pressure_atm": 0.703,
    "droplet_diameter_mm": 3.31,
@@ -456,6 +554,8 @@
   {
    "source_row": 39,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 39",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 34.0,
    "pressure_atm": 0.703,
    "droplet_diameter_mm": 3.59,
@@ -466,6 +566,8 @@
   {
    "source_row": 40,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 40",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 34.0,
    "pressure_atm": 0.704,
    "droplet_diameter_mm": 2.91,
@@ -476,6 +578,8 @@
   {
    "source_row": 41,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 41",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 30.0,
    "pressure_atm": 0.704,
    "droplet_diameter_mm": 3.77,
@@ -486,6 +590,8 @@
   {
    "source_row": 42,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 42",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 30.0,
    "pressure_atm": 0.703,
    "droplet_diameter_mm": 3.35,
@@ -496,6 +602,8 @@
   {
    "source_row": 43,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 43",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 30.0,
    "pressure_atm": 0.704,
    "droplet_diameter_mm": 2.92,
@@ -506,6 +614,8 @@
   {
    "source_row": 44,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 44",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 30.0,
    "pressure_atm": 0.704,
    "droplet_diameter_mm": 2.97,
@@ -516,6 +626,8 @@
   {
    "source_row": 45,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 45",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 30.0,
    "pressure_atm": 1.009,
    "droplet_diameter_mm": 3.49,
@@ -526,6 +638,8 @@
   {
    "source_row": 46,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 46",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 30.0,
    "pressure_atm": 1.011,
    "droplet_diameter_mm": 2.42,
@@ -536,6 +650,8 @@
   {
    "source_row": 47,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 47",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 1.012,
    "droplet_diameter_mm": 2.78,
@@ -546,6 +662,8 @@
   {
    "source_row": 48,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 48",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 1.013,
    "droplet_diameter_mm": 3.36,
@@ -556,6 +674,8 @@
   {
    "source_row": 49,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 49",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 1.011,
    "droplet_diameter_mm": 3.66,
@@ -566,6 +686,8 @@
   {
    "source_row": 50,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 50",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 1.006,
    "droplet_diameter_mm": 3.46,
@@ -576,6 +698,8 @@
   {
    "source_row": 51,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 51",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 1.013,
    "droplet_diameter_mm": 3.57,
@@ -586,6 +710,8 @@
   {
    "source_row": 52,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 52",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 1.015,
    "droplet_diameter_mm": 2.41,
@@ -596,6 +722,8 @@
   {
    "source_row": 53,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 53",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 30.0,
    "pressure_atm": 1.015,
    "droplet_diameter_mm": 3.53,
@@ -606,6 +734,8 @@
   {
    "source_row": 54,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 54",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 1.013,
    "droplet_diameter_mm": null,
@@ -616,6 +746,8 @@
   {
    "source_row": 55,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 55",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 20.0,
    "pressure_atm": 0.712,
    "droplet_diameter_mm": 3.56,
@@ -626,6 +758,8 @@
   {
    "source_row": 56,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 56",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 20.0,
    "pressure_atm": 0.714,
    "droplet_diameter_mm": 3.37,
@@ -636,6 +770,8 @@
   {
    "source_row": 57,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 57",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 20.0,
    "pressure_atm": 0.716,
    "droplet_diameter_mm": 3.56,
@@ -646,6 +782,8 @@
   {
    "source_row": 58,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 58",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 20.0,
    "pressure_atm": 0.716,
    "droplet_diameter_mm": 3.1,
@@ -656,6 +794,8 @@
   {
    "source_row": 59,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 59",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 18.0,
    "pressure_atm": 1.017,
    "droplet_diameter_mm": 3.69,
@@ -666,6 +806,8 @@
   {
    "source_row": 60,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 60",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 18.0,
    "pressure_atm": 1.012,
    "droplet_diameter_mm": 2.93,
@@ -676,6 +818,8 @@
   {
    "source_row": 61,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 61",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 18.0,
    "pressure_atm": 1.018,
    "droplet_diameter_mm": 3.43,
@@ -686,6 +830,8 @@
   {
    "source_row": 62,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 62",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 18.0,
    "pressure_atm": 1.019,
    "droplet_diameter_mm": 3.68,
@@ -696,6 +842,8 @@
   {
    "source_row": 63,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 63",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 18.0,
    "pressure_atm": 1.002,
    "droplet_diameter_mm": 3.43,
@@ -706,6 +854,8 @@
   {
    "source_row": 64,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 64",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 18.0,
    "pressure_atm": 1.01,
    "droplet_diameter_mm": 2.15,
@@ -716,6 +866,8 @@
   {
    "source_row": 65,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 65",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 18.0,
    "pressure_atm": 1.006,
    "droplet_diameter_mm": 2.69,
@@ -726,6 +878,8 @@
   {
    "source_row": 66,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 66",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 15.0,
    "pressure_atm": 1.008,
    "droplet_diameter_mm": 3.37,
@@ -736,6 +890,8 @@
   {
    "source_row": 67,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 67",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 15.0,
    "pressure_atm": 1.009,
    "droplet_diameter_mm": 2.52,
@@ -746,6 +902,8 @@
   {
    "source_row": 68,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 68",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 15.0,
    "pressure_atm": 1.01,
    "droplet_diameter_mm": 3.97,
@@ -756,6 +914,8 @@
   {
    "source_row": 69,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 69",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 15.0,
    "pressure_atm": 1.012,
    "droplet_diameter_mm": 2.38,
@@ -766,6 +926,8 @@
   {
    "source_row": 70,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 70",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 14.0,
    "pressure_atm": 1.009,
    "droplet_diameter_mm": 1.1,
@@ -776,6 +938,8 @@
   {
    "source_row": 71,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 71",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 15.0,
    "pressure_atm": 1.001,
    "droplet_diameter_mm": 4.67,
@@ -786,6 +950,8 @@
   {
    "source_row": 72,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 72",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 15.0,
    "pressure_atm": 1.011,
    "droplet_diameter_mm": 2.25,
@@ -796,6 +962,8 @@
   {
    "source_row": 73,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 73",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 15.0,
    "pressure_atm": 1.007,
    "droplet_diameter_mm": 1.13,
@@ -806,6 +974,8 @@
   {
    "source_row": 74,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 74",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 15.0,
    "pressure_atm": 1.001,
    "droplet_diameter_mm": 4.64,
@@ -816,6 +986,8 @@
   {
    "source_row": 75,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 75",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 15.0,
    "pressure_atm": 1.008,
    "droplet_diameter_mm": 1.33,
@@ -826,6 +998,8 @@
   {
    "source_row": 76,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 76",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 13.0,
    "pressure_atm": 1.014,
    "droplet_diameter_mm": 2.54,
@@ -836,6 +1010,8 @@
   {
    "source_row": 77,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 77",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 13.0,
    "pressure_atm": 1.012,
    "droplet_diameter_mm": 3.21,
@@ -846,6 +1022,8 @@
   {
    "source_row": 78,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 78",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 14.0,
    "pressure_atm": 1.011,
    "droplet_diameter_mm": 3.33,
@@ -856,6 +1034,8 @@
   {
    "source_row": 79,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 79",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 14.0,
    "pressure_atm": 1.008,
    "droplet_diameter_mm": 2.66,
@@ -866,6 +1046,8 @@
   {
    "source_row": 80,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 80",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 13.0,
    "pressure_atm": 1.011,
    "droplet_diameter_mm": 2.92,
@@ -876,6 +1058,8 @@
   {
    "source_row": 81,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 81",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 13.0,
    "pressure_atm": 1.013,
    "droplet_diameter_mm": null,
@@ -886,6 +1070,8 @@
   {
    "source_row": 82,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 82",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 13.0,
    "pressure_atm": 1.013,
    "droplet_diameter_mm": null,
@@ -896,6 +1082,8 @@
   {
    "source_row": 83,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 83",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 13.0,
    "pressure_atm": 1.006,
    "droplet_diameter_mm": 2.84,
@@ -906,6 +1094,8 @@
   {
    "source_row": 84,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 84",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 12.0,
    "pressure_atm": 1.016,
    "droplet_diameter_mm": null,
@@ -916,6 +1106,8 @@
   {
    "source_row": 85,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 85",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 12.0,
    "pressure_atm": 1.009,
    "droplet_diameter_mm": 2.35,
@@ -926,6 +1118,8 @@
   {
    "source_row": 86,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 86",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 12.0,
    "pressure_atm": 1.015,
    "droplet_diameter_mm": 2.4,
@@ -936,6 +1130,8 @@
   {
    "source_row": 87,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 87",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 12.0,
    "pressure_atm": 1.013,
    "droplet_diameter_mm": 3.07,
@@ -946,6 +1142,8 @@
   {
    "source_row": 88,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 88",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 12.0,
    "pressure_atm": 1.015,
    "droplet_diameter_mm": 2.64,
@@ -956,6 +1154,8 @@
   {
    "source_row": 89,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 89",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 25.0,
    "pressure_atm": 0.707,
    "droplet_diameter_mm": 3.01,
@@ -966,6 +1166,8 @@
   {
    "source_row": 90,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 90",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 25.0,
    "pressure_atm": 0.707,
    "droplet_diameter_mm": 3.7,
@@ -976,6 +1178,8 @@
   {
    "source_row": 91,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 91",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 25.0,
    "pressure_atm": 0.709,
    "droplet_diameter_mm": 3.62,
@@ -986,6 +1190,8 @@
   {
    "source_row": 92,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 92",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 25.0,
    "pressure_atm": 0.708,
    "droplet_diameter_mm": 3.51,
@@ -996,6 +1202,8 @@
   {
    "source_row": 93,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 93",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 25.0,
    "pressure_atm": 0.706,
    "droplet_diameter_mm": 3.41,
@@ -1006,6 +1214,8 @@
   {
    "source_row": 94,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 94",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 25.0,
    "pressure_atm": 0.707,
    "droplet_diameter_mm": 2.48,
@@ -1016,6 +1226,8 @@
   {
    "source_row": 95,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 95",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 24.0,
    "pressure_atm": 0.702,
    "droplet_diameter_mm": 3.53,
@@ -1026,6 +1238,8 @@
   {
    "source_row": 96,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 96",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 24.0,
    "pressure_atm": 0.703,
    "droplet_diameter_mm": 3.6,
@@ -1036,6 +1250,8 @@
   {
    "source_row": 97,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 97",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 24.0,
    "pressure_atm": 0.703,
    "droplet_diameter_mm": null,
@@ -1046,6 +1262,8 @@
   {
    "source_row": 98,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 98",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 23.0,
    "pressure_atm": 0.703,
    "droplet_diameter_mm": 4.25,
@@ -1056,6 +1274,8 @@
   {
    "source_row": 99,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 99",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 23.0,
    "pressure_atm": 0.707,
    "droplet_diameter_mm": 3.64,
@@ -1066,6 +1286,8 @@
   {
    "source_row": 100,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 100",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 23.0,
    "pressure_atm": 0.704,
    "droplet_diameter_mm": 4.28,
@@ -1076,6 +1298,8 @@
   {
    "source_row": 101,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 101",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 23.0,
    "pressure_atm": 0.706,
    "droplet_diameter_mm": 4.14,
@@ -1086,6 +1310,8 @@
   {
    "source_row": 102,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 102",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 23.0,
    "pressure_atm": 0.709,
    "droplet_diameter_mm": 3.88,
@@ -1096,6 +1322,8 @@
   {
    "source_row": 103,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 103",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 0.703,
    "droplet_diameter_mm": 3.57,
@@ -1106,6 +1334,8 @@
   {
    "source_row": 104,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 104",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 0.703,
    "droplet_diameter_mm": 4.0,
@@ -1116,6 +1346,8 @@
   {
    "source_row": 105,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 105",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 23.0,
    "pressure_atm": 0.703,
    "droplet_diameter_mm": 3.6,
@@ -1126,6 +1358,8 @@
   {
    "source_row": 106,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 106",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 23.0,
    "pressure_atm": 0.703,
    "droplet_diameter_mm": 4.17,
@@ -1136,6 +1370,8 @@
   {
    "source_row": 107,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 107",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 23.0,
    "pressure_atm": 0.708,
    "droplet_diameter_mm": 3.08,
@@ -1146,6 +1382,8 @@
   {
    "source_row": 108,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 108",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 23.0,
    "pressure_atm": 0.704,
    "droplet_diameter_mm": 3.18,
@@ -1156,6 +1394,8 @@
   {
    "source_row": 109,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 109",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 23.0,
    "pressure_atm": 0.708,
    "droplet_diameter_mm": 3.75,
@@ -1166,6 +1406,8 @@
   {
    "source_row": 110,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 110",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 0.706,
    "droplet_diameter_mm": 3.56,
@@ -1176,6 +1418,8 @@
   {
    "source_row": 111,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 111",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 0.707,
    "droplet_diameter_mm": 2.83,
@@ -1186,6 +1430,8 @@
   {
    "source_row": 112,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 112",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 0.706,
    "droplet_diameter_mm": 3.37,
@@ -1196,6 +1442,8 @@
   {
    "source_row": 113,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 113",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 0.698,
    "droplet_diameter_mm": 3.99,
@@ -1206,6 +1454,8 @@
   {
    "source_row": 114,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 114",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 20.0,
    "pressure_atm": 0.703,
    "droplet_diameter_mm": 4.2,
@@ -1214,18 +1464,10 @@
    "burning_rate_k_mm2_s": 0.49
   },
   {
-   "source_row": 115,
-   "fuel": "Methanol",
-   "o2_pct": 20.0,
-   "pressure_atm": 0.0,
-   "droplet_diameter_mm": 3.23,
-   "self_extinguished": true,
-   "extinction_diameter_mm": 1.68,
-   "burning_rate_k_mm2_s": 0.42
-  },
-  {
    "source_row": 116,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 116",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 20.0,
    "pressure_atm": 0.705,
    "droplet_diameter_mm": 3.97,
@@ -1236,6 +1478,8 @@
   {
    "source_row": 117,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 117",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 20.0,
    "pressure_atm": 0.706,
    "droplet_diameter_mm": 3.16,
@@ -1246,6 +1490,8 @@
   {
    "source_row": 118,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 118",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 20.0,
    "pressure_atm": 0.699,
    "droplet_diameter_mm": 3.84,
@@ -1256,6 +1502,8 @@
   {
    "source_row": 119,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 119",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 20.0,
    "pressure_atm": 0.701,
    "droplet_diameter_mm": 3.03,
@@ -1266,6 +1514,8 @@
   {
    "source_row": 120,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 120",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 18.0,
    "pressure_atm": 0.701,
    "droplet_diameter_mm": 2.6,
@@ -1276,6 +1526,8 @@
   {
    "source_row": 121,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 121",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 18.0,
    "pressure_atm": 0.701,
    "droplet_diameter_mm": 2.45,
@@ -1286,6 +1538,8 @@
   {
    "source_row": 122,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 122",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 18.0,
    "pressure_atm": 0.692,
    "droplet_diameter_mm": 4.25,
@@ -1296,6 +1550,8 @@
   {
    "source_row": 123,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 123",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 18.0,
    "pressure_atm": 0.699,
    "droplet_diameter_mm": 3.46,
@@ -1306,6 +1562,8 @@
   {
    "source_row": 124,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 124",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 18.0,
    "pressure_atm": 0.7,
    "droplet_diameter_mm": 4.13,
@@ -1316,6 +1574,8 @@
   {
    "source_row": 125,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 125",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 18.0,
    "pressure_atm": 0.701,
    "droplet_diameter_mm": 2.87,
@@ -1326,6 +1586,8 @@
   {
    "source_row": 126,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 126",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 17.0,
    "pressure_atm": 0.707,
    "droplet_diameter_mm": 3.63,
@@ -1336,6 +1598,8 @@
   {
    "source_row": 127,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 127",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 17.0,
    "pressure_atm": 0.705,
    "droplet_diameter_mm": 2.8,
@@ -1346,6 +1610,8 @@
   {
    "source_row": 128,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 128",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 17.0,
    "pressure_atm": 0.706,
    "droplet_diameter_mm": 3.22,
@@ -1356,6 +1622,8 @@
   {
    "source_row": 129,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 129",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 17.0,
    "pressure_atm": 0.707,
    "droplet_diameter_mm": 2.91,
@@ -1366,6 +1634,8 @@
   {
    "source_row": 130,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 130",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 17.0,
    "pressure_atm": 0.706,
    "droplet_diameter_mm": 3.33,
@@ -1376,6 +1646,8 @@
   {
    "source_row": 131,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 131",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 17.0,
    "pressure_atm": 0.707,
    "droplet_diameter_mm": 2.91,
@@ -1386,6 +1658,8 @@
   {
    "source_row": 132,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 132",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 24.0,
    "pressure_atm": 1.005,
    "droplet_diameter_mm": 1.72,
@@ -1396,6 +1670,8 @@
   {
    "source_row": 133,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 133",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 24.0,
    "pressure_atm": 1.007,
    "droplet_diameter_mm": 2.63,
@@ -1406,6 +1682,8 @@
   {
    "source_row": 134,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 134",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 24.0,
    "pressure_atm": 1.009,
    "droplet_diameter_mm": 3.25,
@@ -1416,6 +1694,8 @@
   {
    "source_row": 135,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 135",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 24.0,
    "pressure_atm": 1.009,
    "droplet_diameter_mm": 3.66,
@@ -1426,6 +1706,8 @@
   {
    "source_row": 136,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 136",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 24.0,
    "pressure_atm": 1.011,
    "droplet_diameter_mm": 2.78,
@@ -1436,6 +1718,8 @@
   {
    "source_row": 137,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 137",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 24.0,
    "pressure_atm": 1.011,
    "droplet_diameter_mm": 3.08,
@@ -1446,6 +1730,8 @@
   {
    "source_row": 138,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 138",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 24.0,
    "pressure_atm": 1.011,
    "droplet_diameter_mm": 3.13,
@@ -1456,6 +1742,8 @@
   {
    "source_row": 139,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 139",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 24.0,
    "pressure_atm": 1.011,
    "droplet_diameter_mm": null,
@@ -1466,6 +1754,8 @@
   {
    "source_row": 140,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 140",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 24.0,
    "pressure_atm": 1.011,
    "droplet_diameter_mm": 1.75,
@@ -1476,6 +1766,8 @@
   {
    "source_row": 141,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 141",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 15.0,
    "pressure_atm": 0.702,
    "droplet_diameter_mm": 3.98,
@@ -1486,6 +1778,8 @@
   {
    "source_row": 142,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 142",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 15.0,
    "pressure_atm": 0.703,
    "droplet_diameter_mm": 2.86,
@@ -1496,6 +1790,8 @@
   {
    "source_row": 143,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 143",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 15.0,
    "pressure_atm": 0.703,
    "droplet_diameter_mm": 1.86,
@@ -1506,6 +1802,8 @@
   {
    "source_row": 144,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 144",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 15.0,
    "pressure_atm": 0.704,
    "droplet_diameter_mm": 2.25,
@@ -1516,6 +1814,8 @@
   {
    "source_row": 145,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 145",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 20.0,
    "pressure_atm": 1.002,
    "droplet_diameter_mm": 3.53,
@@ -1526,6 +1826,8 @@
   {
    "source_row": 146,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 146",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 20.0,
    "pressure_atm": 1.005,
    "droplet_diameter_mm": 3.33,
@@ -1536,6 +1838,8 @@
   {
    "source_row": 147,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 147",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 20.0,
    "pressure_atm": 1.007,
    "droplet_diameter_mm": 4.35,
@@ -1546,6 +1850,8 @@
   {
    "source_row": 148,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 148",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 17.0,
    "pressure_atm": 0.705,
    "droplet_diameter_mm": 3.02,
@@ -1556,6 +1862,8 @@
   {
    "source_row": 149,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 149",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 20.0,
    "pressure_atm": 1.006,
    "droplet_diameter_mm": 2.58,
@@ -1566,6 +1874,8 @@
   {
    "source_row": 150,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 150",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 20.0,
    "pressure_atm": 1.008,
    "droplet_diameter_mm": 2.21,
@@ -1576,6 +1886,8 @@
   {
    "source_row": 151,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 151",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 20.0,
    "pressure_atm": 1.01,
    "droplet_diameter_mm": 3.18,
@@ -1586,6 +1898,8 @@
   {
    "source_row": 152,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 152",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 18.0,
    "pressure_atm": 1.003,
    "droplet_diameter_mm": 3.86,
@@ -1596,6 +1910,8 @@
   {
    "source_row": 153,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 153",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 18.0,
    "pressure_atm": 1.007,
    "droplet_diameter_mm": 3.33,
@@ -1606,6 +1922,8 @@
   {
    "source_row": 154,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 154",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 18.0,
    "pressure_atm": 1.007,
    "droplet_diameter_mm": 2.78,
@@ -1616,6 +1934,8 @@
   {
    "source_row": 155,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 155",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 18.0,
    "pressure_atm": 1.003,
    "droplet_diameter_mm": 3.7,
@@ -1626,6 +1946,8 @@
   {
    "source_row": 156,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 156",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 18.0,
    "pressure_atm": 1.006,
    "droplet_diameter_mm": 2.73,
@@ -1636,6 +1958,8 @@
   {
    "source_row": 157,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 157",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 18.0,
    "pressure_atm": 1.008,
    "droplet_diameter_mm": 1.34,
@@ -1646,6 +1970,8 @@
   {
    "source_row": 158,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 158",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 16.0,
    "pressure_atm": 1.003,
    "droplet_diameter_mm": 4.24,
@@ -1656,6 +1982,8 @@
   {
    "source_row": 159,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 159",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 16.0,
    "pressure_atm": 1.006,
    "droplet_diameter_mm": 3.7,
@@ -1666,6 +1994,8 @@
   {
    "source_row": 160,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 160",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 16.0,
    "pressure_atm": 1.007,
    "droplet_diameter_mm": 2.71,
@@ -1676,6 +2006,8 @@
   {
    "source_row": 161,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 161",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 16.0,
    "pressure_atm": 1.01,
    "droplet_diameter_mm": 2.77,
@@ -1686,6 +2018,8 @@
   {
    "source_row": 162,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 162",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 15.0,
    "pressure_atm": 1.004,
    "droplet_diameter_mm": 3.72,
@@ -1696,6 +2030,8 @@
   {
    "source_row": 163,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 163",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 15.0,
    "pressure_atm": 1.006,
    "droplet_diameter_mm": 3.05,
@@ -1706,6 +2042,8 @@
   {
    "source_row": 164,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 164",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 15.0,
    "pressure_atm": 1.008,
    "droplet_diameter_mm": 2.59,
@@ -1716,6 +2054,8 @@
   {
    "source_row": 165,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 165",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 15.0,
    "pressure_atm": 1.008,
    "droplet_diameter_mm": 2.59,
@@ -1726,6 +2066,8 @@
   {
    "source_row": 166,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 166",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 18.0,
    "pressure_atm": 1.007,
    "droplet_diameter_mm": 1.96,
@@ -1736,6 +2078,8 @@
   {
    "source_row": 167,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 167",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 14.0,
    "pressure_atm": 1.001,
    "droplet_diameter_mm": 3.22,
@@ -1746,6 +2090,8 @@
   {
    "source_row": 168,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 168",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 14.0,
    "pressure_atm": 1.002,
    "droplet_diameter_mm": 2.32,
@@ -1756,6 +2102,8 @@
   {
    "source_row": 169,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 169",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 1.004,
    "droplet_diameter_mm": 3.03,
@@ -1766,6 +2114,8 @@
   {
    "source_row": 170,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 170",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 1.008,
    "droplet_diameter_mm": 3.05,
@@ -1776,6 +2126,8 @@
   {
    "source_row": 171,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 171",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 1.009,
    "droplet_diameter_mm": 3.53,
@@ -1786,6 +2138,8 @@
   {
    "source_row": 172,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 172",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 18.0,
    "pressure_atm": 1.0,
    "droplet_diameter_mm": 3.74,
@@ -1796,6 +2150,8 @@
   {
    "source_row": 173,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 173",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 18.0,
    "pressure_atm": 1.003,
    "droplet_diameter_mm": 2.4,
@@ -1806,6 +2162,8 @@
   {
    "source_row": 174,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 174",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 18.0,
    "pressure_atm": 1.003,
    "droplet_diameter_mm": 1.35,
@@ -1816,6 +2174,8 @@
   {
    "source_row": 175,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 175",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 24.0,
    "pressure_atm": 0.7,
    "droplet_diameter_mm": 2.5,
@@ -1826,6 +2186,8 @@
   {
    "source_row": 176,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 176",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 24.0,
    "pressure_atm": 0.7,
    "droplet_diameter_mm": 2.88,
@@ -1836,6 +2198,8 @@
   {
    "source_row": 177,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 177",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 24.0,
    "pressure_atm": 0.706,
    "droplet_diameter_mm": 4.53,
@@ -1846,6 +2210,8 @@
   {
    "source_row": 178,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 178",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 24.0,
    "pressure_atm": 0.707,
    "droplet_diameter_mm": 3.02,
@@ -1856,6 +2222,8 @@
   {
    "source_row": 179,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 179",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 23.0,
    "pressure_atm": 0.702,
    "droplet_diameter_mm": 3.32,
@@ -1866,6 +2234,8 @@
   {
    "source_row": 180,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 180",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 23.0,
    "pressure_atm": 0.703,
    "droplet_diameter_mm": 2.07,
@@ -1876,6 +2246,8 @@
   {
    "source_row": 181,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 181",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 19.0,
    "pressure_atm": 0.998,
    "droplet_diameter_mm": 3.4,
@@ -1886,6 +2258,8 @@
   {
    "source_row": 182,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 182",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 19.0,
    "pressure_atm": 0.999,
    "droplet_diameter_mm": 2.48,
@@ -1896,6 +2270,8 @@
   {
    "source_row": 183,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 183",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 19.0,
    "pressure_atm": 0.999,
    "droplet_diameter_mm": 1.64,
@@ -1906,6 +2282,8 @@
   {
    "source_row": 184,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 184",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 23.0,
    "pressure_atm": 0.703,
    "droplet_diameter_mm": 3.72,
@@ -1916,6 +2294,8 @@
   {
    "source_row": 185,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 185",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 23.0,
    "pressure_atm": 0.704,
    "droplet_diameter_mm": 3.42,
@@ -1926,6 +2306,8 @@
   {
    "source_row": 186,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 186",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 23.0,
    "pressure_atm": 0.704,
    "droplet_diameter_mm": 2.8,
@@ -1936,6 +2318,8 @@
   {
    "source_row": 187,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 187",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 23.0,
    "pressure_atm": 0.706,
    "droplet_diameter_mm": 2.47,
@@ -1946,6 +2330,8 @@
   {
    "source_row": 188,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 188",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 19.0,
    "pressure_atm": 0.997,
    "droplet_diameter_mm": 3.38,
@@ -1956,6 +2342,8 @@
   {
    "source_row": 189,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 189",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 19.0,
    "pressure_atm": 0.998,
    "droplet_diameter_mm": 2.47,
@@ -1966,6 +2354,8 @@
   {
    "source_row": 190,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 190",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 18.0,
    "pressure_atm": 1.002,
    "droplet_diameter_mm": 3.77,
@@ -1976,6 +2366,8 @@
   {
    "source_row": 191,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 191",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 18.0,
    "pressure_atm": 1.006,
    "droplet_diameter_mm": 2.74,
@@ -1986,6 +2378,8 @@
   {
    "source_row": 192,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 192",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 18.0,
    "pressure_atm": 1.007,
    "droplet_diameter_mm": 1.76,
@@ -1996,6 +2390,8 @@
   {
    "source_row": 193,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 193",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 17.0,
    "pressure_atm": 0.999,
    "droplet_diameter_mm": 3.46,
@@ -2006,6 +2402,8 @@
   {
    "source_row": 194,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 194",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 17.0,
    "pressure_atm": 0.999,
    "droplet_diameter_mm": 2.77,
@@ -2016,6 +2414,8 @@
   {
    "source_row": 195,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 195",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 17.0,
    "pressure_atm": 0.989,
    "droplet_diameter_mm": 3.76,
@@ -2026,6 +2426,8 @@
   {
    "source_row": 196,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 196",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 17.0,
    "pressure_atm": 0.99,
    "droplet_diameter_mm": 2.9,
@@ -2036,6 +2438,8 @@
   {
    "source_row": 197,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 197",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 20.0,
    "pressure_atm": 0.998,
    "droplet_diameter_mm": 3.06,
@@ -2046,6 +2450,8 @@
   {
    "source_row": 198,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 198",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 20.0,
    "pressure_atm": 1.0,
    "droplet_diameter_mm": 3.04,
@@ -2056,6 +2462,8 @@
   {
    "source_row": 199,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 199",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 20.0,
    "pressure_atm": 1.0,
    "droplet_diameter_mm": 2.12,
@@ -2066,6 +2474,8 @@
   {
    "source_row": 200,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 200",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 20.0,
    "pressure_atm": 0.992,
    "droplet_diameter_mm": 3.37,
@@ -2076,6 +2486,8 @@
   {
    "source_row": 201,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 201",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 20.0,
    "pressure_atm": 0.995,
    "droplet_diameter_mm": 2.57,
@@ -2086,6 +2498,8 @@
   {
    "source_row": 202,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 202",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 20.0,
    "pressure_atm": 0.996,
    "droplet_diameter_mm": 2.4,
@@ -2096,6 +2510,8 @@
   {
    "source_row": 203,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 203",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 1.0,
    "droplet_diameter_mm": 3.3,
@@ -2106,6 +2522,8 @@
   {
    "source_row": 204,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 204",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 1.002,
    "droplet_diameter_mm": 2.75,
@@ -2116,6 +2534,8 @@
   {
    "source_row": 205,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 205",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 0.995,
    "droplet_diameter_mm": 3.56,
@@ -2126,6 +2546,8 @@
   {
    "source_row": 206,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 206",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 0.996,
    "droplet_diameter_mm": 3.58,
@@ -2136,6 +2558,8 @@
   {
    "source_row": 207,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 207",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 1.0,
    "droplet_diameter_mm": 2.96,
@@ -2146,6 +2570,8 @@
   {
    "source_row": 208,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 208",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 1.004,
    "droplet_diameter_mm": 2.72,
@@ -2156,6 +2582,8 @@
   {
    "source_row": 209,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 209",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 1.004,
    "droplet_diameter_mm": 2.92,
@@ -2166,6 +2594,8 @@
   {
    "source_row": 210,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 210",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 16.0,
    "pressure_atm": 1.0,
    "droplet_diameter_mm": 3.34,
@@ -2176,6 +2606,8 @@
   {
    "source_row": 211,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 211",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 16.0,
    "pressure_atm": 1.0,
    "droplet_diameter_mm": null,
@@ -2186,6 +2618,8 @@
   {
    "source_row": 212,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 212",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 16.0,
    "pressure_atm": 1.0,
    "droplet_diameter_mm": 2.52,
@@ -2196,6 +2630,8 @@
   {
    "source_row": 213,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 213",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 15.0,
    "pressure_atm": 1.005,
    "droplet_diameter_mm": 2.55,
@@ -2206,6 +2642,8 @@
   {
    "source_row": 214,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 214",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 14.0,
    "pressure_atm": 1.0,
    "droplet_diameter_mm": 4.16,
@@ -2216,6 +2654,8 @@
   {
    "source_row": 215,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 215",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 14.0,
    "pressure_atm": 1.0,
    "droplet_diameter_mm": 1.83,
@@ -2226,6 +2666,8 @@
   {
    "source_row": 216,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 216",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 14.0,
    "pressure_atm": 0.997,
    "droplet_diameter_mm": 3.5,
@@ -2236,6 +2678,8 @@
   {
    "source_row": 217,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 217",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 14.0,
    "pressure_atm": 0.998,
    "droplet_diameter_mm": 2.67,
@@ -2246,6 +2690,8 @@
   {
    "source_row": 218,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 218",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 13.0,
    "pressure_atm": 0.999,
    "droplet_diameter_mm": 3.46,
@@ -2256,6 +2702,8 @@
   {
    "source_row": 219,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 219",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 13.0,
    "pressure_atm": 1.001,
    "droplet_diameter_mm": 2.75,
@@ -2266,6 +2714,8 @@
   {
    "source_row": 220,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 220",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 12.0,
    "pressure_atm": 1.002,
    "droplet_diameter_mm": 2.6,
@@ -2276,6 +2726,8 @@
   {
    "source_row": 221,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 221",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 12.0,
    "pressure_atm": 1.002,
    "droplet_diameter_mm": 1.94,
@@ -2286,6 +2738,8 @@
   {
    "source_row": 222,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 222",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 12.0,
    "pressure_atm": 1.005,
    "droplet_diameter_mm": 1.84,
@@ -2296,6 +2750,8 @@
   {
    "source_row": 223,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 223",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 20.0,
    "pressure_atm": 0.999,
    "droplet_diameter_mm": 2.91,
@@ -2306,6 +2762,8 @@
   {
    "source_row": 224,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 224",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 20.0,
    "pressure_atm": 0.999,
    "droplet_diameter_mm": null,
@@ -2316,6 +2774,8 @@
   {
    "source_row": 225,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 225",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 20.0,
    "pressure_atm": 0.994,
    "droplet_diameter_mm": 2.25,
@@ -2326,6 +2786,8 @@
   {
    "source_row": 226,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 226",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 19.0,
    "pressure_atm": 0.991,
    "droplet_diameter_mm": 2.78,
@@ -2336,6 +2798,8 @@
   {
    "source_row": 227,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 227",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 18.0,
    "pressure_atm": 0.999,
    "droplet_diameter_mm": 2.79,
@@ -2346,6 +2810,8 @@
   {
    "source_row": 228,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 228",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 18.0,
    "pressure_atm": 1.0,
    "droplet_diameter_mm": 2.95,
@@ -2356,6 +2822,8 @@
   {
    "source_row": 229,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 229",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 1.01,
    "droplet_diameter_mm": 3.32,
@@ -2366,6 +2834,8 @@
   {
    "source_row": 230,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 230",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 1.011,
    "droplet_diameter_mm": 2.39,
@@ -2376,6 +2846,8 @@
   {
    "source_row": 231,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 231",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 1.012,
    "droplet_diameter_mm": 3.65,
@@ -2386,6 +2858,8 @@
   {
    "source_row": 232,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 232",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 19.0,
    "pressure_atm": 0.998,
    "droplet_diameter_mm": 2.59,
@@ -2396,6 +2870,8 @@
   {
    "source_row": 233,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 233",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 18.0,
    "pressure_atm": 1.005,
    "droplet_diameter_mm": 3.52,
@@ -2406,6 +2882,8 @@
   {
    "source_row": 234,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 234",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 18.0,
    "pressure_atm": 1.008,
    "droplet_diameter_mm": 2.3,
@@ -2416,6 +2894,8 @@
   {
    "source_row": 235,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 235",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 18.0,
    "pressure_atm": 1.009,
    "droplet_diameter_mm": 2.27,
@@ -2426,6 +2906,8 @@
   {
    "source_row": 236,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 236",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 17.0,
    "pressure_atm": 0.999,
    "droplet_diameter_mm": 2.85,
@@ -2436,6 +2918,8 @@
   {
    "source_row": 237,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 237",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 17.0,
    "pressure_atm": 0.999,
    "droplet_diameter_mm": 2.12,
@@ -2446,6 +2930,8 @@
   {
    "source_row": 238,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 238",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 17.0,
    "pressure_atm": 0.999,
    "droplet_diameter_mm": null,
@@ -2456,6 +2942,8 @@
   {
    "source_row": 239,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 239",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 17.0,
    "pressure_atm": 1.0,
    "droplet_diameter_mm": 1.61,
@@ -2466,6 +2954,8 @@
   {
    "source_row": 240,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 240",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 17.0,
    "pressure_atm": 0.992,
    "droplet_diameter_mm": 2.99,
@@ -2476,6 +2966,8 @@
   {
    "source_row": 241,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 241",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 17.0,
    "pressure_atm": 0.996,
    "droplet_diameter_mm": 2.9,
@@ -2486,6 +2978,8 @@
   {
    "source_row": 242,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 242",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 16.0,
    "pressure_atm": 1.0,
    "droplet_diameter_mm": 3.4,
@@ -2496,6 +2990,8 @@
   {
    "source_row": 243,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 243",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 16.0,
    "pressure_atm": 1.001,
    "droplet_diameter_mm": null,
@@ -2506,6 +3002,8 @@
   {
    "source_row": 244,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 244",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 16.0,
    "pressure_atm": 0.997,
    "droplet_diameter_mm": 1.49,
@@ -2516,6 +3014,8 @@
   {
    "source_row": 245,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 245",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 15.0,
    "pressure_atm": 0.994,
    "droplet_diameter_mm": 3.67,
@@ -2526,6 +3026,8 @@
   {
    "source_row": 246,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 246",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 15.0,
    "pressure_atm": 0.996,
    "droplet_diameter_mm": 2.52,
@@ -2536,6 +3038,8 @@
   {
    "source_row": 247,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 247",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 14.0,
    "pressure_atm": 0.999,
    "droplet_diameter_mm": 2.44,
@@ -2546,6 +3050,8 @@
   {
    "source_row": 248,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 248",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 14.0,
    "pressure_atm": 1.0,
    "droplet_diameter_mm": 1.88,
@@ -2556,6 +3062,8 @@
   {
    "source_row": 249,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 249",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 13.0,
    "pressure_atm": 1.005,
    "droplet_diameter_mm": 3.56,
@@ -2566,6 +3074,8 @@
   {
    "source_row": 250,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 250",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 24.0,
    "pressure_atm": 0.703,
    "droplet_diameter_mm": 3.78,
@@ -2576,6 +3086,8 @@
   {
    "source_row": 251,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 251",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 23.0,
    "pressure_atm": 0.7,
    "droplet_diameter_mm": 2.8,
@@ -2586,6 +3098,8 @@
   {
    "source_row": 252,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 252",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 24.0,
    "pressure_atm": 0.703,
    "droplet_diameter_mm": 2.82,
@@ -2596,6 +3110,8 @@
   {
    "source_row": 253,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 253",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 24.0,
    "pressure_atm": 0.703,
    "droplet_diameter_mm": 2.79,
@@ -2606,6 +3122,8 @@
   {
    "source_row": 254,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 254",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 23.0,
    "pressure_atm": 0.7,
    "droplet_diameter_mm": 2.45,
@@ -2616,6 +3134,8 @@
   {
    "source_row": 255,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 255",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 23.0,
    "pressure_atm": 0.7,
    "droplet_diameter_mm": 2.61,
@@ -2626,6 +3146,8 @@
   {
    "source_row": 256,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 256",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 0.7,
    "droplet_diameter_mm": 3.22,
@@ -2636,6 +3158,8 @@
   {
    "source_row": 257,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 257",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 0.699,
    "droplet_diameter_mm": 3.25,
@@ -2646,6 +3170,8 @@
   {
    "source_row": 258,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 258",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 0.699,
    "droplet_diameter_mm": 2.67,
@@ -2656,6 +3182,8 @@
   {
    "source_row": 259,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 259",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 0.697,
    "droplet_diameter_mm": 3.23,
@@ -2666,6 +3194,8 @@
   {
    "source_row": 260,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 260",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 0.696,
    "droplet_diameter_mm": 2.86,
@@ -2676,6 +3206,8 @@
   {
    "source_row": 261,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 261",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 20.0,
    "pressure_atm": 0.701,
    "droplet_diameter_mm": 3.69,
@@ -2686,6 +3218,8 @@
   {
    "source_row": 262,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 262",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 20.0,
    "pressure_atm": 0.7,
    "droplet_diameter_mm": 3.08,
@@ -2696,6 +3230,8 @@
   {
    "source_row": 263,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 263",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 20.0,
    "pressure_atm": 0.694,
    "droplet_diameter_mm": 3.87,
@@ -2706,6 +3242,8 @@
   {
    "source_row": 264,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 264",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 20.0,
    "pressure_atm": 0.695,
    "droplet_diameter_mm": 2.95,
@@ -2716,6 +3254,8 @@
   {
    "source_row": 265,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 265",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 18.0,
    "pressure_atm": 0.701,
    "droplet_diameter_mm": 3.5,
@@ -2726,6 +3266,8 @@
   {
    "source_row": 266,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 266",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 18.0,
    "pressure_atm": 0.701,
    "droplet_diameter_mm": 2.7,
@@ -2736,6 +3278,8 @@
   {
    "source_row": 267,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 267",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 18.0,
    "pressure_atm": 0.702,
    "droplet_diameter_mm": 1.84,
@@ -2746,6 +3290,8 @@
   {
    "source_row": 268,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 268",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 18.0,
    "pressure_atm": 0.695,
    "droplet_diameter_mm": 2.27,
@@ -2756,6 +3302,8 @@
   {
    "source_row": 269,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 269",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 18.0,
    "pressure_atm": 0.698,
    "droplet_diameter_mm": 1.86,
@@ -2766,6 +3314,8 @@
   {
    "source_row": 270,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 270",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 17.0,
    "pressure_atm": 0.7,
    "droplet_diameter_mm": 2.22,
@@ -2776,6 +3326,8 @@
   {
    "source_row": 271,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 271",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 17.0,
    "pressure_atm": 0.701,
    "droplet_diameter_mm": 1.61,
@@ -2786,6 +3338,8 @@
   {
    "source_row": 272,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 272",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 17.0,
    "pressure_atm": 0.698,
    "droplet_diameter_mm": 2.79,
@@ -2796,6 +3350,8 @@
   {
    "source_row": 273,
    "fuel": "Methanol",
+   "report_id": "PSI-69 row 273",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 17.0,
    "pressure_atm": 0.699,
    "droplet_diameter_mm": 2.68,
@@ -2806,6 +3362,8 @@
   {
    "source_row": 274,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 274",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 1.006,
    "droplet_diameter_mm": 3.54,
@@ -2816,6 +3374,8 @@
   {
    "source_row": 275,
    "fuel": "Heptane",
+   "report_id": "PSI-69 row 275",
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-69",
    "o2_pct": 21.0,
    "pressure_atm": 1.008,
    "droplet_diameter_mm": 2.82,
