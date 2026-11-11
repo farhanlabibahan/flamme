@@ -1,5 +1,6 @@
 import React, {useMemo, useState} from 'react';
-import {Check, ExternalLink, X} from 'lucide-react';
+import {createPortal} from 'react-dom';
+import {Check, ExternalLink, Layers, X} from 'lucide-react';
 import invs from '../investigationsData.json';
 import {findings, rankFindings, scenarios} from '../ranking.js';
 import './InvestigationsPage.css';
@@ -20,6 +21,7 @@ export default function InvestigationsPage() {
   const [hw, setHw] = useState('All');
   const [fuel, setFuel] = useState('All');
   const [sel, setSel] = useState(['PSI-69', 'PSI-25']);
+  const [open, setOpen] = useState(false);
   const ranked = useMemo(() => {
     const score = Object.fromEntries(rankFindings(scenarios[scn]).map(r => [r.f.finding_id, r.score]));
     return invs.map(i => {
@@ -29,7 +31,11 @@ export default function InvestigationsPage() {
   }, [scn]);
   const shown = ranked.filter(i => (pillar === 'All' || i.pillars.includes(pillar)) && (hw === 'All' || i.hardware === hw) && (fuel === 'All' || i.fuel === fuel));
   const chosen = sel.map(id => ranked.find(i => i.id === id)).filter(Boolean);
-  const toggle = id => setSel(s => s.includes(id) ? s.filter(x => x !== id) : s.length >= MAX ? s : [...s, id]);
+  const toggle = id => setSel(s => {
+    const next = s.includes(id) ? s.filter(x => x !== id) : s.length >= MAX ? s : [...s, id];
+    if (next.length === 0) setOpen(false);
+    return next;
+  });
   const o2 = i => {
     const v = i.finding_ids.map(id => byId[id]).flatMap(f => [f.o2_pct_min, f.o2_pct_max]).filter(x => x != null);
     return v.length ? `${Math.min(...v)}–${Math.max(...v)}%` : 'not in findings';
@@ -70,8 +76,15 @@ export default function InvestigationsPage() {
       {!shown.length && <li className="rk-empty">No investigations match these filters.</li>}
     </ul>
 
-    {chosen.length > 0 && <section className="iv-compare" aria-label="Comparison">
-      <h2>Side-by-side</h2>
+    {chosen.length > 0 && createPortal(<button className={`iv-float-compare ${open ? 'open' : ''}`} onClick={() => setOpen(o => !o)} aria-expanded={open} aria-label={open ? 'Hide comparison' : 'Show comparison'}>
+      <Layers size={17}/> Compare <em>{chosen.length}</em>
+    </button>, document.body)}
+
+    {open && chosen.length > 0 && createPortal(<section className="surface iv-compare iv-compare-float" aria-label="Comparison">
+      <div className="iv-compare-head">
+        <h2>Side-by-side</h2>
+        <button className="iv-compare-close" aria-label="Close comparison" onClick={() => setOpen(false)}><X size={16}/></button>
+      </div>
       <div className="iv-scroll"><table>
         <thead><tr><th/>{chosen.map(i => <th key={i.id}><b>{i.name}</b><button aria-label={`Remove ${i.name}`} onClick={() => toggle(i.id)}><X size={13}/></button><br/>
           <a href={i.url} target="_blank" rel="noreferrer">{i.id} <ExternalLink size={11}/></a></th>)}</tr></thead>
@@ -81,6 +94,6 @@ export default function InvestigationsPage() {
         })}</tbody>
       </table></div>
       <p className="iv-note">Highlighted rows differ between the selected investigations. Pillars, hardware and fuel grouping are curated from the challenge brief; scores use the same method as Rankings, and an investigation with no linked findings has no score.</p>
-    </section>}
+    </section>, document.body)}
   </div>;
 }

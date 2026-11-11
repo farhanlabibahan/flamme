@@ -101,7 +101,7 @@ a{color:var(--accent);text-decoration:none}svg{vertical-align:middle;flex-shrink
 .lab-inner .studio-wrap,.lab-inner .view-transition{height:100%}
 .lab-inner .studio.is-full{height:100dvh}
 .view-transition{animation:viewIn .32s var(--ease) both}
-@keyframes viewIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes viewIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
 /* ============================================================ mission */
 .mission{padding:6px 0 22px}
@@ -140,7 +140,7 @@ a{color:var(--accent);text-decoration:none}svg{vertical-align:middle;flex-shrink
 .vp-overlay{position:absolute;inset:0;pointer-events:none;z-index:2}
 .vp-actions{position:absolute;right:18px;top:14px;z-index:3;pointer-events:auto;display:flex;gap:8px}
 /* one-time toast — fades in, lingers, fades out for good */
-@keyframes toastIn{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:translateX(0)}}
+@keyframes toastIn{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
 .vp-hint{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);z-index:4;display:flex;align-items:center;gap:10px;white-space:nowrap;pointer-events:none}
 .vp-hint-key{display:grid;place-items:center;flex:none;color:#fff;background:none;border:0;filter:drop-shadow(0 1px 3px rgba(0,0,0,.5));animation:keyBob 1.7s ease-in-out infinite}
 .vp-hint-text{font:500 14px/1 -apple-system,BlinkMacSystemFont,'SF Pro Text',system-ui,sans-serif;letter-spacing:-.005em;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.55)}
@@ -181,7 +181,7 @@ a{color:var(--accent);text-decoration:none}svg{vertical-align:middle;flex-shrink
 .pn-chevron{margin-left:auto;transition:transform .25s ease;flex:none}
 .pn.closed .pn-chevron{transform:rotate(-90deg)}
 .pn-body{display:flex;flex-direction:column;gap:5px;padding:0 4px;animation:pnOpen .2s ease both}
-@keyframes pnOpen{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pnOpen{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){.pn-body{animation:none}.pn-chevron{transition:none}}
 .bf{position:relative;height:28px;background:var(--sf);border-radius:0;display:flex;align-items:center;justify-content:space-between;padding:0 11px;overflow:hidden;cursor:ew-resize;border:1px solid transparent;transition:background .3s,border-color .3s;touch-action:none}
 .bf:hover{background:var(--sf2)}
@@ -276,7 +276,7 @@ a{color:var(--accent);text-decoration:none}svg{vertical-align:middle;flex-shrink
 
 /* ============================================================ inline source panel (in page flow, not a modal) */
 .source-panel{margin-bottom:20px;padding:28px 30px;animation:panelDown .3s var(--ease) both}
-@keyframes panelDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes panelDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
 .drawer-close{position:absolute;right:20px;top:20px;color:var(--muted);cursor:pointer;transition:color .2s,transform .18s var(--ease)}.drawer-close:hover{color:var(--ink);transform:scale(1.1)}
 .source-panel>small{font:600 10px var(--disp);letter-spacing:.14em;color:var(--accent)}
 .source-panel h2{font:600 26px/1.15 var(--disp);letter-spacing:-.015em;margin:14px 0 18px}
@@ -322,7 +322,7 @@ mark.trace{background:none;color:inherit;padding:1px 4px;border-bottom:2px solid
   radial-gradient(40% 40% at 10% 15%,rgba(30,58,138,.06),transparent 65%),
   var(--paper)}
 .l-hero-inner{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:70px;max-width:1320px;width:100%;margin:0 auto;animation:heroRise .9s var(--ease) both}
-@keyframes heroRise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes heroRise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 .l-hero-text{flex:1;min-width:0;max-width:620px}
 .l-hero-text h1{font:600 clamp(32px,4.4vw,54px)/1.12 var(--disp);letter-spacing:-.02em;color:var(--ink);margin:0 0 16px}
 .l-h1-line{white-space:nowrap}

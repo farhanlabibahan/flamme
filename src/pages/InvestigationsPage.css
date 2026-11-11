@@ -13,7 +13,21 @@
 .iv-main small{display:block;color:var(--muted);margin-top:3px}.iv-id{font-family:var(--mono);font-size:11px;color:var(--dim)}
 .iv-score{font-family:var(--mono);font-weight:600;color:var(--accent);text-align:right;font-size:16px}
 .iv-score small{display:block;font:400 11px var(--sans);color:var(--dim)}
-.iv-compare h2{font-size:18px;margin:0 0 10px}
+
+/* floating "Compare" trigger */
+.iv-float-compare{position:fixed;right:32px;bottom:28px;z-index:30;display:flex;align-items:center;gap:9px;border:0;padding:13px 20px;background:var(--accent);color:#fff;font:600 14px var(--disp);box-shadow:0 8px 24px -6px rgba(11,11,13,.35);transition:transform .15s var(--ease),background .15s}
+.iv-float-compare:hover{background:var(--accent-hover);transform:translateY(-1px)}
+.iv-float-compare.open{background:var(--charcoal)}
+.iv-float-compare em{font:700 11px var(--mono);font-style:normal;background:rgba(255,255,255,.22);padding:2px 7px;border-radius:999px}
+
+/* comparison panel pops up above the floating button */
+.iv-compare-float{position:fixed;right:32px;bottom:92px;width:min(760px,calc(100vw - 64px));z-index:29;max-height:62vh;overflow-y:auto;animation:ivPopUp .22s var(--ease) both;box-shadow:0 16px 40px -12px rgba(11,11,13,.3)}
+@keyframes ivPopUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.iv-compare-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.iv-compare-head h2{font-size:18px;margin:0}
+.iv-compare-close{border:1px solid var(--line2);width:28px;height:28px;display:grid;place-items:center;color:var(--muted);background:var(--panel2)}
+.iv-compare-close:hover{color:var(--ink);border-color:var(--accent)}
+
 .iv-scroll{overflow-x:auto;border:1px solid var(--line)}
 .iv-compare table{border-collapse:collapse;width:100%;min-width:640px;font-size:13px;background:var(--panel)}
 .iv-compare th,.iv-compare td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);width:22%}
@@ -21,3 +35,5 @@
 .iv-compare tbody th{width:150px;color:var(--muted);font-weight:500}
 .iv-compare tr.diff td{background:var(--accent-soft)}
 .iv-note{font-size:12px;color:var(--muted);margin-top:10px}
+
+@media(max-width:900px){.iv-compare-float{right:16px;width:calc(100vw - 32px);bottom:86px}.iv-float-compare{right:16px}}
