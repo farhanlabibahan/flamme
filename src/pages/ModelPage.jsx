@@ -68,9 +68,7 @@ export default function ModelPage() {
     <header>
       <span className="cmp-kicker">Model</span>
       <h1>The trained model behind the Lab</h1>
-      <p className="md-lede">Two scikit-learn models, fitted once on real NASA data — not a lookup table, not a language model.
-        Training happens offline in <a href="https://github.com/farhanlabibahan/flamme/blob/main/ML/build_flex_model.py" target="_blank" rel="noreferrer">ML/build_flex_model.py <ExternalLink size={12}/></a>;
-        the browser only runs the fitted arithmetic below.</p>
+      <p className="md-lede">Trained offline in <a href="https://github.com/farhanlabibahan/flamme/blob/main/ML/build_flex_model.py" target="_blank" rel="noreferrer">ML/build_flex_model.py <ExternalLink size={14}/></a>.</p>
     </header>
 
     <section className="surface md-diagram">
@@ -79,34 +77,34 @@ export default function ModelPage() {
 
     <section className="surface md-card">
       <div className="md-block">
-        <span className="md-eyebrow">Data</span>
+        <h2 className="md-eyebrow">Data</h2>
         <p>{flexModelMeta.nTests} individual droplet-flame tests from NASA PSI investigation <b>PSI-69 (FLEX)</b> — <a href={flexModelMeta.sourceUrl} target="_blank" rel="noreferrer">source <ExternalLink size={12}/></a>.
           Tested range: O₂ {model.training_range.o2_pct[0]}–{model.training_range.o2_pct[1]}%, pressure {model.training_range.pressure_atm[0].toFixed(2)}–{model.training_range.pressure_atm[1].toFixed(2)} atm,
           droplet {model.training_range.droplet_diameter_mm[0]}–{model.training_range.droplet_diameter_mm[1]} mm — the Lab refuses to predict outside it rather than extrapolate.</p>
       </div>
 
       <div className="md-block">
-        <span className="md-eyebrow">Cleaning</span>
+        <h2 className="md-eyebrow">Cleaning</h2>
         <p>Pressure converted mmHg → atm; the self-extinguish target is derived, not assumed. One row had a literal <code>0 mmHg</code>
           reading — impossible for a sealed chamber — fixed to missing rather than near-vacuum; that single fix raised the
           burning-rate R² from 0.45 to 0.58.</p>
       </div>
 
       <div className="md-block">
-        <span className="md-eyebrow">Feature engineering</span>
+        <h2 className="md-eyebrow">Feature engineering</h2>
         <Table head={['Feature', 'Why it is in the model']} rows={
           model.features.map(f => <tr key={f}><td>{FEATURE_LABEL[f]}</td><td>{FEATURE_WHY[f]}</td></tr>)
         }/>
       </div>
 
       <div className="md-block">
-        <span className="md-eyebrow">Why logistic / linear regression</span>
+        <h2 className="md-eyebrow">Why logistic / linear regression</h2>
         <p>n={flexModelMeta.nTests} is too small for gradient boosting or a neural net — they'd mostly fit noise. Linear models keep
           every coefficient interpretable, and logistic regression gives the calibrated probability the Lab needs.</p>
       </div>
 
       <div className="md-block">
-        <span className="md-eyebrow">Self-extinguish probability</span>
+        <h2 className="md-eyebrow">Self-extinguish probability</h2>
         <p className="md-summary"><b>{Math.round(c.metrics.accuracy * 100)}%</b> accuracy, <b>{c.metrics.auc}</b> AUC on {c.metrics.n_train}/{c.metrics.n_test} train/test rows —
           AUC is the honest number since {Math.round(c.metrics.base_rate_self_extinguish * 100)}% of tests self-extinguish already.</p>
         <Table head={['', 'Predicted: burned out', 'Predicted: extinguished']} rows={<>
@@ -117,13 +115,13 @@ export default function ModelPage() {
       </div>
 
       <div className="md-block">
-        <span className="md-eyebrow">Burning-rate constant K</span>
+        <h2 className="md-eyebrow">Burning-rate constant K</h2>
         <p className="md-summary"><b>R² {r.metrics.r2}</b>, MAE {r.metrics.mae_mm2_s} mm²/s on {r.metrics.n_train}/{r.metrics.n_test} train/test rows.</p>
         <Table head={['Feature', 'Fitted coefficient']} rows={<CoefRows coef={r.coef} intercept={r.intercept}/>}/>
       </div>
 
       <div className="md-block">
-        <span className="md-eyebrow">Using it</span>
+        <h2 className="md-eyebrow">Using it</h2>
         <Mermaid chart={INFERENCE} className="md-mmd md-mmd-sm"/>
         <p>No training happens in the browser — <code>src/flexModel.js</code> just runs the diagram above. Open{' '}
           <a href="/lab">the Lab</a> and move the oxygen or pressure sliders: the "Grounded in NASA FLEX data" card runs this exact
