@@ -465,7 +465,8 @@ mark.trace{background:none;color:inherit;padding:1px 4px;border-bottom:2px solid
 .ev-block{display:flex;flex-direction:column;gap:8px;padding-top:16px;border-top:1px solid var(--line)}
 .ev-label{font:600 10px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
 .ev-block p{font-size:13.5px;line-height:1.6;color:var(--ink2)}
-.ev-caution .ev-label{color:#b45309}
+.ev-caution{background:var(--red);color:#fff;padding:16px 18px;border-top:0}
+.ev-caution .ev-label,.ev-caution p{color:#fff}
 .ev-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
 .ev-stats div{background:var(--panel2);padding:12px}
 .ev-stats dt{font:600 10px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}

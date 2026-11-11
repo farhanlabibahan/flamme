@@ -12,8 +12,7 @@
 
 /* presets: a row of five flat tiles, separated by hairlines */
 .lp-presets{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border-bottom:1px solid var(--line2)}
-.lp-preset{display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:20px 18px 22px 0;background:transparent;border:0;border-right:1px solid var(--line);text-align:left;color:var(--ink);cursor:pointer;transition:color .15s}
-.lp-preset:not(:first-child){padding-left:18px}
+.lp-preset{display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:20px 20px 22px;background:transparent;border:0;border-right:1px solid var(--line);text-align:left;color:var(--ink);cursor:pointer;transition:color .15s}
 .lp-preset:last-child{border-right:0}
 .lp-preset svg{color:var(--ink);margin-bottom:8px;transition:color .15s}
 .lp-preset-name{font:600 14px var(--disp);color:var(--ink)}
@@ -21,7 +20,6 @@
 .lp-preset:hover .lp-preset-name{color:var(--accent)}
 .lp-preset.on{background:var(--accent);color:#fff}
 .lp-preset.on svg,.lp-preset.on .lp-preset-name,.lp-preset.on .lp-preset-sub{color:#fff}
-.lp-preset.on{margin-bottom:-1px;padding-bottom:23px}
 .lp-preset:focus-visible{outline-offset:-2px}
 
 /* grounded estimate: plain section, two big numerals */
@@ -30,24 +28,28 @@
 .lp-link{font:600 13px var(--disp);color:var(--accent);background:none;border:0;cursor:pointer;padding:0}
 .lp-link:hover{text-decoration:underline;text-underline-offset:3px}
 .lp-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0}
-.lp-stats>div{display:flex;flex-direction:column;gap:8px;padding-right:24px}
-.lp-stats>div+div{padding-left:24px;border-left:1px solid var(--line2)}
+.lp-stats>div{display:flex;flex-direction:column;gap:8px;padding:0 28px 0 0}
+.lp-stats>div+div{padding:0 0 0 28px;border-left:1px solid var(--line2)}
 .lp-stats span{font:500 13px var(--sans);color:var(--ink)}
 .lp-stats b{font:600 40px/1 var(--disp);letter-spacing:-.03em;color:var(--ink)}
 .lp-stats small{font:400 12px var(--mono);color:var(--ink)}
 .lp-oor,.lp-nearest{margin:18px 0 0;font:400 14px/1.55 var(--sans);color:var(--ink)}
+.lp-oor{color:#fff}
 .lp-nearest span{display:inline-block;font:600 11px var(--disp);letter-spacing:.08em;text-transform:uppercase;color:var(--ink);margin-right:10px}
 .lp-nearest a{color:var(--accent)}
-.lp-oor{padding-left:12px;border-left:2px solid var(--ink)}
+.lp-oor{padding:14px 16px;background:var(--red);color:#fff}
 
 /* parameter grid: two columns of hairline cells */
 .lp-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-bottom:1px solid var(--line2)}
-.lp-cell{padding:24px 0 26px;border-bottom:1px solid var(--line)}
-.lp-cell:nth-child(odd){padding-right:28px;border-right:1px solid var(--line)}
+.lp-cell{padding:26px 28px 28px;border-bottom:1px solid var(--line)}
+.lp-cell:nth-child(odd){border-right:1px solid var(--line)}
 .lp-cell:nth-child(even){padding-left:28px}
 .lp-head{display:flex;align-items:baseline;gap:12px;margin-bottom:14px}
 .lp-n{font:600 11px var(--mono);color:var(--accent);letter-spacing:.04em}
-.lp-body{display:flex;flex-direction:column;gap:8px}
+.lp-body{display:flex;flex-direction:column;gap:10px}
+.lp .bf-fill{margin:0}
+.lp .bf{padding:0}
+.lp .bf>*{padding:0 12px}
 
 /* the shared controls (Enum / NumField) restyled flat inside this page only */
 .lp .be,.lp .bf{background:transparent;border:0;border-bottom:1px solid var(--line2);border-radius:0;height:36px;padding:0}
@@ -85,7 +87,7 @@
 }
 @media(max-width:760px){
   .lp-grid{grid-template-columns:1fr}
-  .lp-cell:nth-child(n){padding:22px 0 24px;border-right:0}
+  .lp-cell,.lp-cell:nth-child(n){padding:22px 0 24px;border-right:0}
   .lp-cell:nth-child(even){padding-left:0}
   .lp-presets{grid-template-columns:repeat(2,minmax(0,1fr))}
   .lp-preset,.lp-preset:not(:first-child){padding:16px 14px 18px 0;border-right:0}
