@@ -1,5 +1,5 @@
 import React, {useMemo, useState} from 'react';
-import {AlertTriangle, ChevronDown, Download, ExternalLink} from 'lucide-react';
+import {AlertTriangle, ChevronDown, ExternalLink} from 'lucide-react';
 import {DEFAULT_WEIGHTS, exportRows, findings, gapsFor, rankFindings, scenarios, toCsv} from '../ranking.js';
 import './RankingsPage.css';
 
@@ -41,30 +41,42 @@ export default function RankingsPage() {
     </header>
 
     <section className="rk-controls">
-      <div className="rk-presets" role="tablist" aria-label="Crew environment">
-        {Object.entries(PRESETS).map(([k, s]) => <button key={k} role="tab" aria-selected={key === k} className={key === k ? 'on' : ''} onClick={() => setKey(k)}>{s.label}</button>)}
-      </div>
+      <label className="rk-field rk-scenario">
+        <span>Crew environment</span>
+        <select value={key} onChange={e => setKey(e.target.value)}>
+          {Object.entries(PRESETS).map(([k, s]) => <option key={k} value={k}>{s.label}</option>)}
+        </select>
+      </label>
 
       <div className="rk-sliders">
-        <label><span>Oxygen</span><b>{sc.o2_pct}%</b><input type="range" min="15" max="85" value={sc.o2_pct} onChange={e => setC('o2_pct', e.target.value)}/></label>
-        <label><span>Pressure</span><b>{sc.pressure_atm} atm · {(sc.pressure_atm * 14.696).toFixed(1)} psi</b><input type="range" min="0.2" max="1.1" step="0.01" value={sc.pressure_atm} onChange={e => setC('pressure_atm', e.target.value)}/></label>
-        <label><span>Gravity</span><b>{sc.gravity_g} g</b><input type="range" min="0" max="1" step="0.01" value={sc.gravity_g} onChange={e => setC('gravity_g', e.target.value)}/></label>
+        <label className="rk-field"><span>Oxygen <em>{sc.o2_pct}%</em></span>
+          <input type="range" min="15" max="85" value={sc.o2_pct} onChange={e => setC('o2_pct', e.target.value)}/></label>
+        <label className="rk-field"><span>Pressure <em>{sc.pressure_atm} atm</em></span>
+          <input type="range" min="0.2" max="1.1" step="0.01" value={sc.pressure_atm} onChange={e => setC('pressure_atm', e.target.value)}/></label>
+        <label className="rk-field"><span>Gravity <em>{sc.gravity_g} g</em></span>
+          <input type="range" min="0" max="1" step="0.01" value={sc.gravity_g} onChange={e => setC('gravity_g', e.target.value)}/></label>
       </div>
 
-      <div className="rk-foot">
-        <div className="rk-themes" aria-label="Theme">{THEMES.map(t => <button key={t} className={theme === t ? 'on' : ''} onClick={() => setTheme(t)}>{t}</button>)}</div>
+      <div className="rk-toolbar">
+        <label className="rk-field rk-theme">
+          <span>Theme</span>
+          <select value={theme} onChange={e => setTheme(e.target.value)}>
+            {THEMES.map(t => <option key={t} value={t}>{t}</option>)}
+          </select>
+        </label>
         <div className="rk-export">
-          <button onClick={() => download('csv')}><Download size={13}/> CSV</button>
-          <button onClick={() => download('json')}><Download size={13}/> JSON</button>
+          <button onClick={() => download('csv')}>Export CSV</button>
+          <button onClick={() => download('json')}>Export JSON</button>
         </div>
       </div>
 
-      <details className="rk-weights"><summary>Scoring weights</summary>
+      <details className="rk-weights"><summary>Weights</summary>
         <div className="rk-sliders">
           {[['rel', 'Condition match'], ['sev', 'Severity'], ['evi', 'Evidence strength']].map(([k, l]) =>
-            <label key={k}><span>{l}</span><b>{Math.round(w[k] * 100)}%</b><input type="range" min="0" max="1" step="0.05" value={w[k]} onChange={e => setW(x => ({...x, [k]: Number(e.target.value)}))}/></label>)}
+            <label key={k} className="rk-field"><span>{l} <em>{Math.round(w[k] * 100)}%</em></span>
+              <input type="range" min="0" max="1" step="0.05" value={w[k]} onChange={e => setW(x => ({...x, [k]: Number(e.target.value)}))}/></label>)}
         </div>
-        <button className="rk-link" onClick={() => setW(DEFAULT_WEIGHTS)}>Reset weights</button>
+        <button className="rk-link" onClick={() => setW(DEFAULT_WEIGHTS)}>Reset to 45 / 35 / 20</button>
       </details>
     </section>
 

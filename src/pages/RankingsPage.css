@@ -8,36 +8,25 @@
 .rk-count b{font:600 40px/1 var(--disp);letter-spacing:-.03em;color:var(--red)}
 .rk-lede{font:400 14px/1.55 var(--sans);color:var(--ink);max-width:68ch;margin:0 0 16px}
 
-/* controls: segmented underline tabs, hairline sliders, no boxes */
-.rk-controls{padding:24px 0 22px;border-bottom:1px solid var(--line2);display:grid;gap:22px}
-.rk-presets{display:flex;flex-wrap:wrap;gap:6px 22px;border-bottom:1px solid var(--line)}
-.rk-presets button{position:relative;background:none;border:0;padding:0 0 12px;font:600 14px var(--disp);color:var(--ink);cursor:pointer}
-.rk-presets button::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .2s var(--ease)}
-.rk-presets button:hover{color:var(--accent)}
-.rk-presets button.on{color:var(--accent)}
-.rk-presets button.on::after{transform:scaleX(1)}
-
-.rk-sliders{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0 28px}
-.rk-sliders label{display:grid;grid-template-columns:auto 1fr;align-items:baseline;gap:4px 12px;padding:10px 0 12px;border-bottom:1px solid var(--line);font:500 13px var(--sans);color:var(--ink)}
-.rk-sliders label span{font:600 11px var(--disp);letter-spacing:.08em;text-transform:uppercase;color:var(--ink)}
-.rk-sliders b{justify-self:end;font:500 13px var(--mono);color:var(--ink);white-space:nowrap}
-.rk-sliders input{grid-column:1/-1;width:100%;margin:4px 0 0;accent-color:var(--accent)}
-
-.rk-foot{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
-.rk-themes{display:flex;flex-wrap:wrap;gap:4px 14px}
-.rk-themes button{background:none;border:0;padding:4px 0;font:500 13px var(--sans);color:var(--ink);cursor:pointer;border-bottom:1px solid transparent}
-.rk-themes button:hover{color:var(--accent)}
-.rk-themes button.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
-.rk-export{display:flex;gap:16px;align-items:center}
-.rk-export button{display:inline-flex;align-items:center;gap:6px;background:none;border:0;padding:4px 0;font:600 13px var(--disp);color:var(--ink);cursor:pointer}
-.rk-export button:hover{color:var(--accent)}
-
-.rk-weights summary{cursor:pointer;font:600 13px var(--disp);color:var(--ink);list-style:none}
-.rk-weights summary::-webkit-details-marker{display:none}
-.rk-weights summary::after{content:" +";color:var(--accent)}
-.rk-weights[open] summary::after{content:" −"}
-.rk-weights .rk-sliders{margin-top:14px}
-.rk-link{background:none;border:0;padding:0;color:var(--accent);font:600 13px var(--disp);cursor:pointer;margin-top:8px}
+/* controls: one scenario select, three plain sliders, one filter row */
+.rk-controls{padding:22px 0 20px;border-bottom:1px solid var(--line2);display:grid;gap:20px}
+.rk-controls>details{border-top:1px solid var(--line);padding-top:16px}
+.rk-field{display:grid;gap:8px;font:500 13px var(--sans);color:var(--ink)}
+.rk-field>span{display:flex;justify-content:space-between;align-items:baseline;font:600 13px var(--disp);color:var(--ink)}
+.rk-field em{font:500 13px var(--mono);font-style:normal;color:var(--ink)}
+.rk-field select,.rk-theme select{appearance:auto;background:var(--paper);color:var(--ink);border:1px solid var(--line3);border-radius:0;padding:9px 10px;font:500 13px var(--sans);width:100%}
+.rk-scenario{max-width:460px}
+.rk-sliders{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:22px 28px}
+.rk-sliders input,.rk-field input[type=range]{width:100%;margin:0;accent-color:var(--accent)}
+.rk-toolbar{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.rk-theme{min-width:260px}
+.rk-export{display:flex;gap:18px;align-items:center}
+.rk-export button{background:none;border:0;padding:6px 0;font:600 13px var(--disp);color:var(--accent);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.rk-export button:hover{color:var(--ink)}
+.rk-weights summary{cursor:pointer;font:600 13px var(--disp);color:var(--ink)}
+.rk-weights[open] summary{margin-bottom:14px}
+.rk-weights .rk-sliders{margin-bottom:6px}
+.rk-link{background:none;border:0;padding:0;color:var(--accent);font:600 13px var(--disp);cursor:pointer;margin-top:10px}
 .rk-link:hover{text-decoration:underline;text-underline-offset:3px}
 
 /* notices: one left rule, ink text */
@@ -83,4 +72,4 @@
   .rk-detail dl{grid-template-columns:1fr;gap:4px}
   .rk-detail dl dt{margin-top:10px}
 }
-@media(prefers-reduced-motion:reduce){.rk-presets button::after,.rk-chev{transition:none}}
+@media(prefers-reduced-motion:reduce){.rk-chev{transition:none}}
