@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {NavLink, Outlet, useLocation, useNavigate} from 'react-router-dom';
-import {BookOpen, ChevronsLeft, ChevronsRight, Compass, ExternalLink, FlaskConical, Layers, Sparkles, X} from 'lucide-react';
+import {BookOpen, ChevronsLeft, ChevronsRight, Compass, ExternalLink, FlaskConical, Layers, ListOrdered, Table2, Globe, Sparkles, X} from 'lucide-react';
 import {useFlamme} from '../context/FlammeContext.jsx';
 import MicroFlame from './MicroFlame.jsx';
 
@@ -8,6 +8,9 @@ const NAV = [
   {to: '/lab', label: 'Lab', icon: FlaskConical, prefetch: () => import('../pages/LabPage.jsx')},
   {to: '/ask', label: 'Ask', icon: Sparkles, prefetch: () => import('../pages/AskPage.jsx')},
   {to: '/evidence', label: 'Evidence', icon: Compass, prefetch: () => import('../pages/EvidencePage.jsx')},
+  {to: '/rankings', label: 'Rankings', icon: ListOrdered, Table2, Globe, prefetch: () => import('../pages/RankingsPage.jsx')},
+  {to: '/investigations', label: 'Investigations', icon: Table2, Globe, prefetch: () => import('../pages/InvestigationsPage.jsx')},
+  {to: '/earth', label: 'On Earth', icon: Globe, prefetch: () => import('../pages/EarthPage.jsx')},
   {to: '/compare', label: 'Compare', icon: Layers, prefetch: () => import('../pages/ComparePage.jsx')},
 ];
 

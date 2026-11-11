@@ -22,6 +22,9 @@ const LabViewPage = lazy(() => import('./pages/LabViewPage.jsx'));
 const AskPage = lazy(() => import('./pages/AskPage.jsx'));
 const EvidencePage = lazy(() => import('./pages/EvidencePage.jsx'));
 const ComparePage = lazy(() => import('./pages/ComparePage.jsx'));
+const InvestigationsPage = lazy(() => import('./pages/InvestigationsPage.jsx'));
+const EarthPage = lazy(() => import('./pages/EarthPage.jsx'));
+const RankingsPage = lazy(() => import('./pages/RankingsPage.jsx'));
 
 function App() {
   return <BrowserRouter>
@@ -32,6 +35,9 @@ function App() {
           <Route path="/lab" element={<Suspense fallback={<CubeLoader message="Loading lab…" fullHeight/>}><LabPage/></Suspense>}/>
           <Route path="/ask" element={<Suspense fallback={<AskSkeleton/>}><AskPage/></Suspense>}/>
           <Route path="/evidence" element={<Suspense fallback={<EvidenceSkeleton/>}><EvidencePage/></Suspense>}/>
+          <Route path="/investigations" element={<Suspense fallback={<CubeLoader message="Loading investigations…" fullHeight/>}><InvestigationsPage/></Suspense>}/>
+          <Route path="/earth" element={<Suspense fallback={<CubeLoader message="Loading…" fullHeight/>}><EarthPage/></Suspense>}/>
+          <Route path="/rankings" element={<Suspense fallback={<CubeLoader message="Loading rankings…" fullHeight/>}><RankingsPage/></Suspense>}/>
           <Route path="/compare" element={<Suspense fallback={<CompareSkeleton/>}><ComparePage/></Suspense>}/>
         </Route>
         <Route path="/lab/view" element={<Suspense fallback={<CubeLoader message="Loading lab…" fullHeight/>}><LabViewPage/></Suspense>}/>

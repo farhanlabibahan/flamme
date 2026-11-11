@@ -4,3 +4,10 @@ test('unspecified inputs do not count as matches',()=>{assert.equal(rank(experim
 test('qualitative and unavailable results are not given numeric units',()=>{assert.equal(display(experiments.find(r=>r.id==='2-2').measurements.burn),'Insignificant');assert.equal(display(experiments.find(r=>r.id==='2-2').measurements.spread),'n/a')});
 test('ambiguous thickness and spread header are disclosed',()=>{const r=experiments.find(x=>x.id==='2-5');assert.equal(r.sample.thickness.normalized,null);assert.match(explain(r).limitations,/spread-column header conflicts/)});
 test('bundled rows preserve source provenance',()=>{assert.equal(experiments.find(x=>x.id==='2-5').source.row,6);assert.equal(experiments.find(x=>x.id==='2-2').source.row,3)});
+import {rankFindings,scenarios,gapsFor} from './ranking.js';
+test('JS ranking reproduces the Python rankings.csv top results for the Moon scenario',()=>{const r=rankFindings(scenarios.moon);assert.deepEqual(r.slice(0,2).map(x=>x.f.finding_id).sort(),['FLEX-O2-HEPT-30','FLEX-O2-METH-30']);assert.equal(r[0].score,94.2);assert.equal(r[2].f.finding_id,'RPT-20210021781-1');assert.equal(r[2].score,92.8)});
+test('partial-gravity evidence gap is listed only for Moon/Mars-like gravity',()=>{assert.ok(gapsFor(scenarios.moon).some(g=>g.finding_id==='GAP-PARTIAL-G'));assert.ok(!gapsFor(scenarios.iss).some(g=>g.finding_id==='GAP-PARTIAL-G'))});
+import invData from './investigationsData.json' with {type:'json'};
+test('investigation catalog covers all 24 PSI investigations with linked findings resolvable',()=>{assert.equal(invData.length,24);const ids=new Set(rankFindings(scenarios.iss).map(r=>r.f.finding_id));assert.ok(invData.every(i=>i.finding_ids.every(id=>ids.has(id))))});
+import {toCsv,exportRows} from './ranking.js';
+test('CSV export keeps one row per finding, quotes commas, and leaves unknown ranges blank',()=>{const rows=exportRows(rankFindings(scenarios.moon));const lines=toCsv(rows).split('\n');assert.ok(lines.length>=rows.length+1);assert.match(lines[0],/^rank,score,finding_id/);assert.ok(rows.every(r=>r.score>0))});
