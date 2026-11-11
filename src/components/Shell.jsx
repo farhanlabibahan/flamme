@@ -3,7 +3,6 @@ import {NavLink, Outlet, useLocation, useNavigate} from 'react-router-dom';
 import {BookOpen, ChevronsLeft, ChevronsRight, Compass, ExternalLink, FileJson, FlaskConical, Grid3x3, Layers, ListOrdered, Sigma, Table2, Globe, Sparkles, X} from 'lucide-react';
 import {useFlamme} from '../context/FlammeContext.jsx';
 import MicroFlame from './MicroFlame.jsx';
-import allInvestigations from '../investigationsData.json';
 
 const NAV = [
   {to: '/lab', label: 'Lab', icon: FlaskConical, prefetch: () => import('../pages/LabPage.jsx')},
@@ -16,6 +15,7 @@ const NAV = [
   {to: '/gaps', label: 'Gap map', icon: Grid3x3, prefetch: () => import('../pages/GapsPage.jsx')},
   {to: '/template', label: 'Template', icon: FileJson, prefetch: () => import('../pages/TemplatePage.jsx')},
   {to: '/model', label: 'Model', icon: Sigma, prefetch: () => import('../pages/ModelPage.jsx')},
+  {to: '/sources', label: 'Sources', icon: BookOpen, prefetch: () => import('../pages/SourcesPage.jsx')},
 ];
 
 const warmed = new Set();
@@ -34,7 +34,7 @@ function warm(to, loader) {
    150ms click-throttle guards the sidebar's slide/sweep animation from being
    re-triggered by an accidental double click mid-transition. */
 export default function Shell() {
-  const {drawer, setDrawer, compare, record, source, investigations} = useFlamme();
+  const {drawer, setDrawer, compare, record, source} = useFlamme();
   const navigate = useNavigate();
   const location = useLocation();
   const [navCollapsed, setNavCollapsed] = useState(() => { try { return localStorage.getItem('flamme-nav-collapsed') === '1'; } catch { return false; } });
@@ -61,32 +61,17 @@ export default function Shell() {
           <Icon size={19}/><span className="nav-link-text">{label}</span>{label === 'Compare' && <em>{compare.length}</em>}
         </NavLink>
       )}
-      <button className={`nav-link ${drawer === 'all' ? 'is-open' : ''}`} aria-expanded={drawer === 'all'} onClick={() => setDrawer(d => d === 'all' ? null : 'all')} title={navCollapsed ? 'Sources' : undefined}>
-        <BookOpen size={19}/><span className="nav-link-text">Sources</span>
-      </button>
     </aside>
     <main className="workspace">
       <div className="workspace-inner">{/* /lab is now a setup form; the 3D chamber lives at /lab/view */}
-        {drawer && <section className="surface source-panel" role="region" aria-label={drawer === 'all' ? 'Data sources' : 'Source information'}>
+        {drawer === 'source' && <section className="surface source-panel" role="region" aria-label="Source information">
           <button className="drawer-close" aria-label="Close" onClick={() => setDrawer(null)}><X/></button>
-          {drawer === 'all'
-            ? <><small>DATA SOURCES</small><h2>Every NASA source Flamme cites</h2>
-              <p className="drawer-lede">{allInvestigations.length} PSI combustion investigations behind Evidence, Rankings and the Gap map, plus the NTRS/PSI
-                source behind the trained FLEX model on the Lab and Model pages. <button className="drawer-link-btn" onClick={() => { setDrawer(null); navigate('/investigations'); }}>Compare them side by side <ExternalLink size={13}/></button></p>
-              <ul className="drawer-source-list">{allInvestigations.map(i => <li key={i.id}>
-                <div className="drawer-source-main"><strong>{i.name}</strong><span className="drawer-source-id">{i.id}</span>
-                  <small>{i.title} · {i.platform}</small></div>
-                <div className="drawer-source-links">
-                  <a href={i.url} target="_blank" rel="noreferrer" title={`Open ${i.id} on NASA PSI`}><ExternalLink size={13}/></a>
-                  {i.doi && <a href={`https://doi.org/${i.doi}`} target="_blank" rel="noreferrer" title={`DOI ${i.doi}`}>DOI</a>}
-                </div>
-              </li>)}</ul></>
-            : <><small>DATA LINEAGE</small><h2>{source.name} · sample {record.id}</h2>
-              <p>{source.title} on {source.platform}. The displayed values come from local CSV <strong>{record.source.file}</strong>, <mark className="trace">row {record.source.row}</mark> (header is row 1).</p>
-              <div className="lineage-box">Source table → experiment {record.id} → observed card → cautious interpretation</div>
-              <p>{record.source.notes}</p>
-              <a href={source.url} target="_blank" rel="noreferrer">Open NASA PSI investigation <ExternalLink size={15}/></a>
-              <a href={`https://doi.org/${source.doi}`} target="_blank" rel="noreferrer">DOI {source.doi} <ExternalLink size={15}/></a></>}
+          <small>DATA LINEAGE</small><h2>{source.name} · sample {record.id}</h2>
+          <p>{source.title} on {source.platform}. The displayed values come from local CSV <strong>{record.source.file}</strong>, <mark className="trace">row {record.source.row}</mark> (header is row 1).</p>
+          <div className="lineage-box">Source table → experiment {record.id} → observed card → cautious interpretation</div>
+          <p>{record.source.notes}</p>
+          <a href={source.url} target="_blank" rel="noreferrer">Open NASA PSI investigation <ExternalLink size={15}/></a>
+          <a href={`https://doi.org/${source.doi}`} target="_blank" rel="noreferrer">DOI {source.doi} <ExternalLink size={15}/></a>
         </section>}
         <div className="view-transition" key={location.pathname}>
           <Outlet/>
