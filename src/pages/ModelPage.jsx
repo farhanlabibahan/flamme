@@ -25,22 +25,34 @@ const FEATURE_WHY = {
 };
 
 const PIPELINE = `flowchart LR
-  A["NASA PSI-69 FLEX<br/>~24,500 raw rows"] --> B["Pivot + clean<br/>274 tests"]
-  B --> C["Feature engineering<br/>5 features"]
+  A["\`NASA PSI-69 FLEX
+**~24,500** raw rows\`"] --> B["\`Pivot + clean
+**274** tests\`"]
+  B --> C["\`Feature engineering
+**5** features\`"]
   C --> D["StandardScaler"]
-  D --> E["LogisticRegression<br/>self-extinguish"]
-  D --> F["LinearRegression<br/>burning rate K"]
-  E --> G["Held-out test<br/>AUC 0.895"]
-  F --> H["Held-out test<br/>R\u00b2 0.582"]
-  G --> I["flexModel.json<br/>plain coefficients"]
+  D --> E["\`LogisticRegression
+self-extinguish\`"]
+  D --> F["\`LinearRegression
+burning rate K\`"]
+  E --> G["\`Held-out test
+AUC **0.895**\`"]
+  F --> H["\`Held-out test
+R\u00b2 **0.582**\`"]
+  G --> I["\`flexModel.json
+plain coefficients\`"]
   H --> I
-  I --> J["Client-side inference<br/>in the Lab"]`;
+  I --> J["\`Client-side inference
+in the Lab\`"]`;
 
 const INFERENCE = `flowchart LR
-  S["slider value"] --> Z["standardize<br/>(x - mean) / sd"]
-  Z --> W["\u00d7 coefficient<br/>+ intercept"]
+  S["slider value"] --> Z["\`standardize
+(x - mean) / sd\`"]
+  Z --> W["\`\u00d7 coefficient
++ intercept\`"]
   W --> P{"classifier?"}
-  P -->|"yes"| SIG["sigmoid \u2192 probability"]
+  P -->|"yes"| SIG["\`sigmoid \u2192
+probability\`"]
   P -->|"no"| OUT["burning rate K"]`;
 
 function Table({head, rows}) {
@@ -78,16 +90,16 @@ export default function ModelPage() {
     <section className="surface md-card">
       <div className="md-block">
         <h2 className="md-eyebrow">Data</h2>
-        <p>{flexModelMeta.nTests} individual droplet-flame tests from NASA PSI investigation <b>PSI-69 (FLEX)</b> — <a href={flexModelMeta.sourceUrl} target="_blank" rel="noreferrer">source <ExternalLink size={12}/></a>.
-          Tested range: O₂ {model.training_range.o2_pct[0]}–{model.training_range.o2_pct[1]}%, pressure {model.training_range.pressure_atm[0].toFixed(2)}–{model.training_range.pressure_atm[1].toFixed(2)} atm,
-          droplet {model.training_range.droplet_diameter_mm[0]}–{model.training_range.droplet_diameter_mm[1]} mm — the Lab refuses to predict outside it rather than extrapolate.</p>
+        <p><b>{flexModelMeta.nTests}</b> individual droplet-flame tests from NASA PSI investigation <b>PSI-69 (FLEX)</b> — <a href={flexModelMeta.sourceUrl} target="_blank" rel="noreferrer">source <ExternalLink size={12}/></a>.
+          Tested range: O₂ <b>{model.training_range.o2_pct[0]}–{model.training_range.o2_pct[1]}%</b>, pressure <b>{model.training_range.pressure_atm[0].toFixed(2)}–{model.training_range.pressure_atm[1].toFixed(2)} atm</b>,
+          droplet <b>{model.training_range.droplet_diameter_mm[0]}–{model.training_range.droplet_diameter_mm[1]} mm</b> — the Lab refuses to predict outside it rather than extrapolate.</p>
       </div>
 
       <div className="md-block">
         <h2 className="md-eyebrow">Cleaning</h2>
         <p>Pressure converted mmHg → atm; the self-extinguish target is derived, not assumed. One row had a literal <code>0 mmHg</code>
           reading — impossible for a sealed chamber — fixed to missing rather than near-vacuum; that single fix raised the
-          burning-rate R² from 0.45 to 0.58.</p>
+          burning-rate R² from <b>0.45</b> to <b>0.58</b>.</p>
       </div>
 
       <div className="md-block">
@@ -99,14 +111,14 @@ export default function ModelPage() {
 
       <div className="md-block">
         <h2 className="md-eyebrow">Why logistic / linear regression</h2>
-        <p>n={flexModelMeta.nTests} is too small for gradient boosting or a neural net — they'd mostly fit noise. Linear models keep
+        <p>n=<b>{flexModelMeta.nTests}</b> is too small for gradient boosting or a neural net — they'd mostly fit noise. Linear models keep
           every coefficient interpretable, and logistic regression gives the calibrated probability the Lab needs.</p>
       </div>
 
       <div className="md-block">
         <h2 className="md-eyebrow">Self-extinguish probability</h2>
-        <p className="md-summary"><b>{Math.round(c.metrics.accuracy * 100)}%</b> accuracy, <b>{c.metrics.auc}</b> AUC on {c.metrics.n_train}/{c.metrics.n_test} train/test rows —
-          AUC is the honest number since {Math.round(c.metrics.base_rate_self_extinguish * 100)}% of tests self-extinguish already.</p>
+        <p className="md-summary"><b>{Math.round(c.metrics.accuracy * 100)}%</b> accuracy, <b>{c.metrics.auc}</b> AUC on <b>{c.metrics.n_train}/{c.metrics.n_test}</b> train/test rows —
+          AUC is the honest number since <b>{Math.round(c.metrics.base_rate_self_extinguish * 100)}%</b> of tests self-extinguish already.</p>
         <Table head={['', 'Predicted: burned out', 'Predicted: extinguished']} rows={<>
           <tr><th scope="row">Actual: burned out</th><td>{tn}</td><td>{fp}</td></tr>
           <tr><th scope="row">Actual: extinguished</th><td>{fn}</td><td>{tp}</td></tr>
@@ -116,7 +128,7 @@ export default function ModelPage() {
 
       <div className="md-block">
         <h2 className="md-eyebrow">Burning-rate constant K</h2>
-        <p className="md-summary"><b>R² {r.metrics.r2}</b>, MAE {r.metrics.mae_mm2_s} mm²/s on {r.metrics.n_train}/{r.metrics.n_test} train/test rows.</p>
+        <p className="md-summary"><b>R² {r.metrics.r2}</b>, MAE <b>{r.metrics.mae_mm2_s} mm²/s</b> on <b>{r.metrics.n_train}/{r.metrics.n_test}</b> train/test rows.</p>
         <Table head={['Feature', 'Fitted coefficient']} rows={<CoefRows coef={r.coef} intercept={r.intercept}/>}/>
       </div>
 

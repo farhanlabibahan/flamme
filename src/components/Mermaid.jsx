@@ -13,10 +13,10 @@ function ensureConfigured() {
     themeVariables: {
       primaryColor: '#f5f6f8', primaryBorderColor: 'rgba(11,11,13,.28)', primaryTextColor: '#0b0b0d',
       lineColor: 'rgba(11,11,13,.45)', secondaryColor: '#eceef2', tertiaryColor: '#e4e7ec',
-      fontSize: '14px', clusterBkg: '#eceef2', clusterBorder: 'rgba(11,11,13,.18)',
+      fontSize: '16px', clusterBkg: '#eceef2', clusterBorder: 'rgba(11,11,13,.18)',
       edgeLabelBackground: '#f5f6f8', nodeTextColor: '#0b0b0d',
     },
-    flowchart: {curve: 'basis', htmlLabels: true, padding: 10},
+    flowchart: {curve: 'basis', htmlLabels: true, padding: 12},
   });
 }
 

@@ -6,7 +6,7 @@
 /* mermaid pipeline diagram */
 .md-diagram{padding:22px 16px 14px;margin-bottom:18px;overflow-x:auto}
 .md-mmd{display:flex;justify-content:center;min-width:680px}
-.md-mmd svg{max-width:none!important;font-size:16px!important}
+.md-mmd svg{max-width:none!important}
 .md-mmd-sm{min-width:0;margin:10px 0 18px}
 
 /* one continuous card, sections divided by hairlines (same pattern as Evidence's detail panel) */
