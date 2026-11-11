@@ -1,20 +1,24 @@
 import React, {useMemo, useState} from 'react';
 import {AlertTriangle} from 'lucide-react';
 import {findings} from '../ranking.js';
+import {predictFlex} from '../flexModel.js';
 import './GapsPage.css';
 
 /* Real route: /gaps. Plan item 3 ("Map the gaps"): which combinations of
    O2 and gravity have been tested, and which have none. Built from the same
    111-finding catalog as Rankings (findings/findings.csv -> findingsData.json),
-   not a separate dataset. */
+   not a separate dataset. The bottom strip additionally runs the actual
+   trained FLEX model (src/flexModel.js) at each O2 band's midpoint, so this
+   page isn't just counting rows -- it also shows what the real model
+   predicts for the one regime (microgravity droplet combustion) it covers. */
 
 const O2_BINS = [
-  {label: '<16%', test: v => v < 16},
-  {label: '16–18%', test: v => v >= 16 && v < 18},
-  {label: '18–21%', test: v => v >= 18 && v < 21},
-  {label: '21–25%', test: v => v >= 21 && v < 25},
-  {label: '25–30%', test: v => v >= 25 && v < 30},
-  {label: '≥30%', test: v => v >= 30},
+  {label: '<16%', mid: 14, test: v => v < 16},
+  {label: '16–18%', mid: 17, test: v => v >= 16 && v < 18},
+  {label: '18–21%', mid: 19.5, test: v => v >= 18 && v < 21},
+  {label: '21–25%', mid: 23, test: v => v >= 21 && v < 25},
+  {label: '25–30%', mid: 27.5, test: v => v >= 25 && v < 30},
+  {label: '≥30%', mid: 32, test: v => v >= 30},
 ];
 
 const GRAVITY_ROWS = [
@@ -42,6 +46,8 @@ export default function GapsPage() {
     }),
   })), [measured]);
 
+  const modelRow = useMemo(() => O2_BINS.map(col => predictFlex({o2Pct: col.mid, pressureAtm: 1})), []);
+
   const maxCount = Math.max(1, ...grid.flatMap(r => r.cells.map(c => c.rows.length)));
   const untested = grid.flatMap(r => r.cells.filter(c => c.rows.length === 0).map(c => `${r.row.label} × O2 ${c.col.label}`));
   const noGravityOrO2 = measured.filter(f => o2Mid(f) == null || !GRAVITY_ROWS.some(r => r.test(f.gravity || '')));
@@ -50,8 +56,7 @@ export default function GapsPage() {
     <header>
       <span className="cmp-kicker">Gap map</span>
       <h1>Which conditions has NASA actually tested?</h1>
-      <p className="gm-lede">Each cell counts catalog findings whose gravity regime and oxygen band match it. An empty cell isn't
-        proof nothing was tested — it means this catalog doesn't document it, which marks where the next experiment is most needed.</p>
+      <p className="gm-lede">An empty cell means the catalog doesn't document that combination — not that it was never tried.</p>
     </header>
 
     {documentedGaps.length > 0 && <section className="gm-known" aria-label="NASA-documented gaps">
@@ -79,9 +84,22 @@ export default function GapsPage() {
             </button>;
           })}
         </React.Fragment>)}
+
+        <div className="gm-rowhead gm-model-label">FLEX model<small>predicted</small></div>
+        {modelRow.map((pred, i) => {
+          const pct = pred ? Math.round(pred.selfExtinguishProbability * 100) : null;
+          return <div key={O2_BINS[i].label} className={`gm-cell gm-model-cell ${pct == null ? 'empty' : ''}`}
+            title={pct == null ? 'Outside the model\'s trained range' : `${pct}% predicted self-extinguish probability (methanol droplet, 1 atm, 1.7mm)`}
+            style={pct != null ? {background: `color-mix(in srgb, ${pct >= 50 ? 'var(--red)' : 'var(--green)'} ${20 + Math.abs(pct - 50)}%, var(--panel))`} : undefined}>
+            {pct != null ? `${pct}%` : '—'}
+          </div>;
+        })}
       </div>
-      <p className="gm-note">{untested.length} of {GRAVITY_ROWS.length * O2_BINS.length} cells have zero findings in this catalog.
-        {noGravityOrO2.length > 0 && ` ${noGravityOrO2.length} findings could not be placed (gravity or O2 not reported) and are excluded from the grid.`}</p>
+      <p className="gm-note">{untested.length} of {GRAVITY_ROWS.length * O2_BINS.length} catalog cells have zero findings.
+        {noGravityOrO2.length > 0 && ` ${noGravityOrO2.length} findings excluded (gravity or O2 not reported).`}</p>
+      <p className="gm-note">"FLEX model" is the real trained model (<code>src/flexModel.js</code>) run at each band's midpoint, 1 atm,
+        methanol, 1.7mm droplet — predicted <b>self-extinguish probability</b>, not a finding count. It only covers microgravity
+        droplet combustion, so it lines up with the Microgravity row above, not Earth 1-g. See the <a href="/model">full model</a>.</p>
     </section>
 
     {openCell && (() => {

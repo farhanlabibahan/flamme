@@ -15,8 +15,18 @@
 .gm-cell:hover{transform:scale(1.04);border-color:var(--accent)}
 .gm-cell.empty{color:var(--dim);background:var(--panel)}
 .gm-cell.open{outline:2px solid var(--accent);outline-offset:-2px}
-.gm-note{font-size:12px;color:var(--muted);margin:12px 0 0}
+.gm-note{font-size:12px;color:var(--muted);margin:12px 0 0;max-width:72ch}
+.gm-note code{font-family:var(--mono);font-size:11px;color:var(--accent)}
+.gm-note b{color:var(--ink2)}
 .gm-detail{padding:16px 18px}
 .gm-detail h3{font-size:13px;margin:0 0 10px;color:var(--ink);font-weight:600}
 .gm-detail ul{margin:0;padding-left:18px;display:grid;gap:6px;font-size:13px;color:var(--ink2)}
+
+/* FLEX model prediction row — visually distinct from the finding-count rows above it */
+.gm-model-label{border-top:1px dashed var(--line2);margin-top:8px;padding-top:12px;flex-direction:column;align-items:flex-start!important;gap:2px;font-weight:600;color:var(--ink)}
+.gm-model-label small{font-size:10px;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.04em}
+.gm-model-cell{border-top:1px dashed var(--line2);margin-top:8px;cursor:default;font-size:12.5px}
+.gm-model-cell:hover{transform:none;border-color:var(--line2);border-top-style:dashed}
+.gm-model-cell.empty{color:var(--dim)}
+
 @media(max-width:640px){.gm-grid{font-size:11px}.gm-colhead{writing-mode:vertical-rl;text-orientation:mixed;padding:6px 0}}
