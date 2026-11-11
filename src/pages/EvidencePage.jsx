@@ -15,6 +15,12 @@ export default function EvidencePage() {
     <select value={scenario[key]} onChange={e => update(key, e.target.value)}>{items.map(([v, t]) => <option value={v} key={v}>{t}</option>)}</select>
   </label>;
 
+  const numField = (label, key, {step, unit}) => <label className="ev-field">
+    <span>{label}</span>
+    <input type="number" inputMode="decimal" step={step} placeholder={`Any${unit ? ` (${unit})` : ''}`}
+      value={scenario[key]} onChange={e => update(key, e.target.value)}/>
+  </label>;
+
   return <div className="ev reveal">
     <header className="ev-head">
       <div>
@@ -29,8 +35,8 @@ export default function EvidencePage() {
 
     <div className="ev-filters" id="scenario">
       {select('Material', 'material', [['Cotton–fiberglass (SIBAL)', 'Cotton–fiberglass (SIBAL)'], ['Silicone', 'Silicone'], ['PMMA', 'PMMA'], ['', 'Any']])}
-      {select('Oxygen', 'oxygen', [['22.1', '22.1 %'], ['21.5', '21.5 %'], ['22.2', '22.2 %'], ['', 'Any']])}
-      {select('Airflow', 'airflow', [['20', '20 cm/s'], ['10', '10 cm/s'], ['5', '5 cm/s'], ['', 'Any']])}
+      {numField('Oxygen', 'oxygen', {step: '0.1', unit: '%'})}
+      {numField('Airflow', 'airflow', {step: '1', unit: 'cm/s'})}
       <button className="ev-more" onClick={() => setAdvanced(!advanced)} aria-expanded={advanced}>More <ChevronDown size={14} className={advanced ? 'up' : ''}/></button>
     </div>
     {advanced && <div className="ev-filters ev-advanced">
