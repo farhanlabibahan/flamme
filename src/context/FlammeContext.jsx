@@ -32,9 +32,10 @@ export function FlammeProvider({children}) {
 
   const ranked = useMemo(() => rank(experiments, scenario), [scenario]);
   const results = useMemo(() => ranked.filter(({record}) =>
+    (!scenario.material || record.sample.material === scenario.material) &&
     (filter === 'All' || record.investigationId === filter) &&
     `${record.sample.material} ${record.id}`.toLowerCase().includes(debouncedQuery.toLowerCase())
-  ), [ranked, filter, debouncedQuery]);
+  ), [ranked, filter, debouncedQuery, scenario.material]);
 
   const record = experiments.find(e => e.id === selected) || experiments[0];
   const source = investigations.find(i => i.id === record.investigationId);

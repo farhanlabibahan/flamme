@@ -30,6 +30,10 @@ export default function EvidencePage() {
       value={scenario[key]} onChange={e => update(key, e.target.value)}/>
   </label>;
 
+  // The detail panel follows the filtered list: keep the selected record if it still matches, else show the first match.
+  const view = results.some(x => x.record.id === record.id) ? record : results[0]?.record;
+  const viewSource = view && investigations.find(i => i.id === view.investigationId);
+
   return <div className="ev reveal">
     <header className="ev-head">
       <div>
@@ -81,18 +85,19 @@ export default function EvidencePage() {
       </section>
 
       <aside className="ev-detail" aria-label="Selected record">
+        {results.length === 0 ? <div className="ev-empty ev-empty-detail">No {scenario.material || 'record'} in the evidence set for this scenario.</div> : <>
         <div className="ev-detail-top">
-          <span className="ev-kicker">{record.id} · {source.name}</span>
-          <h2>{record.sample.material}</h2>
-          <p>{source.platform} · row {record.source.row}</p>
+          <span className="ev-kicker">{view.id} · {viewSource.name}</span>
+          <h2>{view.sample.material}</h2>
+          <p>{viewSource.platform} · row {view.source.row}</p>
         </div>
 
         <div className="ev-block">
           <span className="ev-label">Observed</span>
           <p>{brief.observed}</p>
-          {record.investigationId === 'PSI-99' && <dl className="ev-stats">
-            <div><dt>Burn time</dt><dd>{value(record.measurements.burn)}</dd></div>
-            <div><dt>Spread entry*</dt><dd>{value(record.measurements.spread)}</dd></div>
+          {view.investigationId === 'PSI-99' && <dl className="ev-stats">
+            <div><dt>Burn time</dt><dd>{value(view.measurements.burn)}</dd></div>
+            <div><dt>Spread entry*</dt><dd>{value(view.measurements.spread)}</dd></div>
           </dl>}
         </div>
         <div className="ev-block"><span className="ev-label">Interpretation</span><p>{brief.interpretation}</p></div>
@@ -101,13 +106,14 @@ export default function EvidencePage() {
         <details className="ev-raw">
           <summary>Original conditions <ChevronDown size={14}/></summary>
           <dl>
-            {[['Thickness', record.sample.thickness], ['Length', record.sample.length], ['Width', record.sample.width], ['Oxygen', record.environment.oxygen], ['Pressure', record.environment.pressure], ['Airflow', record.flow.speed], ['Flow direction', record.flow.direction], ['Ignition power', record.ignition.power], ['Ignition time', record.ignition.duration]].map(([name, f]) => <div key={name}><dt>{name}</dt><dd>{value(f)}</dd></div>)}
+            {[['Thickness', view.sample.thickness], ['Length', view.sample.length], ['Width', view.sample.width], ['Oxygen', view.environment.oxygen], ['Pressure', view.environment.pressure], ['Airflow', view.flow.speed], ['Flow direction', view.flow.direction], ['Ignition power', view.ignition.power], ['Ignition time', view.ignition.duration]].map(([name, f]) => <div key={name}><dt>{name}</dt><dd>{value(f)}</dd></div>)}
           </dl>
         </details>
 
         <div className="ev-actions">
-          <button className="ev-ghost" onClick={() => openSource(record.id)}>Trace to source</button>
+          <button className="ev-ghost" onClick={() => openSource(view.id)}>Trace to source</button>
         </div>
+        </>}
       </aside>
     </div>
   </div>;
