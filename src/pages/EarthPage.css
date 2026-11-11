@@ -1,0 +1,5 @@
+.ea{max-width:980px;margin:0 auto;padding:8px 4px 64px}.ea h1{font-size:28px;letter-spacing:-.02em;margin:6px 0 8px}
+.ea-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin:20px 0}
+.ea-card{padding:18px;display:grid;gap:8px;align-content:start}.ea-card small{color:var(--accent);text-transform:uppercase;letter-spacing:.06em}
+.ea-card h2{font-size:17px;margin:0}.ea-card p{margin:0;font-size:13px;color:var(--ink2);line-height:1.5}
+.ea-card footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:8px;margin-top:4px}

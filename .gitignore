@@ -1,3 +1,7 @@
 node_modules/
 dist/
 .DS_Store
+flame_in_freefall_data/psi_data/*/Analyzed Data/
+flame_in_freefall_data/psi_data/*/Reports/
+flame_in_freefall_data/psi_data/*/Science Documents/
+flame_in_freefall_data/*.part
