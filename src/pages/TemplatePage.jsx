@@ -1,5 +1,5 @@
 import React from 'react';
-import {Download, FileJson, FileSpreadsheet} from 'lucide-react';
+import {FileJson, FileSpreadsheet} from 'lucide-react';
 import './TemplatePage.css';
 
 /* Real route: /template. Plan item 5 ("A reporting template"): publish the
@@ -69,9 +69,9 @@ export default function TemplatePage() {
 
     <section className="surface tp-table-wrap">
       <table className="tp-table">
-        <thead><tr><th>#</th><th>Condition</th><th>Standard representation</th><th>Field type</th></tr></thead>
+        <thead><tr><th>#</th><th>Condition</th><th>Standard representation</th></tr></thead>
         <tbody>{CONDITIONS.map(c => <tr key={c.n}>
-          <td>{c.n}</td><td><b>{c.name}</b><br/><code>{c.key}</code></td><td>{c.rep}</td><td className="tp-type">{c.type}</td>
+          <td>{c.n}</td><td><b>{c.name}</b></td><td>{c.rep}</td>
         </tr>)}</tbody>
       </table>
     </section>
@@ -79,13 +79,11 @@ export default function TemplatePage() {
     <section className="surface tp-notes">
       <h2>Rules for filling it in</h2>
       <ul>
-        <li>Record the condition you actually controlled or measured, in the stated unit — convert once at entry, not downstream.</li>
-        <li>Leave a field <code>null</code>/blank when the source does not report it. Do not infer, average, or default to a "typical" value.</li>
-        <li>If the source gives a range (e.g. an O2 sweep), record both ends; Flamme's tools compute the midpoint and flag range width themselves — raw ranges should not be collapsed before they reach the database.</li>
-        <li>Always carry the source: investigation ID, a direct URL, the file name, and the row/page the value came from. Every page in Flamme traces a value back to this chain.</li>
-        <li>One row = one test/sample, not one investigation. A test with a before/after or micro-g-vs-1-g comparison is two rows, cross-referenced by a shared <code>record_id</code> prefix.</li>
+        <li>Record what you actually controlled or measured, in the stated unit.</li>
+        <li>Leave a field blank when the source doesn't report it — never guess, average, or default to zero.</li>
+        <li>If the source gives a range, record both ends; Flamme computes the midpoint itself.</li>
+        <li>Always carry the source: investigation ID, URL, file name, and row.</li>
       </ul>
-      <p className="tp-foot"><Download size={13}/> Both downloads above are generated client-side from this page's source — they can't drift out of sync with the table.</p>
     </section>
   </div>;
 }

@@ -3,13 +3,14 @@ import {NavLink, Outlet, useLocation, useNavigate} from 'react-router-dom';
 import {BookOpen, ChevronsLeft, ChevronsRight, Compass, ExternalLink, FileJson, FlaskConical, Grid3x3, Layers, ListOrdered, Sigma, Table2, Globe, Sparkles, X} from 'lucide-react';
 import {useFlamme} from '../context/FlammeContext.jsx';
 import MicroFlame from './MicroFlame.jsx';
+import allInvestigations from '../investigationsData.json';
 
 const NAV = [
   {to: '/lab', label: 'Lab', icon: FlaskConical, prefetch: () => import('../pages/LabPage.jsx')},
   {to: '/ask', label: 'Ask', icon: Sparkles, prefetch: () => import('../pages/AskPage.jsx')},
   {to: '/evidence', label: 'Evidence', icon: Compass, prefetch: () => import('../pages/EvidencePage.jsx')},
-  {to: '/rankings', label: 'Rankings', icon: ListOrdered, Table2, Globe, prefetch: () => import('../pages/RankingsPage.jsx')},
-  {to: '/investigations', label: 'Investigations', icon: Table2, Globe, prefetch: () => import('../pages/InvestigationsPage.jsx')},
+  {to: '/rankings', label: 'Rankings', icon: ListOrdered, prefetch: () => import('../pages/RankingsPage.jsx')},
+  {to: '/investigations', label: 'Investigations', icon: Table2, prefetch: () => import('../pages/InvestigationsPage.jsx')},
   {to: '/earth', label: 'On Earth', icon: Globe, prefetch: () => import('../pages/EarthPage.jsx')},
   {to: '/compare', label: 'Compare', icon: Layers, prefetch: () => import('../pages/ComparePage.jsx')},
   {to: '/gaps', label: 'Gap map', icon: Grid3x3, prefetch: () => import('../pages/GapsPage.jsx')},
@@ -69,12 +70,17 @@ export default function Shell() {
         {drawer && <section className="surface source-panel" role="region" aria-label={drawer === 'all' ? 'Data sources' : 'Source information'}>
           <button className="drawer-close" aria-label="Close" onClick={() => setDrawer(null)}><X/></button>
           {drawer === 'all'
-            ? <><small>DATA SOURCES</small><h2>Curated NASA PSI investigations</h2>
-              <div className="drawer-source-grid">{investigations.map(i => <div className="drawer-source" key={i.id}>
-                <strong>{i.name}</strong><p>{i.title} · {i.platform}</p>
-                <a href={i.url} target="_blank" rel="noreferrer">Open {i.id} <ExternalLink size={14}/></a>
-                <a href={`https://doi.org/${i.doi}`} target="_blank" rel="noreferrer">DOI {i.doi} <ExternalLink size={14}/></a>
-              </div>)}</div></>
+            ? <><small>DATA SOURCES</small><h2>Every NASA source Flamme cites</h2>
+              <p className="drawer-lede">{allInvestigations.length} PSI combustion investigations behind Evidence, Rankings and the Gap map, plus the NTRS/PSI
+                source behind the trained FLEX model on the Lab and Model pages. <button className="drawer-link-btn" onClick={() => { setDrawer(null); navigate('/investigations'); }}>Compare them side by side <ExternalLink size={13}/></button></p>
+              <ul className="drawer-source-list">{allInvestigations.map(i => <li key={i.id}>
+                <div className="drawer-source-main"><strong>{i.name}</strong><span className="drawer-source-id">{i.id}</span>
+                  <small>{i.title} · {i.platform}</small></div>
+                <div className="drawer-source-links">
+                  <a href={i.url} target="_blank" rel="noreferrer" title={`Open ${i.id} on NASA PSI`}><ExternalLink size={13}/></a>
+                  {i.doi && <a href={`https://doi.org/${i.doi}`} target="_blank" rel="noreferrer" title={`DOI ${i.doi}`}>DOI</a>}
+                </div>
+              </li>)}</ul></>
             : <><small>DATA LINEAGE</small><h2>{source.name} · sample {record.id}</h2>
               <p>{source.title} on {source.platform}. The displayed values come from local CSV <strong>{record.source.file}</strong>, <mark className="trace">row {record.source.row}</mark> (header is row 1).</p>
               <div className="lineage-box">Source table → experiment {record.id} → observed card → cautious interpretation</div>

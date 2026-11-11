@@ -1,5 +1,5 @@
 import React, {useMemo, useState} from 'react';
-import {AlertTriangle, Grid3x3} from 'lucide-react';
+import {AlertTriangle} from 'lucide-react';
 import {findings} from '../ranking.js';
 import './GapsPage.css';
 
@@ -49,20 +49,19 @@ export default function GapsPage() {
   return <div className="gm reveal">
     <header>
       <span className="cmp-kicker">Gap map</span>
-      <h1>Which conditions have NASA actually tested?</h1>
-      <p className="gm-lede">Every cell below is a count of catalog findings whose gravity regime and oxygen band fall in that cell,
-        from the same 111-finding catalog as Rankings. An empty cell is not proof nothing was ever tested at that condition —
-        it means nothing in this curated catalog documents it, which is itself useful: it is where the next experiment, or the
-        next extraction pass over NASA PSI/NTRS sources, is most needed.</p>
+      <h1>Which conditions has NASA actually tested?</h1>
+      <p className="gm-lede">Each cell counts catalog findings whose gravity regime and oxygen band match it. An empty cell isn't
+        proof nothing was tested — it means this catalog doesn't document it, which marks where the next experiment is most needed.</p>
     </header>
 
     {documentedGaps.length > 0 && <section className="gm-known" aria-label="NASA-documented gaps">
       <h2><AlertTriangle size={16}/> Gaps the sources call out directly</h2>
-      {documentedGaps.map(g => <p key={g.finding_id}><b>{g.finding}</b> {g.safety_implication}</p>)}
+      <ul>{documentedGaps.map(g => <li key={g.finding_id}>{g.finding}</li>)}</ul>
+      <p className="gm-known-note">{documentedGaps[0].safety_implication}</p>
     </section>}
 
     <section className="surface gm-grid-wrap">
-      <h2><Grid3x3 size={15}/> Tests per gravity × oxygen band</h2>
+      <h2>Tests per gravity × oxygen band</h2>
       <div className="gm-grid" style={{gridTemplateColumns: `160px repeat(${O2_BINS.length}, 1fr)`}}>
         <div className="gm-corner"/>
         {O2_BINS.map(c => <div className="gm-colhead" key={c.label}>{c.label}</div>)}
