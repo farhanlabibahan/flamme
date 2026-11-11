@@ -1,6 +1,7 @@
 import React from 'react';
 import {ExternalLink} from 'lucide-react';
 import Mermaid from '../components/Mermaid.jsx';
+import {CoefBarChart, ScatterChart} from '../components/Charts.jsx';
 import {flexModelMeta} from '../flexModel.js';
 import model from '../flexModel.json' with {type: 'json'};
 import './ModelPage.css';
@@ -75,6 +76,9 @@ function CoefRows({coef, intercept}) {
 export default function ModelPage() {
   const c = model.classifier, r = model.regressor;
   const [[tn, fp], [fn, tp]] = c.metrics.confusion_matrix;
+  const scatterPoints = model.tests.map(t => ({
+    ...t, o2_partial_pressure_atm: (t.o2_pct / 100) * t.pressure_atm,
+  }));
 
   return <div className="md reveal">
     <header>
@@ -90,16 +94,26 @@ export default function ModelPage() {
     <section className="surface md-card">
       <div className="md-block">
         <h2 className="md-eyebrow">Data</h2>
-        <p><b>{flexModelMeta.nTests}</b> individual droplet-flame tests from NASA PSI investigation <b>PSI-69 (FLEX)</b> — <a href={flexModelMeta.sourceUrl} target="_blank" rel="noreferrer">source <ExternalLink size={12}/></a>.
+        <p><b>{flexModelMeta.nTests}</b> individual droplet-flame tests from NASA PSI investigation <b>PSI-69 (FLEX)</b> — <a href={flexModelMeta.sourceUrl} target="_blank" rel="noreferrer">source <ExternalLink size={12}/></a>, pivoted
+          out of a ~24,500-row long-format export (one row per measurement) into one row per physical test.
           Tested range: O₂ <b>{model.training_range.o2_pct[0]}–{model.training_range.o2_pct[1]}%</b>, pressure <b>{model.training_range.pressure_atm[0].toFixed(2)}–{model.training_range.pressure_atm[1].toFixed(2)} atm</b>,
           droplet <b>{model.training_range.droplet_diameter_mm[0]}–{model.training_range.droplet_diameter_mm[1]} mm</b> — the Lab refuses to predict outside it rather than extrapolate.</p>
+        <ScatterChart points={scatterPoints} xKey="o2_partial_pressure_atm" yKey="burning_rate_k_mm2_s"
+          xLabel="O₂ partial pressure (atm)" yLabel="Burning rate K (mm²/s)"/>
+        <p className="md-caption">Every point is a real PSI-69 test, not a simulation — this is what the model actually trained on.</p>
       </div>
 
       <div className="md-block">
         <h2 className="md-eyebrow">Cleaning</h2>
-        <p>Pressure converted mmHg → atm; the self-extinguish target is derived, not assumed. One row had a literal <code>0 mmHg</code>
-          reading — impossible for a sealed chamber — fixed to missing rather than near-vacuum; that single fix raised the
-          burning-rate R² from <b>0.45</b> to <b>0.58</b>.</p>
+        <p>Pressure converted mmHg → atm. The self-extinguish target is <b>derived, not assumed</b>:</p>
+        <ul className="md-rules">
+          <li>numeric extinction diameter reported → <b>1</b> (flame measurably shrank to extinction)</li>
+          <li>source explicitly marks "burned to completion" → <b>0</b></li>
+          <li>unreported / ambiguous → left missing, <b>never guessed</b></li>
+        </ul>
+        <p>One row had a literal <code>0 mmHg</code> reading — impossible for a sealed chamber — fixed to missing rather than
+          near-vacuum; that single fix raised the burning-rate R² from <b>0.45</b> to <b>0.58</b>, which is the evidence the fix was
+          correct, not just tidier-looking data.</p>
       </div>
 
       <div className="md-block">
@@ -123,12 +137,15 @@ export default function ModelPage() {
           <tr><th scope="row">Actual: burned out</th><td>{tn}</td><td>{fp}</td></tr>
           <tr><th scope="row">Actual: extinguished</th><td>{fn}</td><td>{tp}</td></tr>
         </>}/>
+        <p className="md-caption">Fitted coefficients — bar length is magnitude, color is sign:</p>
+        <CoefBarChart features={model.features} labels={FEATURE_LABEL} coef={c.coef}/>
         <Table head={['Feature', 'Fitted coefficient']} rows={<CoefRows coef={c.coef} intercept={c.intercept}/>}/>
       </div>
 
       <div className="md-block">
         <h2 className="md-eyebrow">Burning-rate constant K</h2>
         <p className="md-summary"><b>R² {r.metrics.r2}</b>, MAE <b>{r.metrics.mae_mm2_s} mm²/s</b> on <b>{r.metrics.n_train}/{r.metrics.n_test}</b> train/test rows.</p>
+        <CoefBarChart features={model.features} labels={FEATURE_LABEL} coef={r.coef}/>
         <Table head={['Feature', 'Fitted coefficient']} rows={<CoefRows coef={r.coef} intercept={r.intercept}/>}/>
       </div>
 
