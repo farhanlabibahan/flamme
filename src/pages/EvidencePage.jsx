@@ -1,33 +1,26 @@
 import React from 'react';
-import {useNavigate} from 'react-router-dom';
-import {ArrowRight, Check, ChevronDown, Layers, Search, ShieldCheck} from 'lucide-react';
+import {ArrowRight, ChevronDown, Search, ShieldCheck} from 'lucide-react';
 import {useFlamme, value} from '../context/FlammeContext.jsx';
 
-/* Real route: /evidence. Two separate jobs, kept visually apart:
-   - the row you click OPENS a record in the detail panel, and
-   - the "Compare" tick ADDS it to the Compare page (up to three). */
+/* Real route: /evidence. Click a row to open it in the detail panel. */
 export default function EvidencePage() {
   const {
-    scenario, update, results, selected, setSelected, compare, toggleCompare,
+    scenario, update, results, selected, setSelected,
     query, setQuery, filter, setFilter, investigations, record, source, brief,
     setSearched, advanced, setAdvanced, ranked, openSource,
   } = useFlamme();
-  const navigate = useNavigate();
 
   const select = (label, key, items) => <label className="ev-field">
     <span>{label}</span>
     <select value={scenario[key]} onChange={e => update(key, e.target.value)}>{items.map(([v, t]) => <option value={v} key={v}>{t}</option>)}</select>
   </label>;
 
-  const inCompare = compare.includes(record.id);
-  const full = compare.length >= 3;
-
   return <div className="ev reveal">
     <header className="ev-head">
       <div>
         <span className="ev-kicker">Evidence</span>
         <h1>Find the record that fits</h1>
-        <p>Set a scenario, open a record to read it, and tick up to three to compare.</p>
+        <p>Set a scenario, then open a record to read it.</p>
       </div>
       <button className="ev-primary" onClick={() => { setSearched(true); setSelected(ranked[0].record.id); document.getElementById('ev-list')?.scrollIntoView({behavior: 'smooth', block: 'start'}); }}>
         Best match <ArrowRight size={16}/>
@@ -56,11 +49,10 @@ export default function EvidencePage() {
             {investigations.map(i => <option value={i.id} key={i.id}>{i.name}</option>)}
           </select>
         </div>
-        <div className="ev-count">{results.length} record{results.length === 1 ? '' : 's'}{compare.length > 0 && <> · <b>{compare.length}</b> to compare</>}</div>
+        <div className="ev-count">{results.length} record{results.length === 1 ? '' : 's'}</div>
 
         {results.length === 0 ? <div className="ev-empty">No records match this scenario.</div> : results.map(({record: r, matched}) => {
           const isOpen = selected === r.id;
-          const isIn = compare.includes(r.id);
           return <div key={r.id} className={`ev-row ${isOpen ? 'open' : ''}`}>
             <button className="ev-row-main" onClick={() => setSelected(r.id)} aria-pressed={isOpen}>
               <span className="ev-row-id">{r.id}</span>
@@ -69,13 +61,6 @@ export default function EvidencePage() {
                 <small>{r.investigationId === 'PSI-99' ? 'Saffire II' : 'BASS II'} · {value(r.environment.oxygen)} O₂ · {value(r.flow.speed)}</small>
               </span>
               <span className="ev-row-match">{matched} match</span>
-            </button>
-            <button className={`ev-tick ${isIn ? 'on' : ''}`} disabled={!isIn && full}
-              aria-pressed={isIn}
-              title={isIn ? 'Remove from comparison' : full ? 'Compare holds up to three records' : 'Add to comparison'}
-              onClick={() => toggleCompare(r.id)}>
-              {isIn ? <Check size={14}/> : <Layers size={14}/>}
-              <span>{isIn ? 'Comparing' : 'Compare'}</span>
             </button>
           </div>;
         })}
@@ -108,10 +93,6 @@ export default function EvidencePage() {
 
         <div className="ev-actions">
           <button className="ev-ghost" onClick={() => openSource(record.id)}>Trace to source</button>
-          <button className="ev-primary" disabled={!inCompare && full}
-            onClick={() => { if (!inCompare) toggleCompare(record.id); navigate('/compare'); }}>
-            {inCompare ? 'View comparison' : 'Compare this'} <ArrowRight size={16}/>
-          </button>
         </div>
       </aside>
     </div>

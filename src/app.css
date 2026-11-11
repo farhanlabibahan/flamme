@@ -28,7 +28,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,[r
 a{color:var(--accent);text-decoration:none}svg{vertical-align:middle;flex-shrink:0}h1,h2,h3,p{margin-top:0}small{font-size:11px}
 
 /* flat hairline panel — no blur, no shadow */
-.surface,.compare-card{position:relative;border:1px solid var(--line);background:var(--panel);border-radius:0}
+.surface{position:relative;border:1px solid var(--line);background:var(--panel);border-radius:0}
 
 /* ============================================================ shell */
 .app-shell{position:relative;z-index:1;min-height:100vh;display:flex}
@@ -251,9 +251,6 @@ a{color:var(--accent);text-decoration:none}svg{vertical-align:middle;flex-shrink
 .match-reasons{display:flex;gap:5px;flex-wrap:wrap;margin-top:10px}
 .match-reasons span{font:600 9.5px var(--disp);letter-spacing:.04em;border-radius:0;border:1px solid rgba(21,128,61,.35);color:var(--green);background:rgba(21,128,61,.08);padding:4px 7px}
 .match-reasons .different{border:1px dotted rgba(234,88,12,.6);color:#9a3412;background:rgba(234,88,12,.07)}
-.compare-add{position:absolute;right:16px;bottom:16px;width:32px;height:32px;border-radius:0;display:grid;place-items:center;border:1px solid var(--line3);color:var(--muted);background:var(--paper);transition:transform .18s var(--ease),background .2s,color .2s}
-.compare-add:hover{background:var(--ink);color:#fff;transform:scale(1.08)}
-.compare-add.on{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
 .empty-result{padding:42px;color:var(--muted);font-size:13px;text-align:center}
 .card-top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:22px 24px 8px}
 .card-top small{font:600 11px/1 var(--disp);letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
@@ -274,19 +271,6 @@ a{color:var(--accent);text-decoration:none}svg{vertical-align:middle;flex-shrink
 .raw-details strong{font:500 12px var(--mono);color:var(--ink);text-align:right}
 .card-actions{display:flex;gap:10px;padding:18px 24px 22px;border-top:1px solid var(--line);margin-top:18px}
 .card-actions .outline-btn,.card-actions .quiet-btn{flex:1}
-
-/* ============================================================ compare */
-.comparison-intro{margin:12px 0 24px}
-.comparison-intro h1{font:600 clamp(32px,3.6vw,48px)/1.1 var(--disp);letter-spacing:-.02em;margin:0}
-.compare-warning{display:flex;gap:12px;align-items:center;border:1px dotted rgba(234,88,12,.6);border-radius:0;background:rgba(234,88,12,.06);color:#9a3412;padding:14px 18px;font-size:13px;margin-bottom:18px}
-.compare-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
-.compare-card{padding:24px}
-.compare-card h2{font:600 24px var(--disp);margin:10px 0 18px}
-.compare-card small{font:600 10px var(--disp);letter-spacing:.14em;color:var(--accent)}
-.compare-line{display:flex;justify-content:space-between;gap:18px;border-top:1px solid var(--line);padding:11px 0;font-size:13px}
-.compare-line span{color:var(--muted)}.compare-line b{font:500 12px var(--mono);text-align:right;color:var(--ink)}
-.compare-card .outline-btn{margin-top:18px;width:100%}
-.compare-footnote{color:var(--muted);font-size:12px;line-height:1.6;margin-top:18px}
 
 .page-foot{border-top:1px solid var(--line);margin-top:40px;padding:20px 0;display:flex;justify-content:space-between;gap:15px;font:600 10px var(--disp);letter-spacing:.1em;color:var(--dim);text-transform:uppercase}
 
@@ -524,10 +508,6 @@ mark.trace{background:none;color:inherit;padding:1px 4px;border-bottom:2px solid
 .ev-row-body strong{font:600 14px var(--disp);color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ev-row-body small{font:400 11.5px var(--mono);color:var(--muted)}
 .ev-row-match{font:500 11px var(--mono);color:var(--muted);white-space:nowrap}
-.ev-tick{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 10px;background:transparent;border:1px solid var(--line3);color:var(--ink2);font:600 11.5px var(--disp);white-space:nowrap;transition:background .15s,color .15s,border-color .15s}
-.ev-tick:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
-.ev-tick.on{background:var(--accent);border-color:var(--accent);color:#fff}
-.ev-tick:disabled{opacity:.35;cursor:not-allowed}
 
 .ev-detail{background:#fff;border:1px solid var(--line);padding:24px;display:flex;flex-direction:column;gap:18px;position:sticky;top:20px;min-width:0}
 .ev-detail-top h2{font:700 24px/1.15 var(--disp);letter-spacing:-.02em;color:var(--ink);margin-top:2px}

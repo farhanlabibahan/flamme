@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {NavLink, Outlet, useLocation, useNavigate} from 'react-router-dom';
-import {BookOpen, ChevronsLeft, ChevronsRight, Compass, ExternalLink, FlaskConical, Grid3x3, Layers, ListOrdered, Sigma, Table2, Globe, Sparkles, X} from 'lucide-react';
+import {BookOpen, ChevronsLeft, ChevronsRight, Compass, ExternalLink, FlaskConical, Grid3x3, ListOrdered, Sigma, Table2, Sparkles, X} from 'lucide-react';
 import {useFlamme} from '../context/FlammeContext.jsx';
 import MicroFlame from './MicroFlame.jsx';
 
@@ -10,8 +10,6 @@ const NAV = [
   {to: '/evidence', label: 'Evidence', icon: Compass, prefetch: () => import('../pages/EvidencePage.jsx')},
   {to: '/rankings', label: 'Rankings', icon: ListOrdered, prefetch: () => import('../pages/RankingsPage.jsx')},
   {to: '/investigations', label: 'Investigations', icon: Table2, prefetch: () => import('../pages/InvestigationsPage.jsx')},
-  {to: '/earth', label: 'On Earth', icon: Globe, prefetch: () => import('../pages/EarthPage.jsx')},
-  {to: '/compare', label: 'Compare', icon: Layers, prefetch: () => import('../pages/ComparePage.jsx')},
   {to: '/gaps', label: 'Gap map', icon: Grid3x3, prefetch: () => import('../pages/GapsPage.jsx')},
   {to: '/model', label: 'Model', icon: Sigma, prefetch: () => import('../pages/ModelPage.jsx')},
   {to: '/sources', label: 'Sources', icon: BookOpen, prefetch: () => import('../pages/SourcesPage.jsx')},
@@ -25,7 +23,7 @@ function warm(to, loader) {
 }
 
 /* Persistent app frame: sidebar + source drawer + <Outlet/>. Each sidebar
-   item is a real react-router route (/lab, /ask, /evidence, /compare) — not
+   item is a real react-router route (/lab, /ask, /evidence, …) — not
    a client-state flag — so every section is its own code-split bundle,
    the URL/back-button work, and the heavy Lab (Three.js) chunk only loads
    when its route is actually visited. Hovering/focusing a link warms that
@@ -33,7 +31,7 @@ function warm(to, loader) {
    150ms click-throttle guards the sidebar's slide/sweep animation from being
    re-triggered by an accidental double click mid-transition. */
 export default function Shell() {
-  const {drawer, setDrawer, compare, record, source} = useFlamme();
+  const {drawer, setDrawer, record, source} = useFlamme();
   const navigate = useNavigate();
   const location = useLocation();
   const [navCollapsed, setNavCollapsed] = useState(() => { try { return localStorage.getItem('flamme-nav-collapsed') === '1'; } catch { return false; } });
@@ -57,7 +55,7 @@ export default function Shell() {
           onClick={() => setDrawer(null)}
           className={({isActive}) => `nav-link ${isActive ? 'active' : ''}`}
           title={navCollapsed ? label : undefined}>
-          <Icon size={19}/><span className="nav-link-text">{label}</span>{label === 'Compare' && <em>{compare.length}</em>}
+          <Icon size={19}/><span className="nav-link-text">{label}</span>
         </NavLink>
       )}
     </aside>

@@ -10,7 +10,7 @@
 .sk-page{display:flex;flex-direction:column;gap:16px;width:100%;animation:skIn .25s ease both}
 @keyframes skIn{from{opacity:0}to{opacity:1}}
 
-.sk-panel,.sk-list,.sk-detail,.sk-compare-card{background:#fff;border:1px solid var(--line);padding:18px;display:flex;flex-direction:column;gap:14px}
+.sk-panel,.sk-list,.sk-detail{background:#fff;border:1px solid var(--line);padding:18px;display:flex;flex-direction:column;gap:14px}
 .sk-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .sk-row .sk-input{flex:1}
 .sk-chips{display:flex;gap:8px;flex-wrap:wrap}
@@ -22,8 +22,6 @@
 .sk-item-text{display:flex;flex-direction:column;gap:7px;flex:1;min-width:0}
 .sk-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:6px}
 .sk-stats>div{display:flex;flex-direction:column;gap:8px}
-.sk-compare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-.sk-line{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-top:1px solid var(--line)}
 .sk-sources{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;padding:8px 0}
 .sk-source{display:flex;flex-direction:column;gap:10px;background:#fff;border:1px solid var(--line);padding:16px}
 
@@ -34,5 +32,5 @@
 .reveal>*:nth-child(4){animation:revealIn .38s var(--ease) .15s both}
 @keyframes revealIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
-@media(max-width:800px){.sk-split,.sk-compare{grid-template-columns:1fr}.sk-filters{grid-template-columns:1fr 1fr}}
+@media(max-width:800px){.sk-split{grid-template-columns:1fr}.sk-filters{grid-template-columns:1fr 1fr}}
 @media (prefers-reduced-motion:reduce){.sk::after{animation:none;display:none}.sk-page,.reveal,.reveal>*{animation:none}}

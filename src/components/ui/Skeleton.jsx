@@ -57,18 +57,6 @@ export function EvidenceSkeleton() {
   </SkeletonPage>;
 }
 
-export function CompareSkeleton() {
-  return <SkeletonPage label="Loading comparison">
-    <section className="sk-mission"><Bar w="55%" h={34}/><Bar w="35%" h={18}/></section>
-    <div className="sk-compare">
-      {[0, 1].map(i => <section className="surface sk-compare-card" key={i}>
-        <Bar w="40%" h={10}/><Bar w="60%" h={22}/>
-        {[0, 1, 2, 3, 4, 5, 6, 7].map(r => <div className="sk-line" key={r}><Bar w="45%" h={11}/><Bar w="25%" h={11}/></div>)}
-      </section>)}
-    </div>
-  </SkeletonPage>;
-}
-
 export function SourcesSkeleton() {
   return <SkeletonPage label="Loading sources">
     <div className="sk-sources">

@@ -13,7 +13,7 @@ const TRACE_STEPS = [
 ];
 
 /* Real route: / — the one page outside the app shell. "Enter Flamme" and the
-   footer product links now push real URLs (/lab, /ask, /evidence, /compare)
+   footer product links now push real URLs (/lab, /ask, /evidence)
    instead of flipping a client-side view flag. */
 export default function LandingPage() {
   const navigate = useNavigate();

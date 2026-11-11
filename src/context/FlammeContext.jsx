@@ -10,7 +10,7 @@ const Ctx = createContext(null);
 
 /* Shared app state used to live inside one giant App() component, with the
    sidebar just swapping which JSX block rendered. Now each sidebar item is
-   its own routed page (see main.jsx), so the shared scenario/compare/search
+   its own routed page (see main.jsx), so the shared scenario/search
    state has to live above the router in a context instead — pages read and
    write it with useFlamme() without needing to be siblings in one file. */
 export function FlammeProvider({children}) {
@@ -18,7 +18,6 @@ export function FlammeProvider({children}) {
   const [scenario, setScenario] = useState({...initialScenario});
   const [mode, setMode] = useState('Illustrative visualization');
   const [selected, setSelected] = useState('2-5');
-  const [compare, setCompare] = useState(['2-5', '2-2']);
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState('All');
   const [drawer, setDrawer] = useState(null);
@@ -43,7 +42,6 @@ export function FlammeProvider({children}) {
   const brief = explain(record);
 
   const update = (key, v) => { setScenario(s => ({...s, [key]: v})); setSearched(false); };
-  const toggleCompare = id => setCompare(c => c.includes(id) ? c.filter(x => x !== id) : c.length < 3 ? [...c, id] : c);
   const openSource = id => { if (id) setSelected(id); setDrawer('source'); };
   const askFlame = () => {
     const parsed = parsePrompt(prompt);
@@ -54,13 +52,13 @@ export function FlammeProvider({children}) {
   const clearRecognized = key => { setRecognized(r => r && ({...r, [key]: ''})); update(key, ''); };
 
   const ctx = useMemo(() => ({
-    labRef, scenario, setScenario, mode, setMode, selected, setSelected, compare, setCompare, toggleCompare,
+    labRef, scenario, setScenario, mode, setMode, selected, setSelected,
     query, setQuery, filter, setFilter, drawer, setDrawer, reduced, setReduced,
     searched, setSearched, advanced, setAdvanced, prompt, setPrompt, recognized, setRecognized,
     ranked, results, record, source, brief, update, openSource, askFlame, clearRecognized,
     experiments, investigations, hasAnyField,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }), [scenario, mode, selected, compare, query, filter, drawer, reduced, searched, advanced, prompt, recognized, ranked, results, record, source, brief]);
+  }), [scenario, mode, selected, query, filter, drawer, reduced, searched, advanced, prompt, recognized, ranked, results, record, source, brief]);
 
   return <Ctx.Provider value={ctx}>{children}</Ctx.Provider>;
 }
