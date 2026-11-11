@@ -1,7 +1,8 @@
 import React, {useMemo, useState} from 'react';
-import {ArrowRight, Flame, RotateCcw, Zap} from 'lucide-react';
+import {ArrowRight, Flame, FlaskConical, RotateCcw, Zap} from 'lucide-react';
 import {Enum, NumField, PANELS} from '../Lab.jsx';
 import {AGENTS, DEFAULT_PARAMS, DIRECTIONS, GRAVITY, MATERIALS, derive} from '../labModel.js';
+import {flexModelMeta, nearestFlexTest, predictFlex} from '../flexModel.js';
 
 /* Real route: /lab (sidebar entry). A setup page: pick a preset or tune the
    parameters, then "Enter the Lab" opens /lab/view in a new tab with only the
@@ -51,6 +52,12 @@ export default function LabPage() {
   const change = (k, v) => setParams(p => ({...p, [k]: v}));
   const applyPreset = p => setParams({...DEFAULT_PARAMS, ...p.values});
   const regime = useMemo(() => derive(params).regime, [params]);
+  const grounded = useMemo(() => {
+    const pressureAtm = params.pressure / 101.325;
+    const pred = predictFlex({o2Pct: params.oxygen, pressureAtm});
+    const nearest = nearestFlexTest({o2Pct: params.oxygen, pressureAtm});
+    return {pred, nearest, pressureAtm};
+  }, [params.oxygen, params.pressure]);
 
   const enter = () => {
     localStorage.setItem(LAB_PARAMS_KEY, JSON.stringify(params));
@@ -78,6 +85,39 @@ export default function LabPage() {
         </button>;
       })}
     </div>
+
+    <article className="sc-card gr-card">
+      <header className="sc-head">
+        <span className="sc-icon"><FlaskConical size={15}/></span>
+        <span className="sc-title">Grounded in NASA FLEX data</span>
+      </header>
+      <div className="gr-body">
+        <p className="gr-scope">The panels below are an <b>illustrative</b> solid-sample model (not fitted to data). This card is a genuine
+          data-driven estimate from the 274 real FLEX (PSI-69) liquid-droplet tests at your current oxygen ({params.oxygen}%) and
+          pressure ({grounded.pressureAtm.toFixed(2)} atm) — a different physical regime (free-floating droplet, not a solid sheet),
+          shown side by side rather than blended into the simulation below.</p>
+        <div className="gr-stats">
+          <div className="gr-stat">
+            <span>Predicted self-extinguish probability</span>
+            <b>{Math.round(grounded.pred.selfExtinguishProbability * 100)}%</b>
+            <small>logistic regression, test AUC {flexModelMeta.classifierMetrics.auc} (n={flexModelMeta.classifierMetrics.n_train + flexModelMeta.classifierMetrics.n_test})</small>
+          </div>
+          <div className="gr-stat">
+            <span>Predicted burning-rate constant K</span>
+            <b>{grounded.pred.burningRateK.toFixed(2)} mm²/s</b>
+            <small>linear regression, test R² {flexModelMeta.regressorMetrics.r2}</small>
+          </div>
+        </div>
+        {grounded.nearest && <div className="gr-nearest">
+          <span>Closest real FLEX test</span>
+          <p><b>{grounded.nearest.fuel}</b> droplet · {grounded.nearest.o2_pct}% O₂ · {grounded.nearest.pressure_atm} atm
+            {grounded.nearest.droplet_diameter_mm != null && <> · {grounded.nearest.droplet_diameter_mm} mm initial diameter</>}
+            {' — '}{grounded.nearest.self_extinguished == null ? 'extinction outcome not reported'
+              : grounded.nearest.self_extinguished ? `self-extinguished at ${grounded.nearest.extinction_diameter_mm ?? '?'} mm diameter` : 'burned to completion'}
+            {grounded.nearest.burning_rate_k_mm2_s != null && <>, measured K = {grounded.nearest.burning_rate_k_mm2_s} mm²/s</>}.</p>
+        </div>}
+      </div>
+    </article>
 
     <div className="ls-grid">
       {PANELS.map(panel => <Section key={panel.id} panel={panel} params={params} change={change}/>)}

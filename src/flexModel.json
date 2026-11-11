@@ -1,0 +1,2827 @@
+{
+ "source": "NASA PSI PSI-69 (FLEX), 274 individual droplet-flame tests, cleaned from flame_in_freefall_data/cleaned/cleaned_values.csv",
+ "generated_by": "flame_in_freefall_data/ml/build_flex_model.py",
+ "scope_note": "Fitted on free-floating liquid-droplet flames (methanol/heptane). Physically distinct from the solid-sample lab model (labModel.js derive()) -- use as nearest-evidence comparison, not a drop-in replacement for the solid-sample curves.",
+ "features": [
+  "o2_pct",
+  "pressure_atm",
+  "o2_partial_pressure_atm",
+  "droplet_diameter_mm",
+  "fuel_methanol"
+ ],
+ "classifier": {
+  "target": "self_extinguished (1 = flame went out before fuel was consumed, 0 = burned to completion)",
+  "scaler_mean": [
+   19.664670658682635,
+   0.894377560668137,
+   0.17380917901040022,
+   3.101377245508982,
+   0.592814371257485
+  ],
+  "scaler_scale": [
+   4.240679499335594,
+   0.23330258847679444,
+   0.05447109068981468,
+   0.648405613579767,
+   0.4913099759704436
+  ],
+  "coef": [
+   -0.6173760360707822,
+   0.23696506098030004,
+   -0.2075121956082604,
+   -0.28622886911508677,
+   -0.05173808540248475
+  ],
+  "intercept": 2.3201256818636002,
+  "metrics": {
+   "n_train": 167,
+   "n_test": 56,
+   "accuracy": 0.875,
+   "auc": 0.913,
+   "confusion_matrix": [
+    [
+     0,
+     7
+    ],
+    [
+     0,
+     49
+    ]
+   ],
+   "base_rate_self_extinguish": 0.883
+  }
+ },
+ "regressor": {
+  "target": "burning_rate_k_mm2_s (d^2-law burning-rate constant K, mm^2/s)",
+  "scaler_mean": [
+   20.424870466321245,
+   0.8986398963730573,
+   0.1808500681756205,
+   3.008963730569949,
+   0.5854922279792746
+  ],
+  "scaler_scale": [
+   4.732842271582372,
+   0.2921992335263745,
+   0.0663995890833271,
+   0.6976934342662308,
+   0.4926368631711797
+  ],
+  "coef": [
+   0.0688184115221741,
+   -0.026366225953149212,
+   0.012251119062761048,
+   -0.06539860939583748,
+   -0.02242482530499582
+  ],
+  "intercept": 0.5115025906735751,
+  "metrics": {
+   "n_train": 193,
+   "n_test": 65,
+   "r2": 0.448,
+   "mae_mm2_s": 0.0755
+  }
+ },
+ "tests": [
+  {
+   "source_row": 2,
+   "fuel": "Methanol",
+   "o2_pct": 21.0,
+   "pressure_atm": 0.997,
+   "droplet_diameter_mm": 1.69,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 0.89,
+   "burning_rate_k_mm2_s": 0.52
+  },
+  {
+   "source_row": 3,
+   "fuel": "Methanol",
+   "o2_pct": 21.0,
+   "pressure_atm": 1.003,
+   "droplet_diameter_mm": 1.86,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 0.94,
+   "burning_rate_k_mm2_s": 0.6
+  },
+  {
+   "source_row": 4,
+   "fuel": "Methanol",
+   "o2_pct": 21.0,
+   "pressure_atm": 1.006,
+   "droplet_diameter_mm": 1.61,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 0.92,
+   "burning_rate_k_mm2_s": 0.58
+  },
+  {
+   "source_row": 5,
+   "fuel": "Methanol",
+   "o2_pct": 21.0,
+   "pressure_atm": 1.0,
+   "droplet_diameter_mm": 2.06,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.6
+  },
+  {
+   "source_row": 6,
+   "fuel": "Methanol",
+   "o2_pct": 21.0,
+   "pressure_atm": 1.0,
+   "droplet_diameter_mm": 1.92,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 0.81,
+   "burning_rate_k_mm2_s": 0.48
+  },
+  {
+   "source_row": 7,
+   "fuel": "Methanol",
+   "o2_pct": 21.0,
+   "pressure_atm": 1.0,
+   "droplet_diameter_mm": 2.54,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.53,
+   "burning_rate_k_mm2_s": 0.51
+  },
+  {
+   "source_row": 8,
+   "fuel": "Heptane",
+   "o2_pct": 21.0,
+   "pressure_atm": 1.002,
+   "droplet_diameter_mm": 1.87,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.67
+  },
+  {
+   "source_row": 9,
+   "fuel": "Heptane",
+   "o2_pct": 21.0,
+   "pressure_atm": 1.003,
+   "droplet_diameter_mm": 2.95,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.79
+  },
+  {
+   "source_row": 10,
+   "fuel": "Heptane",
+   "o2_pct": 21.0,
+   "pressure_atm": 1.0,
+   "droplet_diameter_mm": null,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": null
+  },
+  {
+   "source_row": 11,
+   "fuel": "Methanol",
+   "o2_pct": 21.0,
+   "pressure_atm": 3.052,
+   "droplet_diameter_mm": 3.86,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.37
+  },
+  {
+   "source_row": 12,
+   "fuel": "Methanol",
+   "o2_pct": 21.0,
+   "pressure_atm": 3.051,
+   "droplet_diameter_mm": 3.03,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.4
+  },
+  {
+   "source_row": 13,
+   "fuel": "Heptane",
+   "o2_pct": 21.0,
+   "pressure_atm": 3.053,
+   "droplet_diameter_mm": 2.74,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": null
+  },
+  {
+   "source_row": 14,
+   "fuel": "Methanol",
+   "o2_pct": 21.0,
+   "pressure_atm": 2.729,
+   "droplet_diameter_mm": 2.59,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.49
+  },
+  {
+   "source_row": 15,
+   "fuel": "Methanol",
+   "o2_pct": 21.0,
+   "pressure_atm": 2.705,
+   "droplet_diameter_mm": 3.7,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": null
+  },
+  {
+   "source_row": 16,
+   "fuel": "Methanol",
+   "o2_pct": 21.0,
+   "pressure_atm": 2.719,
+   "droplet_diameter_mm": 4.42,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": null
+  },
+  {
+   "source_row": 17,
+   "fuel": "Methanol",
+   "o2_pct": 21.0,
+   "pressure_atm": 2.726,
+   "droplet_diameter_mm": 1.66,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.0,
+   "burning_rate_k_mm2_s": 0.53
+  },
+  {
+   "source_row": 18,
+   "fuel": "Methanol",
+   "o2_pct": 21.0,
+   "pressure_atm": 2.034,
+   "droplet_diameter_mm": 2.67,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": null
+  },
+  {
+   "source_row": 19,
+   "fuel": "Heptane",
+   "o2_pct": 21.0,
+   "pressure_atm": 2.044,
+   "droplet_diameter_mm": 2.74,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.77,
+   "burning_rate_k_mm2_s": 0.61
+  },
+  {
+   "source_row": 20,
+   "fuel": "Heptane",
+   "o2_pct": 34.0,
+   "pressure_atm": 0.709,
+   "droplet_diameter_mm": 3.39,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.9
+  },
+  {
+   "source_row": 21,
+   "fuel": "Methanol",
+   "o2_pct": 34.0,
+   "pressure_atm": 0.71,
+   "droplet_diameter_mm": 3.4,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.56,
+   "burning_rate_k_mm2_s": 0.53
+  },
+  {
+   "source_row": 22,
+   "fuel": "Methanol",
+   "o2_pct": 34.0,
+   "pressure_atm": 0.711,
+   "droplet_diameter_mm": 3.49,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 0.95,
+   "burning_rate_k_mm2_s": 0.66
+  },
+  {
+   "source_row": 23,
+   "fuel": "Methanol",
+   "o2_pct": 34.0,
+   "pressure_atm": 0.711,
+   "droplet_diameter_mm": 3.5,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.65
+  },
+  {
+   "source_row": 24,
+   "fuel": "Heptane",
+   "o2_pct": 34.0,
+   "pressure_atm": 0.713,
+   "droplet_diameter_mm": 3.01,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.73
+  },
+  {
+   "source_row": 25,
+   "fuel": "Heptane",
+   "o2_pct": 34.0,
+   "pressure_atm": 0.714,
+   "droplet_diameter_mm": null,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": null
+  },
+  {
+   "source_row": 26,
+   "fuel": "Methanol",
+   "o2_pct": 30.0,
+   "pressure_atm": 0.707,
+   "droplet_diameter_mm": 2.6,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 0.59,
+   "burning_rate_k_mm2_s": 0.65
+  },
+  {
+   "source_row": 27,
+   "fuel": "Methanol",
+   "o2_pct": 30.0,
+   "pressure_atm": 0.708,
+   "droplet_diameter_mm": 3.63,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 0.4,
+   "burning_rate_k_mm2_s": 0.62
+  },
+  {
+   "source_row": 28,
+   "fuel": "Heptane",
+   "o2_pct": 30.0,
+   "pressure_atm": 0.711,
+   "droplet_diameter_mm": 3.87,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.64
+  },
+  {
+   "source_row": 29,
+   "fuel": "Heptane",
+   "o2_pct": 30.0,
+   "pressure_atm": 0.71,
+   "droplet_diameter_mm": 3.36,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.64
+  },
+  {
+   "source_row": 30,
+   "fuel": "Methanol",
+   "o2_pct": 30.0,
+   "pressure_atm": 1.009,
+   "droplet_diameter_mm": 2.57,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.74
+  },
+  {
+   "source_row": 31,
+   "fuel": "Methanol",
+   "o2_pct": 30.0,
+   "pressure_atm": 1.012,
+   "droplet_diameter_mm": 3.26,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.32,
+   "burning_rate_k_mm2_s": 0.59
+  },
+  {
+   "source_row": 32,
+   "fuel": "Heptane",
+   "o2_pct": 30.0,
+   "pressure_atm": 1.014,
+   "droplet_diameter_mm": 3.39,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.85
+  },
+  {
+   "source_row": 33,
+   "fuel": "Heptane",
+   "o2_pct": 30.0,
+   "pressure_atm": 1.014,
+   "droplet_diameter_mm": 3.07,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.68
+  },
+  {
+   "source_row": 34,
+   "fuel": "Methanol",
+   "o2_pct": 21.0,
+   "pressure_atm": 1.006,
+   "droplet_diameter_mm": 2.62,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.25,
+   "burning_rate_k_mm2_s": 0.48
+  },
+  {
+   "source_row": 35,
+   "fuel": "Methanol",
+   "o2_pct": 21.0,
+   "pressure_atm": 1.01,
+   "droplet_diameter_mm": 3.89,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.0,
+   "burning_rate_k_mm2_s": 0.44
+  },
+  {
+   "source_row": 36,
+   "fuel": "Heptane",
+   "o2_pct": 21.0,
+   "pressure_atm": 1.011,
+   "droplet_diameter_mm": 3.85,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 3.34,
+   "burning_rate_k_mm2_s": 0.43
+  },
+  {
+   "source_row": 37,
+   "fuel": "Methanol",
+   "o2_pct": 20.0,
+   "pressure_atm": 0.709,
+   "droplet_diameter_mm": 2.4,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.67,
+   "burning_rate_k_mm2_s": 0.45
+  },
+  {
+   "source_row": 38,
+   "fuel": "Methanol",
+   "o2_pct": 34.0,
+   "pressure_atm": 0.703,
+   "droplet_diameter_mm": 3.31,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.72
+  },
+  {
+   "source_row": 39,
+   "fuel": "Methanol",
+   "o2_pct": 34.0,
+   "pressure_atm": 0.703,
+   "droplet_diameter_mm": 3.59,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.71
+  },
+  {
+   "source_row": 40,
+   "fuel": "Heptane",
+   "o2_pct": 34.0,
+   "pressure_atm": 0.704,
+   "droplet_diameter_mm": 2.91,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 0.0,
+   "burning_rate_k_mm2_s": 0.8
+  },
+  {
+   "source_row": 41,
+   "fuel": "Methanol",
+   "o2_pct": 30.0,
+   "pressure_atm": 0.704,
+   "droplet_diameter_mm": 3.77,
+   "self_extinguished": false,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.62
+  },
+  {
+   "source_row": 42,
+   "fuel": "Methanol",
+   "o2_pct": 30.0,
+   "pressure_atm": 0.703,
+   "droplet_diameter_mm": 3.35,
+   "self_extinguished": false,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.65
+  },
+  {
+   "source_row": 43,
+   "fuel": "Heptane",
+   "o2_pct": 30.0,
+   "pressure_atm": 0.704,
+   "droplet_diameter_mm": 2.92,
+   "self_extinguished": false,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.58
+  },
+  {
+   "source_row": 44,
+   "fuel": "Heptane",
+   "o2_pct": 30.0,
+   "pressure_atm": 0.704,
+   "droplet_diameter_mm": 2.97,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 0.0,
+   "burning_rate_k_mm2_s": 0.78
+  },
+  {
+   "source_row": 45,
+   "fuel": "Methanol",
+   "o2_pct": 30.0,
+   "pressure_atm": 1.009,
+   "droplet_diameter_mm": 3.49,
+   "self_extinguished": false,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.63
+  },
+  {
+   "source_row": 46,
+   "fuel": "Methanol",
+   "o2_pct": 30.0,
+   "pressure_atm": 1.011,
+   "droplet_diameter_mm": 2.42,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.01,
+   "burning_rate_k_mm2_s": 0.73
+  },
+  {
+   "source_row": 47,
+   "fuel": "Methanol",
+   "o2_pct": 21.0,
+   "pressure_atm": 1.012,
+   "droplet_diameter_mm": 2.78,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.08,
+   "burning_rate_k_mm2_s": 0.54
+  },
+  {
+   "source_row": 48,
+   "fuel": "Heptane",
+   "o2_pct": 21.0,
+   "pressure_atm": 1.013,
+   "droplet_diameter_mm": 3.36,
+   "self_extinguished": false,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.5
+  },
+  {
+   "source_row": 49,
+   "fuel": "Methanol",
+   "o2_pct": 21.0,
+   "pressure_atm": 1.011,
+   "droplet_diameter_mm": 3.66,
+   "self_extinguished": false,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.27
+  },
+  {
+   "source_row": 50,
+   "fuel": "Heptane",
+   "o2_pct": 21.0,
+   "pressure_atm": 1.006,
+   "droplet_diameter_mm": 3.46,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.78,
+   "burning_rate_k_mm2_s": 0.59
+  },
+  {
+   "source_row": 51,
+   "fuel": "Heptane",
+   "o2_pct": 21.0,
+   "pressure_atm": 1.013,
+   "droplet_diameter_mm": 3.57,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.98,
+   "burning_rate_k_mm2_s": 0.52
+  },
+  {
+   "source_row": 52,
+   "fuel": "Heptane",
+   "o2_pct": 21.0,
+   "pressure_atm": 1.015,
+   "droplet_diameter_mm": 2.41,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 0.0,
+   "burning_rate_k_mm2_s": 0.65
+  },
+  {
+   "source_row": 53,
+   "fuel": "Heptane",
+   "o2_pct": 30.0,
+   "pressure_atm": 1.015,
+   "droplet_diameter_mm": 3.53,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 0.0,
+   "burning_rate_k_mm2_s": 0.7
+  },
+  {
+   "source_row": 54,
+   "fuel": "Heptane",
+   "o2_pct": 21.0,
+   "pressure_atm": 1.013,
+   "droplet_diameter_mm": null,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": null
+  },
+  {
+   "source_row": 55,
+   "fuel": "Methanol",
+   "o2_pct": 20.0,
+   "pressure_atm": 0.712,
+   "droplet_diameter_mm": 3.56,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.41
+  },
+  {
+   "source_row": 56,
+   "fuel": "Methanol",
+   "o2_pct": 20.0,
+   "pressure_atm": 0.714,
+   "droplet_diameter_mm": 3.37,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.39,
+   "burning_rate_k_mm2_s": 0.46
+  },
+  {
+   "source_row": 57,
+   "fuel": "Heptane",
+   "o2_pct": 20.0,
+   "pressure_atm": 0.716,
+   "droplet_diameter_mm": 3.56,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 3.04,
+   "burning_rate_k_mm2_s": 0.44
+  },
+  {
+   "source_row": 58,
+   "fuel": "Heptane",
+   "o2_pct": 20.0,
+   "pressure_atm": 0.716,
+   "droplet_diameter_mm": 3.1,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.49,
+   "burning_rate_k_mm2_s": 0.54
+  },
+  {
+   "source_row": 59,
+   "fuel": "Methanol",
+   "o2_pct": 18.0,
+   "pressure_atm": 1.017,
+   "droplet_diameter_mm": 3.69,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.42
+  },
+  {
+   "source_row": 60,
+   "fuel": "Methanol",
+   "o2_pct": 18.0,
+   "pressure_atm": 1.012,
+   "droplet_diameter_mm": 2.93,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.39,
+   "burning_rate_k_mm2_s": 0.43
+  },
+  {
+   "source_row": 61,
+   "fuel": "Methanol",
+   "o2_pct": 18.0,
+   "pressure_atm": 1.018,
+   "droplet_diameter_mm": 3.43,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.45
+  },
+  {
+   "source_row": 62,
+   "fuel": "Methanol",
+   "o2_pct": 18.0,
+   "pressure_atm": 1.019,
+   "droplet_diameter_mm": 3.68,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.0,
+   "burning_rate_k_mm2_s": 0.41
+  },
+  {
+   "source_row": 63,
+   "fuel": "Heptane",
+   "o2_pct": 18.0,
+   "pressure_atm": 1.002,
+   "droplet_diameter_mm": 3.43,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 3.17,
+   "burning_rate_k_mm2_s": 0.39
+  },
+  {
+   "source_row": 64,
+   "fuel": "Heptane",
+   "o2_pct": 18.0,
+   "pressure_atm": 1.01,
+   "droplet_diameter_mm": 2.15,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 0.0,
+   "burning_rate_k_mm2_s": 0.51
+  },
+  {
+   "source_row": 65,
+   "fuel": "Heptane",
+   "o2_pct": 18.0,
+   "pressure_atm": 1.006,
+   "droplet_diameter_mm": 2.69,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.07,
+   "burning_rate_k_mm2_s": 0.6
+  },
+  {
+   "source_row": 66,
+   "fuel": "Methanol",
+   "o2_pct": 15.0,
+   "pressure_atm": 1.008,
+   "droplet_diameter_mm": 3.37,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.4
+  },
+  {
+   "source_row": 67,
+   "fuel": "Methanol",
+   "o2_pct": 15.0,
+   "pressure_atm": 1.009,
+   "droplet_diameter_mm": 2.52,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.32,
+   "burning_rate_k_mm2_s": 0.38
+  },
+  {
+   "source_row": 68,
+   "fuel": "Methanol",
+   "o2_pct": 15.0,
+   "pressure_atm": 1.01,
+   "droplet_diameter_mm": 3.97,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 3.3,
+   "burning_rate_k_mm2_s": 0.36
+  },
+  {
+   "source_row": 69,
+   "fuel": "Methanol",
+   "o2_pct": 15.0,
+   "pressure_atm": 1.012,
+   "droplet_diameter_mm": 2.38,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.29,
+   "burning_rate_k_mm2_s": 0.39
+  },
+  {
+   "source_row": 70,
+   "fuel": "Heptane",
+   "o2_pct": 14.0,
+   "pressure_atm": 1.009,
+   "droplet_diameter_mm": 1.1,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 0.0,
+   "burning_rate_k_mm2_s": 0.94
+  },
+  {
+   "source_row": 71,
+   "fuel": "Heptane",
+   "o2_pct": 15.0,
+   "pressure_atm": 1.001,
+   "droplet_diameter_mm": 4.67,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 4.6,
+   "burning_rate_k_mm2_s": 0.41
+  },
+  {
+   "source_row": 72,
+   "fuel": "Methanol",
+   "o2_pct": 15.0,
+   "pressure_atm": 1.011,
+   "droplet_diameter_mm": 2.25,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.4
+  },
+  {
+   "source_row": 73,
+   "fuel": "Heptane",
+   "o2_pct": 15.0,
+   "pressure_atm": 1.007,
+   "droplet_diameter_mm": 1.13,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.52
+  },
+  {
+   "source_row": 74,
+   "fuel": "Heptane",
+   "o2_pct": 15.0,
+   "pressure_atm": 1.001,
+   "droplet_diameter_mm": 4.64,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 4.58,
+   "burning_rate_k_mm2_s": 0.56
+  },
+  {
+   "source_row": 75,
+   "fuel": "Heptane",
+   "o2_pct": 15.0,
+   "pressure_atm": 1.008,
+   "droplet_diameter_mm": 1.33,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.77
+  },
+  {
+   "source_row": 76,
+   "fuel": "Methanol",
+   "o2_pct": 13.0,
+   "pressure_atm": 1.014,
+   "droplet_diameter_mm": 2.54,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.78,
+   "burning_rate_k_mm2_s": 0.37
+  },
+  {
+   "source_row": 77,
+   "fuel": "Methanol",
+   "o2_pct": 13.0,
+   "pressure_atm": 1.012,
+   "droplet_diameter_mm": 3.21,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.78,
+   "burning_rate_k_mm2_s": 0.37
+  },
+  {
+   "source_row": 78,
+   "fuel": "Methanol",
+   "o2_pct": 14.0,
+   "pressure_atm": 1.011,
+   "droplet_diameter_mm": 3.33,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.91,
+   "burning_rate_k_mm2_s": 0.34
+  },
+  {
+   "source_row": 79,
+   "fuel": "Methanol",
+   "o2_pct": 14.0,
+   "pressure_atm": 1.008,
+   "droplet_diameter_mm": 2.66,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.66,
+   "burning_rate_k_mm2_s": 0.35
+  },
+  {
+   "source_row": 80,
+   "fuel": "Heptane",
+   "o2_pct": 13.0,
+   "pressure_atm": 1.011,
+   "droplet_diameter_mm": 2.92,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.86,
+   "burning_rate_k_mm2_s": 0.25
+  },
+  {
+   "source_row": 81,
+   "fuel": "Heptane",
+   "o2_pct": 13.0,
+   "pressure_atm": 1.013,
+   "droplet_diameter_mm": null,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": null
+  },
+  {
+   "source_row": 82,
+   "fuel": "Heptane",
+   "o2_pct": 13.0,
+   "pressure_atm": 1.013,
+   "droplet_diameter_mm": null,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": null
+  },
+  {
+   "source_row": 83,
+   "fuel": "Methanol",
+   "o2_pct": 13.0,
+   "pressure_atm": 1.006,
+   "droplet_diameter_mm": 2.84,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.39,
+   "burning_rate_k_mm2_s": 0.35
+  },
+  {
+   "source_row": 84,
+   "fuel": "Methanol",
+   "o2_pct": 12.0,
+   "pressure_atm": 1.016,
+   "droplet_diameter_mm": null,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": null
+  },
+  {
+   "source_row": 85,
+   "fuel": "Methanol",
+   "o2_pct": 12.0,
+   "pressure_atm": 1.009,
+   "droplet_diameter_mm": 2.35,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.42,
+   "burning_rate_k_mm2_s": 0.35
+  },
+  {
+   "source_row": 86,
+   "fuel": "Methanol",
+   "o2_pct": 12.0,
+   "pressure_atm": 1.015,
+   "droplet_diameter_mm": 2.4,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.77,
+   "burning_rate_k_mm2_s": 0.35
+  },
+  {
+   "source_row": 87,
+   "fuel": "Methanol",
+   "o2_pct": 12.0,
+   "pressure_atm": 1.013,
+   "droplet_diameter_mm": 3.07,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.56,
+   "burning_rate_k_mm2_s": 0.35
+  },
+  {
+   "source_row": 88,
+   "fuel": "Methanol",
+   "o2_pct": 12.0,
+   "pressure_atm": 1.015,
+   "droplet_diameter_mm": 2.64,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.92,
+   "burning_rate_k_mm2_s": 0.38
+  },
+  {
+   "source_row": 89,
+   "fuel": "Methanol",
+   "o2_pct": 25.0,
+   "pressure_atm": 0.707,
+   "droplet_diameter_mm": 3.01,
+   "self_extinguished": false,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.53
+  },
+  {
+   "source_row": 90,
+   "fuel": "Methanol",
+   "o2_pct": 25.0,
+   "pressure_atm": 0.707,
+   "droplet_diameter_mm": 3.7,
+   "self_extinguished": false,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.51
+  },
+  {
+   "source_row": 91,
+   "fuel": "Methanol",
+   "o2_pct": 25.0,
+   "pressure_atm": 0.709,
+   "droplet_diameter_mm": 3.62,
+   "self_extinguished": false,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.53
+  },
+  {
+   "source_row": 92,
+   "fuel": "Methanol",
+   "o2_pct": 25.0,
+   "pressure_atm": 0.708,
+   "droplet_diameter_mm": 3.51,
+   "self_extinguished": false,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.51
+  },
+  {
+   "source_row": 93,
+   "fuel": "Heptane",
+   "o2_pct": 25.0,
+   "pressure_atm": 0.706,
+   "droplet_diameter_mm": 3.41,
+   "self_extinguished": false,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.55
+  },
+  {
+   "source_row": 94,
+   "fuel": "Heptane",
+   "o2_pct": 25.0,
+   "pressure_atm": 0.707,
+   "droplet_diameter_mm": 2.48,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 0.0,
+   "burning_rate_k_mm2_s": 0.71
+  },
+  {
+   "source_row": 95,
+   "fuel": "Heptane",
+   "o2_pct": 24.0,
+   "pressure_atm": 0.702,
+   "droplet_diameter_mm": 3.53,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.76,
+   "burning_rate_k_mm2_s": 0.51
+  },
+  {
+   "source_row": 96,
+   "fuel": "Heptane",
+   "o2_pct": 24.0,
+   "pressure_atm": 0.703,
+   "droplet_diameter_mm": 3.6,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 3.04,
+   "burning_rate_k_mm2_s": 0.58
+  },
+  {
+   "source_row": 97,
+   "fuel": "Heptane",
+   "o2_pct": 24.0,
+   "pressure_atm": 0.703,
+   "droplet_diameter_mm": null,
+   "self_extinguished": false,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": null
+  },
+  {
+   "source_row": 98,
+   "fuel": "Methanol",
+   "o2_pct": 23.0,
+   "pressure_atm": 0.703,
+   "droplet_diameter_mm": 4.25,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.6,
+   "burning_rate_k_mm2_s": 0.45
+  },
+  {
+   "source_row": 99,
+   "fuel": "Methanol",
+   "o2_pct": 23.0,
+   "pressure_atm": 0.707,
+   "droplet_diameter_mm": 3.64,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.74,
+   "burning_rate_k_mm2_s": 0.47
+  },
+  {
+   "source_row": 100,
+   "fuel": "Methanol",
+   "o2_pct": 23.0,
+   "pressure_atm": 0.704,
+   "droplet_diameter_mm": 4.28,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.32,
+   "burning_rate_k_mm2_s": 0.42
+  },
+  {
+   "source_row": 101,
+   "fuel": "Heptane",
+   "o2_pct": 23.0,
+   "pressure_atm": 0.706,
+   "droplet_diameter_mm": 4.14,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 3.98,
+   "burning_rate_k_mm2_s": 0.34
+  },
+  {
+   "source_row": 102,
+   "fuel": "Heptane",
+   "o2_pct": 23.0,
+   "pressure_atm": 0.709,
+   "droplet_diameter_mm": 3.88,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 3.45,
+   "burning_rate_k_mm2_s": 0.5
+  },
+  {
+   "source_row": 103,
+   "fuel": "Heptane",
+   "o2_pct": 21.0,
+   "pressure_atm": 0.703,
+   "droplet_diameter_mm": 3.57,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 3.43,
+   "burning_rate_k_mm2_s": 0.33
+  },
+  {
+   "source_row": 104,
+   "fuel": "Heptane",
+   "o2_pct": 21.0,
+   "pressure_atm": 0.703,
+   "droplet_diameter_mm": 4.0,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 3.88,
+   "burning_rate_k_mm2_s": 0.35
+  },
+  {
+   "source_row": 105,
+   "fuel": "Methanol",
+   "o2_pct": 23.0,
+   "pressure_atm": 0.703,
+   "droplet_diameter_mm": 3.6,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.58,
+   "burning_rate_k_mm2_s": 0.49
+  },
+  {
+   "source_row": 106,
+   "fuel": "Methanol",
+   "o2_pct": 23.0,
+   "pressure_atm": 0.703,
+   "droplet_diameter_mm": 4.17,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.0,
+   "burning_rate_k_mm2_s": 0.47
+  },
+  {
+   "source_row": 107,
+   "fuel": "Methanol",
+   "o2_pct": 23.0,
+   "pressure_atm": 0.708,
+   "droplet_diameter_mm": 3.08,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.75,
+   "burning_rate_k_mm2_s": 0.51
+  },
+  {
+   "source_row": 108,
+   "fuel": "Methanol",
+   "o2_pct": 23.0,
+   "pressure_atm": 0.704,
+   "droplet_diameter_mm": 3.18,
+   "self_extinguished": false,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.52
+  },
+  {
+   "source_row": 109,
+   "fuel": "Methanol",
+   "o2_pct": 23.0,
+   "pressure_atm": 0.708,
+   "droplet_diameter_mm": 3.75,
+   "self_extinguished": false,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.47
+  },
+  {
+   "source_row": 110,
+   "fuel": "Methanol",
+   "o2_pct": 21.0,
+   "pressure_atm": 0.706,
+   "droplet_diameter_mm": 3.56,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.92,
+   "burning_rate_k_mm2_s": 0.42
+  },
+  {
+   "source_row": 111,
+   "fuel": "Methanol",
+   "o2_pct": 21.0,
+   "pressure_atm": 0.707,
+   "droplet_diameter_mm": 2.83,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.57,
+   "burning_rate_k_mm2_s": 0.45
+  },
+  {
+   "source_row": 112,
+   "fuel": "Methanol",
+   "o2_pct": 21.0,
+   "pressure_atm": 0.706,
+   "droplet_diameter_mm": 3.37,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.1,
+   "burning_rate_k_mm2_s": 0.45
+  },
+  {
+   "source_row": 113,
+   "fuel": "Methanol",
+   "o2_pct": 21.0,
+   "pressure_atm": 0.698,
+   "droplet_diameter_mm": 3.99,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.35,
+   "burning_rate_k_mm2_s": 0.43
+  },
+  {
+   "source_row": 114,
+   "fuel": "Methanol",
+   "o2_pct": 20.0,
+   "pressure_atm": 0.703,
+   "droplet_diameter_mm": 4.2,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.85,
+   "burning_rate_k_mm2_s": 0.49
+  },
+  {
+   "source_row": 115,
+   "fuel": "Methanol",
+   "o2_pct": 20.0,
+   "pressure_atm": 0.0,
+   "droplet_diameter_mm": 3.23,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.68,
+   "burning_rate_k_mm2_s": 0.42
+  },
+  {
+   "source_row": 116,
+   "fuel": "Methanol",
+   "o2_pct": 20.0,
+   "pressure_atm": 0.705,
+   "droplet_diameter_mm": 3.97,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.61,
+   "burning_rate_k_mm2_s": 0.41
+  },
+  {
+   "source_row": 117,
+   "fuel": "Methanol",
+   "o2_pct": 20.0,
+   "pressure_atm": 0.706,
+   "droplet_diameter_mm": 3.16,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.57,
+   "burning_rate_k_mm2_s": 0.46
+  },
+  {
+   "source_row": 118,
+   "fuel": "Heptane",
+   "o2_pct": 20.0,
+   "pressure_atm": 0.699,
+   "droplet_diameter_mm": 3.84,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 3.77,
+   "burning_rate_k_mm2_s": 0.25
+  },
+  {
+   "source_row": 119,
+   "fuel": "Heptane",
+   "o2_pct": 20.0,
+   "pressure_atm": 0.701,
+   "droplet_diameter_mm": 3.03,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.93,
+   "burning_rate_k_mm2_s": 0.38
+  },
+  {
+   "source_row": 120,
+   "fuel": "Heptane",
+   "o2_pct": 18.0,
+   "pressure_atm": 0.701,
+   "droplet_diameter_mm": 2.6,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.48,
+   "burning_rate_k_mm2_s": 0.37
+  },
+  {
+   "source_row": 121,
+   "fuel": "Heptane",
+   "o2_pct": 18.0,
+   "pressure_atm": 0.701,
+   "droplet_diameter_mm": 2.45,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.39,
+   "burning_rate_k_mm2_s": 0.38
+  },
+  {
+   "source_row": 122,
+   "fuel": "Methanol",
+   "o2_pct": 18.0,
+   "pressure_atm": 0.692,
+   "droplet_diameter_mm": 4.25,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 3.92,
+   "burning_rate_k_mm2_s": 0.34
+  },
+  {
+   "source_row": 123,
+   "fuel": "Methanol",
+   "o2_pct": 18.0,
+   "pressure_atm": 0.699,
+   "droplet_diameter_mm": 3.46,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.58,
+   "burning_rate_k_mm2_s": 0.41
+  },
+  {
+   "source_row": 124,
+   "fuel": "Methanol",
+   "o2_pct": 18.0,
+   "pressure_atm": 0.7,
+   "droplet_diameter_mm": 4.13,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 3.79,
+   "burning_rate_k_mm2_s": 0.35
+  },
+  {
+   "source_row": 125,
+   "fuel": "Methanol",
+   "o2_pct": 18.0,
+   "pressure_atm": 0.701,
+   "droplet_diameter_mm": 2.87,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.74,
+   "burning_rate_k_mm2_s": 0.3
+  },
+  {
+   "source_row": 126,
+   "fuel": "Methanol",
+   "o2_pct": 17.0,
+   "pressure_atm": 0.707,
+   "droplet_diameter_mm": 3.63,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 3.37,
+   "burning_rate_k_mm2_s": 0.35
+  },
+  {
+   "source_row": 127,
+   "fuel": "Methanol",
+   "o2_pct": 17.0,
+   "pressure_atm": 0.705,
+   "droplet_diameter_mm": 2.8,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.84,
+   "burning_rate_k_mm2_s": 0.4
+  },
+  {
+   "source_row": 128,
+   "fuel": "Methanol",
+   "o2_pct": 17.0,
+   "pressure_atm": 0.706,
+   "droplet_diameter_mm": 3.22,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.53,
+   "burning_rate_k_mm2_s": 0.38
+  },
+  {
+   "source_row": 129,
+   "fuel": "Methanol",
+   "o2_pct": 17.0,
+   "pressure_atm": 0.707,
+   "droplet_diameter_mm": 2.91,
+   "self_extinguished": false,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.39
+  },
+  {
+   "source_row": 130,
+   "fuel": "Heptane",
+   "o2_pct": 17.0,
+   "pressure_atm": 0.706,
+   "droplet_diameter_mm": 3.33,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 3.34,
+   "burning_rate_k_mm2_s": 0.33
+  },
+  {
+   "source_row": 131,
+   "fuel": "Heptane",
+   "o2_pct": 17.0,
+   "pressure_atm": 0.707,
+   "droplet_diameter_mm": 2.91,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.89,
+   "burning_rate_k_mm2_s": 0.05
+  },
+  {
+   "source_row": 132,
+   "fuel": "Heptane",
+   "o2_pct": 24.0,
+   "pressure_atm": 1.005,
+   "droplet_diameter_mm": 1.72,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 0.52,
+   "burning_rate_k_mm2_s": 0.61
+  },
+  {
+   "source_row": 133,
+   "fuel": "Heptane",
+   "o2_pct": 24.0,
+   "pressure_atm": 1.007,
+   "droplet_diameter_mm": 2.63,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 0.53,
+   "burning_rate_k_mm2_s": 0.6
+  },
+  {
+   "source_row": 134,
+   "fuel": "Heptane",
+   "o2_pct": 24.0,
+   "pressure_atm": 1.009,
+   "droplet_diameter_mm": 3.25,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 0.55,
+   "burning_rate_k_mm2_s": 0.56
+  },
+  {
+   "source_row": 135,
+   "fuel": "Heptane",
+   "o2_pct": 24.0,
+   "pressure_atm": 1.009,
+   "droplet_diameter_mm": 3.66,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.88,
+   "burning_rate_k_mm2_s": 0.56
+  },
+  {
+   "source_row": 136,
+   "fuel": "Heptane",
+   "o2_pct": 24.0,
+   "pressure_atm": 1.011,
+   "droplet_diameter_mm": 2.78,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 0.0,
+   "burning_rate_k_mm2_s": 0.59
+  },
+  {
+   "source_row": 137,
+   "fuel": "Heptane",
+   "o2_pct": 24.0,
+   "pressure_atm": 1.011,
+   "droplet_diameter_mm": 3.08,
+   "self_extinguished": false,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.51
+  },
+  {
+   "source_row": 138,
+   "fuel": "Heptane",
+   "o2_pct": 24.0,
+   "pressure_atm": 1.011,
+   "droplet_diameter_mm": 3.13,
+   "self_extinguished": false,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.55
+  },
+  {
+   "source_row": 139,
+   "fuel": "Heptane",
+   "o2_pct": 24.0,
+   "pressure_atm": 1.011,
+   "droplet_diameter_mm": null,
+   "self_extinguished": false,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": null
+  },
+  {
+   "source_row": 140,
+   "fuel": "Heptane",
+   "o2_pct": 24.0,
+   "pressure_atm": 1.011,
+   "droplet_diameter_mm": 1.75,
+   "self_extinguished": false,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.63
+  },
+  {
+   "source_row": 141,
+   "fuel": "Methanol",
+   "o2_pct": 15.0,
+   "pressure_atm": 0.702,
+   "droplet_diameter_mm": 3.98,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 3.95,
+   "burning_rate_k_mm2_s": 0.2
+  },
+  {
+   "source_row": 142,
+   "fuel": "Methanol",
+   "o2_pct": 15.0,
+   "pressure_atm": 0.703,
+   "droplet_diameter_mm": 2.86,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.73,
+   "burning_rate_k_mm2_s": 0.3
+  },
+  {
+   "source_row": 143,
+   "fuel": "Methanol",
+   "o2_pct": 15.0,
+   "pressure_atm": 0.703,
+   "droplet_diameter_mm": 1.86,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.48,
+   "burning_rate_k_mm2_s": 0.39
+  },
+  {
+   "source_row": 144,
+   "fuel": "Methanol",
+   "o2_pct": 15.0,
+   "pressure_atm": 0.704,
+   "droplet_diameter_mm": 2.25,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.06,
+   "burning_rate_k_mm2_s": 0.36
+  },
+  {
+   "source_row": 145,
+   "fuel": "Methanol",
+   "o2_pct": 20.0,
+   "pressure_atm": 1.002,
+   "droplet_diameter_mm": 3.53,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.53,
+   "burning_rate_k_mm2_s": 0.45
+  },
+  {
+   "source_row": 146,
+   "fuel": "Methanol",
+   "o2_pct": 20.0,
+   "pressure_atm": 1.005,
+   "droplet_diameter_mm": 3.33,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.61,
+   "burning_rate_k_mm2_s": 0.45
+  },
+  {
+   "source_row": 147,
+   "fuel": "Methanol",
+   "o2_pct": 20.0,
+   "pressure_atm": 1.007,
+   "droplet_diameter_mm": 4.35,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.95,
+   "burning_rate_k_mm2_s": 0.41
+  },
+  {
+   "source_row": 148,
+   "fuel": "Methanol",
+   "o2_pct": 17.0,
+   "pressure_atm": 0.705,
+   "droplet_diameter_mm": 3.02,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.49,
+   "burning_rate_k_mm2_s": 0.4
+  },
+  {
+   "source_row": 149,
+   "fuel": "Heptane",
+   "o2_pct": 20.0,
+   "pressure_atm": 1.006,
+   "droplet_diameter_mm": 2.58,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.15,
+   "burning_rate_k_mm2_s": 0.54
+  },
+  {
+   "source_row": 150,
+   "fuel": "Heptane",
+   "o2_pct": 20.0,
+   "pressure_atm": 1.008,
+   "droplet_diameter_mm": 2.21,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 0.82,
+   "burning_rate_k_mm2_s": 0.53
+  },
+  {
+   "source_row": 151,
+   "fuel": "Heptane",
+   "o2_pct": 20.0,
+   "pressure_atm": 1.01,
+   "droplet_diameter_mm": 3.18,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.54,
+   "burning_rate_k_mm2_s": 0.46
+  },
+  {
+   "source_row": 152,
+   "fuel": "Methanol",
+   "o2_pct": 18.0,
+   "pressure_atm": 1.003,
+   "droplet_diameter_mm": 3.86,
+   "self_extinguished": false,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.36
+  },
+  {
+   "source_row": 153,
+   "fuel": "Methanol",
+   "o2_pct": 18.0,
+   "pressure_atm": 1.007,
+   "droplet_diameter_mm": 3.33,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.23,
+   "burning_rate_k_mm2_s": 0.43
+  },
+  {
+   "source_row": 154,
+   "fuel": "Methanol",
+   "o2_pct": 18.0,
+   "pressure_atm": 1.007,
+   "droplet_diameter_mm": 2.78,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.19,
+   "burning_rate_k_mm2_s": 0.42
+  },
+  {
+   "source_row": 155,
+   "fuel": "Heptane",
+   "o2_pct": 18.0,
+   "pressure_atm": 1.003,
+   "droplet_diameter_mm": 3.7,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 3.6,
+   "burning_rate_k_mm2_s": 0.34
+  },
+  {
+   "source_row": 156,
+   "fuel": "Heptane",
+   "o2_pct": 18.0,
+   "pressure_atm": 1.006,
+   "droplet_diameter_mm": 2.73,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.52,
+   "burning_rate_k_mm2_s": 0.39
+  },
+  {
+   "source_row": 157,
+   "fuel": "Heptane",
+   "o2_pct": 18.0,
+   "pressure_atm": 1.008,
+   "droplet_diameter_mm": 1.34,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 0.45,
+   "burning_rate_k_mm2_s": 0.48
+  },
+  {
+   "source_row": 158,
+   "fuel": "Methanol",
+   "o2_pct": 16.0,
+   "pressure_atm": 1.003,
+   "droplet_diameter_mm": 4.24,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 3.96,
+   "burning_rate_k_mm2_s": 0.3
+  },
+  {
+   "source_row": 159,
+   "fuel": "Methanol",
+   "o2_pct": 16.0,
+   "pressure_atm": 1.006,
+   "droplet_diameter_mm": 3.7,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 3.22,
+   "burning_rate_k_mm2_s": 0.37
+  },
+  {
+   "source_row": 160,
+   "fuel": "Methanol",
+   "o2_pct": 16.0,
+   "pressure_atm": 1.007,
+   "droplet_diameter_mm": 2.71,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.34,
+   "burning_rate_k_mm2_s": 0.38
+  },
+  {
+   "source_row": 161,
+   "fuel": "Methanol",
+   "o2_pct": 16.0,
+   "pressure_atm": 1.01,
+   "droplet_diameter_mm": 2.77,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.52,
+   "burning_rate_k_mm2_s": 0.38
+  },
+  {
+   "source_row": 162,
+   "fuel": "Methanol",
+   "o2_pct": 15.0,
+   "pressure_atm": 1.004,
+   "droplet_diameter_mm": 3.72,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 3.5,
+   "burning_rate_k_mm2_s": 0.28
+  },
+  {
+   "source_row": 163,
+   "fuel": "Methanol",
+   "o2_pct": 15.0,
+   "pressure_atm": 1.006,
+   "droplet_diameter_mm": 3.05,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.54,
+   "burning_rate_k_mm2_s": 0.37
+  },
+  {
+   "source_row": 164,
+   "fuel": "Methanol",
+   "o2_pct": 15.0,
+   "pressure_atm": 1.008,
+   "droplet_diameter_mm": 2.59,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.63,
+   "burning_rate_k_mm2_s": 0.37
+  },
+  {
+   "source_row": 165,
+   "fuel": "Methanol",
+   "o2_pct": 15.0,
+   "pressure_atm": 1.008,
+   "droplet_diameter_mm": 2.59,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.79,
+   "burning_rate_k_mm2_s": 0.42
+  },
+  {
+   "source_row": 166,
+   "fuel": "Heptane",
+   "o2_pct": 18.0,
+   "pressure_atm": 1.007,
+   "droplet_diameter_mm": 1.96,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.39,
+   "burning_rate_k_mm2_s": 0.54
+  },
+  {
+   "source_row": 167,
+   "fuel": "Methanol",
+   "o2_pct": 14.0,
+   "pressure_atm": 1.001,
+   "droplet_diameter_mm": 3.22,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 3.08,
+   "burning_rate_k_mm2_s": 0.28
+  },
+  {
+   "source_row": 168,
+   "fuel": "Methanol",
+   "o2_pct": 14.0,
+   "pressure_atm": 1.002,
+   "droplet_diameter_mm": 2.32,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.84,
+   "burning_rate_k_mm2_s": 0.37
+  },
+  {
+   "source_row": 169,
+   "fuel": "Methanol",
+   "o2_pct": 21.0,
+   "pressure_atm": 1.004,
+   "droplet_diameter_mm": 3.03,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.57,
+   "burning_rate_k_mm2_s": 0.48
+  },
+  {
+   "source_row": 170,
+   "fuel": "Methanol",
+   "o2_pct": 21.0,
+   "pressure_atm": 1.008,
+   "droplet_diameter_mm": 3.05,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.28,
+   "burning_rate_k_mm2_s": 0.51
+  },
+  {
+   "source_row": 171,
+   "fuel": "Methanol",
+   "o2_pct": 21.0,
+   "pressure_atm": 1.009,
+   "droplet_diameter_mm": 3.53,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.59,
+   "burning_rate_k_mm2_s": 0.46
+  },
+  {
+   "source_row": 172,
+   "fuel": "Heptane",
+   "o2_pct": 18.0,
+   "pressure_atm": 1.0,
+   "droplet_diameter_mm": 3.74,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 3.68,
+   "burning_rate_k_mm2_s": 0.35
+  },
+  {
+   "source_row": 173,
+   "fuel": "Heptane",
+   "o2_pct": 18.0,
+   "pressure_atm": 1.003,
+   "droplet_diameter_mm": 2.4,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.96,
+   "burning_rate_k_mm2_s": 0.46
+  },
+  {
+   "source_row": 174,
+   "fuel": "Heptane",
+   "o2_pct": 18.0,
+   "pressure_atm": 1.003,
+   "droplet_diameter_mm": 1.35,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 0.47,
+   "burning_rate_k_mm2_s": 0.5
+  },
+  {
+   "source_row": 175,
+   "fuel": "Heptane",
+   "o2_pct": 24.0,
+   "pressure_atm": 0.7,
+   "droplet_diameter_mm": 2.5,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 0.21,
+   "burning_rate_k_mm2_s": 0.56
+  },
+  {
+   "source_row": 176,
+   "fuel": "Heptane",
+   "o2_pct": 24.0,
+   "pressure_atm": 0.7,
+   "droplet_diameter_mm": 2.88,
+   "self_extinguished": false,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.55
+  },
+  {
+   "source_row": 177,
+   "fuel": "Methanol",
+   "o2_pct": 24.0,
+   "pressure_atm": 0.706,
+   "droplet_diameter_mm": 4.53,
+   "self_extinguished": false,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.46
+  },
+  {
+   "source_row": 178,
+   "fuel": "Methanol",
+   "o2_pct": 24.0,
+   "pressure_atm": 0.707,
+   "droplet_diameter_mm": 3.02,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.35,
+   "burning_rate_k_mm2_s": 0.52
+  },
+  {
+   "source_row": 179,
+   "fuel": "Heptane",
+   "o2_pct": 23.0,
+   "pressure_atm": 0.702,
+   "droplet_diameter_mm": 3.32,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.61,
+   "burning_rate_k_mm2_s": 0.5
+  },
+  {
+   "source_row": 180,
+   "fuel": "Heptane",
+   "o2_pct": 23.0,
+   "pressure_atm": 0.703,
+   "droplet_diameter_mm": 2.07,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 0.48,
+   "burning_rate_k_mm2_s": 0.57
+  },
+  {
+   "source_row": 181,
+   "fuel": "Heptane",
+   "o2_pct": 19.0,
+   "pressure_atm": 0.998,
+   "droplet_diameter_mm": 3.4,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 3.13,
+   "burning_rate_k_mm2_s": 0.41
+  },
+  {
+   "source_row": 182,
+   "fuel": "Heptane",
+   "o2_pct": 19.0,
+   "pressure_atm": 0.999,
+   "droplet_diameter_mm": 2.48,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.68,
+   "burning_rate_k_mm2_s": 0.49
+  },
+  {
+   "source_row": 183,
+   "fuel": "Heptane",
+   "o2_pct": 19.0,
+   "pressure_atm": 0.999,
+   "droplet_diameter_mm": 1.64,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 0.49,
+   "burning_rate_k_mm2_s": 0.54
+  },
+  {
+   "source_row": 184,
+   "fuel": "Methanol",
+   "o2_pct": 23.0,
+   "pressure_atm": 0.703,
+   "droplet_diameter_mm": 3.72,
+   "self_extinguished": false,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.53
+  },
+  {
+   "source_row": 185,
+   "fuel": "Methanol",
+   "o2_pct": 23.0,
+   "pressure_atm": 0.704,
+   "droplet_diameter_mm": 3.42,
+   "self_extinguished": false,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.51
+  },
+  {
+   "source_row": 186,
+   "fuel": "Methanol",
+   "o2_pct": 23.0,
+   "pressure_atm": 0.704,
+   "droplet_diameter_mm": 2.8,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.33,
+   "burning_rate_k_mm2_s": 0.51
+  },
+  {
+   "source_row": 187,
+   "fuel": "Methanol",
+   "o2_pct": 23.0,
+   "pressure_atm": 0.706,
+   "droplet_diameter_mm": 2.47,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.21,
+   "burning_rate_k_mm2_s": 0.52
+  },
+  {
+   "source_row": 188,
+   "fuel": "Methanol",
+   "o2_pct": 19.0,
+   "pressure_atm": 0.997,
+   "droplet_diameter_mm": 3.38,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.29,
+   "burning_rate_k_mm2_s": 0.47
+  },
+  {
+   "source_row": 189,
+   "fuel": "Methanol",
+   "o2_pct": 19.0,
+   "pressure_atm": 0.998,
+   "droplet_diameter_mm": 2.47,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.08,
+   "burning_rate_k_mm2_s": 0.46
+  },
+  {
+   "source_row": 190,
+   "fuel": "Methanol",
+   "o2_pct": 18.0,
+   "pressure_atm": 1.002,
+   "droplet_diameter_mm": 3.77,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.78,
+   "burning_rate_k_mm2_s": 0.42
+  },
+  {
+   "source_row": 191,
+   "fuel": "Methanol",
+   "o2_pct": 18.0,
+   "pressure_atm": 1.006,
+   "droplet_diameter_mm": 2.74,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 0.95,
+   "burning_rate_k_mm2_s": 0.5
+  },
+  {
+   "source_row": 192,
+   "fuel": "Methanol",
+   "o2_pct": 18.0,
+   "pressure_atm": 1.007,
+   "droplet_diameter_mm": 1.76,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 0.81,
+   "burning_rate_k_mm2_s": 0.46
+  },
+  {
+   "source_row": 193,
+   "fuel": "Methanol",
+   "o2_pct": 17.0,
+   "pressure_atm": 0.999,
+   "droplet_diameter_mm": 3.46,
+   "self_extinguished": false,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.39
+  },
+  {
+   "source_row": 194,
+   "fuel": "Methanol",
+   "o2_pct": 17.0,
+   "pressure_atm": 0.999,
+   "droplet_diameter_mm": 2.77,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.27,
+   "burning_rate_k_mm2_s": 0.4
+  },
+  {
+   "source_row": 195,
+   "fuel": "Heptane",
+   "o2_pct": 17.0,
+   "pressure_atm": 0.989,
+   "droplet_diameter_mm": 3.76,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 3.71,
+   "burning_rate_k_mm2_s": 0.29
+  },
+  {
+   "source_row": 196,
+   "fuel": "Heptane",
+   "o2_pct": 17.0,
+   "pressure_atm": 0.99,
+   "droplet_diameter_mm": 2.9,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.79,
+   "burning_rate_k_mm2_s": 0.36
+  },
+  {
+   "source_row": 197,
+   "fuel": "Heptane",
+   "o2_pct": 20.0,
+   "pressure_atm": 0.998,
+   "droplet_diameter_mm": 3.06,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.28,
+   "burning_rate_k_mm2_s": 0.52
+  },
+  {
+   "source_row": 198,
+   "fuel": "Heptane",
+   "o2_pct": 20.0,
+   "pressure_atm": 1.0,
+   "droplet_diameter_mm": 3.04,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.33,
+   "burning_rate_k_mm2_s": 0.49
+  },
+  {
+   "source_row": 199,
+   "fuel": "Heptane",
+   "o2_pct": 20.0,
+   "pressure_atm": 1.0,
+   "droplet_diameter_mm": 2.12,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 0.13,
+   "burning_rate_k_mm2_s": 0.53
+  },
+  {
+   "source_row": 200,
+   "fuel": "Methanol",
+   "o2_pct": 20.0,
+   "pressure_atm": 0.992,
+   "droplet_diameter_mm": 3.37,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 0.98,
+   "burning_rate_k_mm2_s": 0.49
+  },
+  {
+   "source_row": 201,
+   "fuel": "Methanol",
+   "o2_pct": 20.0,
+   "pressure_atm": 0.995,
+   "droplet_diameter_mm": 2.57,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.13,
+   "burning_rate_k_mm2_s": 0.47
+  },
+  {
+   "source_row": 202,
+   "fuel": "Methanol",
+   "o2_pct": 20.0,
+   "pressure_atm": 0.996,
+   "droplet_diameter_mm": 2.4,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.05,
+   "burning_rate_k_mm2_s": 0.48
+  },
+  {
+   "source_row": 203,
+   "fuel": "Methanol",
+   "o2_pct": 21.0,
+   "pressure_atm": 1.0,
+   "droplet_diameter_mm": 3.3,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.42,
+   "burning_rate_k_mm2_s": 0.47
+  },
+  {
+   "source_row": 204,
+   "fuel": "Methanol",
+   "o2_pct": 21.0,
+   "pressure_atm": 1.002,
+   "droplet_diameter_mm": 2.75,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.11,
+   "burning_rate_k_mm2_s": 0.52
+  },
+  {
+   "source_row": 205,
+   "fuel": "Heptane",
+   "o2_pct": 21.0,
+   "pressure_atm": 0.995,
+   "droplet_diameter_mm": 3.56,
+   "self_extinguished": false,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.43
+  },
+  {
+   "source_row": 206,
+   "fuel": "Heptane",
+   "o2_pct": 21.0,
+   "pressure_atm": 0.996,
+   "droplet_diameter_mm": 3.58,
+   "self_extinguished": false,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.42
+  },
+  {
+   "source_row": 207,
+   "fuel": "Heptane",
+   "o2_pct": 21.0,
+   "pressure_atm": 1.0,
+   "droplet_diameter_mm": 2.96,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 0.47,
+   "burning_rate_k_mm2_s": 0.5
+  },
+  {
+   "source_row": 208,
+   "fuel": "Heptane",
+   "o2_pct": 21.0,
+   "pressure_atm": 1.004,
+   "droplet_diameter_mm": 2.72,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.13,
+   "burning_rate_k_mm2_s": 0.54
+  },
+  {
+   "source_row": 209,
+   "fuel": "Heptane",
+   "o2_pct": 21.0,
+   "pressure_atm": 1.004,
+   "droplet_diameter_mm": 2.92,
+   "self_extinguished": false,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.69
+  },
+  {
+   "source_row": 210,
+   "fuel": "Heptane",
+   "o2_pct": 16.0,
+   "pressure_atm": 1.0,
+   "droplet_diameter_mm": 3.34,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 3.18,
+   "burning_rate_k_mm2_s": 0.34
+  },
+  {
+   "source_row": 211,
+   "fuel": "Heptane",
+   "o2_pct": 16.0,
+   "pressure_atm": 1.0,
+   "droplet_diameter_mm": null,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": null
+  },
+  {
+   "source_row": 212,
+   "fuel": "Heptane",
+   "o2_pct": 16.0,
+   "pressure_atm": 1.0,
+   "droplet_diameter_mm": 2.52,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.13,
+   "burning_rate_k_mm2_s": 0.42
+  },
+  {
+   "source_row": 213,
+   "fuel": "Heptane",
+   "o2_pct": 15.0,
+   "pressure_atm": 1.005,
+   "droplet_diameter_mm": 2.55,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.31,
+   "burning_rate_k_mm2_s": 0.37
+  },
+  {
+   "source_row": 214,
+   "fuel": "Heptane",
+   "o2_pct": 14.0,
+   "pressure_atm": 1.0,
+   "droplet_diameter_mm": 4.16,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 4.15,
+   "burning_rate_k_mm2_s": 0.24
+  },
+  {
+   "source_row": 215,
+   "fuel": "Heptane",
+   "o2_pct": 14.0,
+   "pressure_atm": 1.0,
+   "droplet_diameter_mm": 1.83,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.39
+  },
+  {
+   "source_row": 216,
+   "fuel": "Methanol",
+   "o2_pct": 14.0,
+   "pressure_atm": 0.997,
+   "droplet_diameter_mm": 3.5,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.3
+  },
+  {
+   "source_row": 217,
+   "fuel": "Methanol",
+   "o2_pct": 14.0,
+   "pressure_atm": 0.998,
+   "droplet_diameter_mm": 2.67,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.27,
+   "burning_rate_k_mm2_s": 0.38
+  },
+  {
+   "source_row": 218,
+   "fuel": "Methanol",
+   "o2_pct": 13.0,
+   "pressure_atm": 0.999,
+   "droplet_diameter_mm": 3.46,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.96,
+   "burning_rate_k_mm2_s": 0.36
+  },
+  {
+   "source_row": 219,
+   "fuel": "Methanol",
+   "o2_pct": 13.0,
+   "pressure_atm": 1.001,
+   "droplet_diameter_mm": 2.75,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.46,
+   "burning_rate_k_mm2_s": 0.35
+  },
+  {
+   "source_row": 220,
+   "fuel": "Methanol",
+   "o2_pct": 12.0,
+   "pressure_atm": 1.002,
+   "droplet_diameter_mm": 2.6,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.09,
+   "burning_rate_k_mm2_s": 0.36
+  },
+  {
+   "source_row": 221,
+   "fuel": "Methanol",
+   "o2_pct": 12.0,
+   "pressure_atm": 1.002,
+   "droplet_diameter_mm": 1.94,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.05,
+   "burning_rate_k_mm2_s": 0.35
+  },
+  {
+   "source_row": 222,
+   "fuel": "Methanol",
+   "o2_pct": 12.0,
+   "pressure_atm": 1.005,
+   "droplet_diameter_mm": 1.84,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.04,
+   "burning_rate_k_mm2_s": 0.38
+  },
+  {
+   "source_row": 223,
+   "fuel": "Methanol",
+   "o2_pct": 20.0,
+   "pressure_atm": 0.999,
+   "droplet_diameter_mm": 2.91,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.12,
+   "burning_rate_k_mm2_s": 0.51
+  },
+  {
+   "source_row": 224,
+   "fuel": "Methanol",
+   "o2_pct": 20.0,
+   "pressure_atm": 0.999,
+   "droplet_diameter_mm": null,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": null
+  },
+  {
+   "source_row": 225,
+   "fuel": "Heptane",
+   "o2_pct": 20.0,
+   "pressure_atm": 0.994,
+   "droplet_diameter_mm": 2.25,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.57
+  },
+  {
+   "source_row": 226,
+   "fuel": "Methanol",
+   "o2_pct": 19.0,
+   "pressure_atm": 0.991,
+   "droplet_diameter_mm": 2.78,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.57
+  },
+  {
+   "source_row": 227,
+   "fuel": "Methanol",
+   "o2_pct": 18.0,
+   "pressure_atm": 0.999,
+   "droplet_diameter_mm": 2.79,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.3,
+   "burning_rate_k_mm2_s": 0.51
+  },
+  {
+   "source_row": 228,
+   "fuel": "Methanol",
+   "o2_pct": 18.0,
+   "pressure_atm": 1.0,
+   "droplet_diameter_mm": 2.95,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.67,
+   "burning_rate_k_mm2_s": 0.53
+  },
+  {
+   "source_row": 229,
+   "fuel": "Heptane",
+   "o2_pct": 21.0,
+   "pressure_atm": 1.01,
+   "droplet_diameter_mm": 3.32,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.37,
+   "burning_rate_k_mm2_s": 0.52
+  },
+  {
+   "source_row": 230,
+   "fuel": "Heptane",
+   "o2_pct": 21.0,
+   "pressure_atm": 1.011,
+   "droplet_diameter_mm": 2.39,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.57
+  },
+  {
+   "source_row": 231,
+   "fuel": "Heptane",
+   "o2_pct": 21.0,
+   "pressure_atm": 1.012,
+   "droplet_diameter_mm": 3.65,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.85,
+   "burning_rate_k_mm2_s": 0.57
+  },
+  {
+   "source_row": 232,
+   "fuel": "Heptane",
+   "o2_pct": 19.0,
+   "pressure_atm": 0.998,
+   "droplet_diameter_mm": 2.59,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.54
+  },
+  {
+   "source_row": 233,
+   "fuel": "Heptane",
+   "o2_pct": 18.0,
+   "pressure_atm": 1.005,
+   "droplet_diameter_mm": 3.52,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 3.28,
+   "burning_rate_k_mm2_s": 0.41
+  },
+  {
+   "source_row": 234,
+   "fuel": "Heptane",
+   "o2_pct": 18.0,
+   "pressure_atm": 1.008,
+   "droplet_diameter_mm": 2.3,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.49
+  },
+  {
+   "source_row": 235,
+   "fuel": "Heptane",
+   "o2_pct": 18.0,
+   "pressure_atm": 1.009,
+   "droplet_diameter_mm": 2.27,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.51
+  },
+  {
+   "source_row": 236,
+   "fuel": "Heptane",
+   "o2_pct": 17.0,
+   "pressure_atm": 0.999,
+   "droplet_diameter_mm": 2.85,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.6,
+   "burning_rate_k_mm2_s": 0.46
+  },
+  {
+   "source_row": 237,
+   "fuel": "Heptane",
+   "o2_pct": 17.0,
+   "pressure_atm": 0.999,
+   "droplet_diameter_mm": 2.12,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.39,
+   "burning_rate_k_mm2_s": 0.59
+  },
+  {
+   "source_row": 238,
+   "fuel": "Heptane",
+   "o2_pct": 17.0,
+   "pressure_atm": 0.999,
+   "droplet_diameter_mm": null,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": null
+  },
+  {
+   "source_row": 239,
+   "fuel": "Heptane",
+   "o2_pct": 17.0,
+   "pressure_atm": 1.0,
+   "droplet_diameter_mm": 1.61,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.91
+  },
+  {
+   "source_row": 240,
+   "fuel": "Methanol",
+   "o2_pct": 17.0,
+   "pressure_atm": 0.992,
+   "droplet_diameter_mm": 2.99,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.49
+  },
+  {
+   "source_row": 241,
+   "fuel": "Methanol",
+   "o2_pct": 17.0,
+   "pressure_atm": 0.996,
+   "droplet_diameter_mm": 2.9,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.42,
+   "burning_rate_k_mm2_s": 0.51
+  },
+  {
+   "source_row": 242,
+   "fuel": "Methanol",
+   "o2_pct": 16.0,
+   "pressure_atm": 1.0,
+   "droplet_diameter_mm": 3.4,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.79,
+   "burning_rate_k_mm2_s": 0.51
+  },
+  {
+   "source_row": 243,
+   "fuel": "Methanol",
+   "o2_pct": 16.0,
+   "pressure_atm": 1.001,
+   "droplet_diameter_mm": null,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": null
+  },
+  {
+   "source_row": 244,
+   "fuel": "Heptane",
+   "o2_pct": 16.0,
+   "pressure_atm": 0.997,
+   "droplet_diameter_mm": 1.49,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 0.69,
+   "burning_rate_k_mm2_s": 0.6
+  },
+  {
+   "source_row": 245,
+   "fuel": "Methanol",
+   "o2_pct": 15.0,
+   "pressure_atm": 0.994,
+   "droplet_diameter_mm": 3.67,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 3.47,
+   "burning_rate_k_mm2_s": 0.43
+  },
+  {
+   "source_row": 246,
+   "fuel": "Methanol",
+   "o2_pct": 15.0,
+   "pressure_atm": 0.996,
+   "droplet_diameter_mm": 2.52,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.06,
+   "burning_rate_k_mm2_s": 0.56
+  },
+  {
+   "source_row": 247,
+   "fuel": "Methanol",
+   "o2_pct": 14.0,
+   "pressure_atm": 0.999,
+   "droplet_diameter_mm": 2.44,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.26,
+   "burning_rate_k_mm2_s": 0.56
+  },
+  {
+   "source_row": 248,
+   "fuel": "Methanol",
+   "o2_pct": 14.0,
+   "pressure_atm": 1.0,
+   "droplet_diameter_mm": 1.88,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.73,
+   "burning_rate_k_mm2_s": 0.58
+  },
+  {
+   "source_row": 249,
+   "fuel": "Methanol",
+   "o2_pct": 13.0,
+   "pressure_atm": 1.005,
+   "droplet_diameter_mm": 3.56,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 3.54,
+   "burning_rate_k_mm2_s": 0.51
+  },
+  {
+   "source_row": 250,
+   "fuel": "Heptane",
+   "o2_pct": 24.0,
+   "pressure_atm": 0.703,
+   "droplet_diameter_mm": 3.78,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.52,
+   "burning_rate_k_mm2_s": 0.72
+  },
+  {
+   "source_row": 251,
+   "fuel": "Heptane",
+   "o2_pct": 23.0,
+   "pressure_atm": 0.7,
+   "droplet_diameter_mm": 2.8,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 0.12,
+   "burning_rate_k_mm2_s": 0.71
+  },
+  {
+   "source_row": 252,
+   "fuel": "Methanol",
+   "o2_pct": 24.0,
+   "pressure_atm": 0.703,
+   "droplet_diameter_mm": 2.82,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.03,
+   "burning_rate_k_mm2_s": 0.62
+  },
+  {
+   "source_row": 253,
+   "fuel": "Methanol",
+   "o2_pct": 24.0,
+   "pressure_atm": 0.703,
+   "droplet_diameter_mm": 2.79,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.53,
+   "burning_rate_k_mm2_s": 0.7
+  },
+  {
+   "source_row": 254,
+   "fuel": "Methanol",
+   "o2_pct": 23.0,
+   "pressure_atm": 0.7,
+   "droplet_diameter_mm": 2.45,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 0.86,
+   "burning_rate_k_mm2_s": 0.6
+  },
+  {
+   "source_row": 255,
+   "fuel": "Methanol",
+   "o2_pct": 23.0,
+   "pressure_atm": 0.7,
+   "droplet_diameter_mm": 2.61,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.73
+  },
+  {
+   "source_row": 256,
+   "fuel": "Methanol",
+   "o2_pct": 21.0,
+   "pressure_atm": 0.7,
+   "droplet_diameter_mm": 3.22,
+   "self_extinguished": null,
+   "extinction_diameter_mm": null,
+   "burning_rate_k_mm2_s": 0.56
+  },
+  {
+   "source_row": 257,
+   "fuel": "Methanol",
+   "o2_pct": 21.0,
+   "pressure_atm": 0.699,
+   "droplet_diameter_mm": 3.25,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.78,
+   "burning_rate_k_mm2_s": 0.65
+  },
+  {
+   "source_row": 258,
+   "fuel": "Methanol",
+   "o2_pct": 21.0,
+   "pressure_atm": 0.699,
+   "droplet_diameter_mm": 2.67,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.42,
+   "burning_rate_k_mm2_s": 0.7
+  },
+  {
+   "source_row": 259,
+   "fuel": "Heptane",
+   "o2_pct": 21.0,
+   "pressure_atm": 0.697,
+   "droplet_diameter_mm": 3.23,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.33,
+   "burning_rate_k_mm2_s": 0.67
+  },
+  {
+   "source_row": 260,
+   "fuel": "Heptane",
+   "o2_pct": 21.0,
+   "pressure_atm": 0.696,
+   "droplet_diameter_mm": 2.86,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 0.71,
+   "burning_rate_k_mm2_s": 0.7
+  },
+  {
+   "source_row": 261,
+   "fuel": "Heptane",
+   "o2_pct": 20.0,
+   "pressure_atm": 0.701,
+   "droplet_diameter_mm": 3.69,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 3.32,
+   "burning_rate_k_mm2_s": 0.61
+  },
+  {
+   "source_row": 262,
+   "fuel": "Heptane",
+   "o2_pct": 20.0,
+   "pressure_atm": 0.7,
+   "droplet_diameter_mm": 3.08,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.69,
+   "burning_rate_k_mm2_s": 0.67
+  },
+  {
+   "source_row": 263,
+   "fuel": "Methanol",
+   "o2_pct": 20.0,
+   "pressure_atm": 0.694,
+   "droplet_diameter_mm": 3.87,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.24,
+   "burning_rate_k_mm2_s": 0.6
+  },
+  {
+   "source_row": 264,
+   "fuel": "Methanol",
+   "o2_pct": 20.0,
+   "pressure_atm": 0.695,
+   "droplet_diameter_mm": 2.95,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.5,
+   "burning_rate_k_mm2_s": 0.63
+  },
+  {
+   "source_row": 265,
+   "fuel": "Methanol",
+   "o2_pct": 18.0,
+   "pressure_atm": 0.701,
+   "droplet_diameter_mm": 3.5,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.67,
+   "burning_rate_k_mm2_s": 0.59
+  },
+  {
+   "source_row": 266,
+   "fuel": "Methanol",
+   "o2_pct": 18.0,
+   "pressure_atm": 0.701,
+   "droplet_diameter_mm": 2.7,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.92,
+   "burning_rate_k_mm2_s": 0.63
+  },
+  {
+   "source_row": 267,
+   "fuel": "Methanol",
+   "o2_pct": 18.0,
+   "pressure_atm": 0.702,
+   "droplet_diameter_mm": 1.84,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.3,
+   "burning_rate_k_mm2_s": 0.62
+  },
+  {
+   "source_row": 268,
+   "fuel": "Heptane",
+   "o2_pct": 18.0,
+   "pressure_atm": 0.695,
+   "droplet_diameter_mm": 2.27,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.64,
+   "burning_rate_k_mm2_s": 0.71
+  },
+  {
+   "source_row": 269,
+   "fuel": "Heptane",
+   "o2_pct": 18.0,
+   "pressure_atm": 0.698,
+   "droplet_diameter_mm": 1.86,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 0.84,
+   "burning_rate_k_mm2_s": 0.77
+  },
+  {
+   "source_row": 270,
+   "fuel": "Heptane",
+   "o2_pct": 17.0,
+   "pressure_atm": 0.7,
+   "droplet_diameter_mm": 2.22,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 1.86,
+   "burning_rate_k_mm2_s": 0.76
+  },
+  {
+   "source_row": 271,
+   "fuel": "Heptane",
+   "o2_pct": 17.0,
+   "pressure_atm": 0.701,
+   "droplet_diameter_mm": 1.61,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 0.91,
+   "burning_rate_k_mm2_s": 1.06
+  },
+  {
+   "source_row": 272,
+   "fuel": "Methanol",
+   "o2_pct": 17.0,
+   "pressure_atm": 0.698,
+   "droplet_diameter_mm": 2.79,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.3,
+   "burning_rate_k_mm2_s": 0.63
+  },
+  {
+   "source_row": 273,
+   "fuel": "Methanol",
+   "o2_pct": 17.0,
+   "pressure_atm": 0.699,
+   "droplet_diameter_mm": 2.68,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.31,
+   "burning_rate_k_mm2_s": 0.66
+  },
+  {
+   "source_row": 274,
+   "fuel": "Heptane",
+   "o2_pct": 21.0,
+   "pressure_atm": 1.006,
+   "droplet_diameter_mm": 3.54,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 2.91,
+   "burning_rate_k_mm2_s": 0.55
+  },
+  {
+   "source_row": 275,
+   "fuel": "Heptane",
+   "o2_pct": 21.0,
+   "pressure_atm": 1.008,
+   "droplet_diameter_mm": 2.82,
+   "self_extinguished": true,
+   "extinction_diameter_mm": 0.73,
+   "burning_rate_k_mm2_s": 0.65
+  }
+ ]
+}
