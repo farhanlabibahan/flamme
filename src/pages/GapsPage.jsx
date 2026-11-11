@@ -1,16 +1,16 @@
 import React, {useMemo, useState} from 'react';
 import {AlertTriangle} from 'lucide-react';
 import {findings} from '../ranking.js';
-import {predictFlex} from '../flexModel.js';
+import {predictFlex, flexModelMeta} from '../flexModel.js';
 import './GapsPage.css';
 
 /* Real route: /gaps. Plan item 3 ("Map the gaps"): which combinations of
    O2 and gravity have been tested, and which have none. Built from the same
    111-finding catalog as Rankings (findings/findings.csv -> findingsData.json),
    not a separate dataset. The bottom strip additionally runs the actual
-   trained FLEX model (src/flexModel.js) at each O2 band's midpoint, so this
-   page isn't just counting rows -- it also shows what the real model
-   predicts for the one regime (microgravity droplet combustion) it covers. */
+   trained FLEX model (src/flexModel.js) at each O2 band's midpoint, with
+   live sliders for pressure/droplet size/fuel so it isn't a static number --
+   moving a slider re-runs the real fitted model, not a lookup. */
 
 const O2_BINS = [
   {label: '<16%', mid: 14, test: v => v < 16},
@@ -35,6 +35,9 @@ function o2Mid(f) {
 
 export default function GapsPage() {
   const [openCell, setOpenCell] = useState(null);
+  const [pressureAtm, setPressureAtm] = useState(1);
+  const [dropletDiameterMm, setDropletDiameterMm] = useState(1.7);
+  const [fuelMethanol, setFuelMethanol] = useState(true);
   const measured = useMemo(() => findings.filter(f => f.evidence_type !== 'evidence_gap'), []);
   const documentedGaps = useMemo(() => findings.filter(f => f.evidence_type === 'evidence_gap'), []);
 
@@ -46,11 +49,12 @@ export default function GapsPage() {
     }),
   })), [measured]);
 
-  const modelRow = useMemo(() => O2_BINS.map(col => predictFlex({o2Pct: col.mid, pressureAtm: 1})), []);
+  const modelRow = useMemo(() => O2_BINS.map(col => predictFlex({o2Pct: col.mid, pressureAtm, dropletDiameterMm, fuelMethanol})),
+    [pressureAtm, dropletDiameterMm, fuelMethanol]);
 
   const maxCount = Math.max(1, ...grid.flatMap(r => r.cells.map(c => c.rows.length)));
-  const untested = grid.flatMap(r => r.cells.filter(c => c.rows.length === 0).map(c => `${r.row.label} × O2 ${c.col.label}`));
-  const noGravityOrO2 = measured.filter(f => o2Mid(f) == null || !GRAVITY_ROWS.some(r => r.test(f.gravity || '')));
+
+  const pr = flexModelMeta.trainingRange.pressure_atm, dr = flexModelMeta.trainingRange.droplet_diameter_mm;
 
   return <div className="gm reveal">
     <header>
@@ -89,17 +93,25 @@ export default function GapsPage() {
         {modelRow.map((pred, i) => {
           const pct = pred ? Math.round(pred.selfExtinguishProbability * 100) : null;
           return <div key={O2_BINS[i].label} className={`gm-cell gm-model-cell ${pct == null ? 'empty' : ''}`}
-            title={pct == null ? 'Outside the model\'s trained range' : `${pct}% predicted self-extinguish probability (methanol droplet, 1 atm, 1.7mm)`}
+            title={pct == null ? "Outside the model's trained range" : `${pct}% predicted self-extinguish probability`}
             style={pct != null ? {background: `color-mix(in srgb, ${pct >= 50 ? 'var(--red)' : 'var(--green)'} ${20 + Math.abs(pct - 50)}%, var(--panel))`} : undefined}>
             {pct != null ? `${pct}%` : '—'}
           </div>;
         })}
       </div>
-      <p className="gm-note">{untested.length} of {GRAVITY_ROWS.length * O2_BINS.length} catalog cells have zero findings.
-        {noGravityOrO2.length > 0 && ` ${noGravityOrO2.length} findings excluded (gravity or O2 not reported).`}</p>
-      <p className="gm-note">"FLEX model" is the real trained model (<code>src/flexModel.js</code>) run at each band's midpoint, 1 atm,
-        methanol, 1.7mm droplet — predicted <b>self-extinguish probability</b>, not a finding count. It only covers microgravity
-        droplet combustion, so it lines up with the Microgravity row above, not Earth 1-g. See the <a href="/model">full model</a>.</p>
+
+      <div className="gm-sliders">
+        <label>Pressure <b>{pressureAtm.toFixed(2)} atm</b>
+          <input type="range" min={pr[0]} max={pr[1]} step="0.01" value={pressureAtm} onChange={e => setPressureAtm(Number(e.target.value))}/></label>
+        <label>Droplet diameter <b>{dropletDiameterMm.toFixed(2)} mm</b>
+          <input type="range" min={dr[0]} max={dr[1]} step="0.01" value={dropletDiameterMm} onChange={e => setDropletDiameterMm(Number(e.target.value))}/></label>
+        <label>Fuel
+          <div className="gm-fuel-toggle">
+            <button className={fuelMethanol ? 'on' : ''} onClick={() => setFuelMethanol(true)}>Methanol</button>
+            <button className={!fuelMethanol ? 'on' : ''} onClick={() => setFuelMethanol(false)}>Heptane</button>
+          </div>
+        </label>
+      </div>
     </section>
 
     {openCell && (() => {
