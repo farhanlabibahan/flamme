@@ -2,6 +2,15 @@ import React from 'react';
 import {ArrowRight, ChevronDown, Search, ShieldCheck} from 'lucide-react';
 import {useFlamme, value} from '../context/FlammeContext.jsx';
 
+/* Every single-material family named in the catalog (findingsData.json, the
+   same data the model and Rankings use). Mixtures and generic descriptions are
+   left out. A material with no Evidence record shows zero matches. */
+const MATERIAL_OPTIONS = [
+  'Cotton–fiberglass (SIBAL)', 'Silicone', 'PMMA', 'Nomex', 'Teflon', 'Kapton', 'Pyrell',
+  'Lampwick', 'Cotton jersey', 'Wax', 'Heptane', 'Methanol', 'Ethanol', 'Decane', 'Dodecane',
+  'DME', 'Methane', 'Ethane', 'Ethylene', 'Propane', 'Butane', 'Propylene', 'Paper',
+].map(m => [m, m]);
+
 /* Real route: /evidence. Click a row to open it in the detail panel. */
 export default function EvidencePage() {
   const {
@@ -34,7 +43,7 @@ export default function EvidencePage() {
     </header>
 
     <div className="ev-filters" id="scenario">
-      {select('Material', 'material', [['Cotton–fiberglass (SIBAL)', 'Cotton–fiberglass (SIBAL)'], ['Silicone', 'Silicone'], ['PMMA', 'PMMA'], ['', 'Any']])}
+      {select('Material', 'material', [['', 'Any'], ...MATERIAL_OPTIONS])}
       {numField('Oxygen', 'oxygen', {step: '0.1', unit: '%'})}
       {numField('Airflow', 'airflow', {step: '1', unit: 'cm/s'})}
       {select('Flow direction', 'direction', [['', 'Any'], ['Concurrent', 'Concurrent'], ['Opposed', 'Opposed']])}
