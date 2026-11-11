@@ -54,7 +54,6 @@ export default function InvestigationsPage() {
     <header>
       <span className="cmp-kicker">Investigations</span>
       <h1>Compare the 24 NASA combustion investigations</h1>
-      <p className="rk-lede">Find which investigations speak to the crew environment you care about, then compare their fuels, hardware, and conditions side by side. Select up to {MAX}.</p>
     </header>
     <section className="surface iv-filters">
       <div className="iv-seg"><small>Rank for</small><div>{Object.entries(scenarios).map(([k, s]) => <button key={k} className={scn === k ? 'on' : ''} onClick={() => setScn(k)}>{s.label.split(' (')[0]}</button>)}</div></div>
@@ -67,7 +66,7 @@ export default function InvestigationsPage() {
       {shown.map(i => {
         const on = sel.includes(i.id);
         return <li key={i.id} className={`surface iv-item ${on ? 'on' : ''}`}>
-          <button className="iv-pick" aria-pressed={on} aria-label={`${on ? 'Remove' : 'Add'} ${i.name} ${on ? 'from' : 'to'} comparison`} disabled={!on && sel.length >= MAX} onClick={() => toggle(i.id)}>{on && <Check size={14}/>}</button>
+          <button className="iv-pick" aria-pressed={on} aria-label={`${on ? 'Remove' : 'Add'} ${i.name} ${on ? 'from' : 'to'} comparison`} disabled={!on && sel.length >= MAX} title={!on && sel.length >= MAX ? `Limit of ${MAX} reached. Remove one to add another.` : undefined} onClick={() => toggle(i.id)}>{on && <Check size={14}/>}</button>
           <div className="iv-main"><b>{i.name}</b> <span className="iv-id">{i.id}</span>
             <small>{i.hardware} · {i.fuel} · {i.pillars.join(' / ') || 'Fundamental'}</small></div>
           <div className="iv-score" title={i.n ? `${i.n} linked findings` : 'No linked findings'}>{i.best != null ? i.best.toFixed(1) : '—'}<small>{i.n} findings</small></div>
