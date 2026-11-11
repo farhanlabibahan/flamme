@@ -18,12 +18,12 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, roc_auc_score, confusion_matrix, r2_score, mean_absolute_error
 from sklearn.preprocessing import StandardScaler
 
-ROOT = Path(__file__).resolve().parent.parent  # flame_in_freefall_data/
-OUT = Path(__file__).resolve().parent          # flame_in_freefall_data/ml/
-SITE_OUT = ROOT.parent / 'src' / 'flexModel.json'
+ROOT = Path(__file__).resolve().parent.parent  # repo root (ML/ is directly under it)
+OUT = Path(__file__).resolve().parent          # ML/
+SITE_OUT = ROOT / 'src' / 'flexModel.json'
 
 # ---------------------------------------------------------------- 1. pivot
-raw = pd.read_csv(ROOT / 'cleaned' / 'cleaned_values.csv')
+raw = pd.read_csv(ROOT / 'flame_in_freefall_data' / 'cleaned' / 'cleaned_values.csv')
 flex = raw[(raw.psi_id == 'PSI-69') & (raw.row_kind == 'data')].copy()
 
 KEEP = {
@@ -147,7 +147,7 @@ export = {
     'source': 'NASA PSI PSI-69 (FLEX), 274 individual droplet-flame tests, cleaned from flame_in_freefall_data/cleaned/cleaned_values.csv',
     'source_url': PSI_URL,
     'source_file': SOURCE_FILE,
-    'generated_by': 'flame_in_freefall_data/ml/build_flex_model.py',
+    'generated_by': 'ML/build_flex_model.py',
     'scope_note': 'Fitted on free-floating liquid-droplet flames (methanol/heptane). Physically distinct from the solid-sample lab model (labModel.js derive()) -- use as nearest-evidence comparison, not a drop-in replacement for the solid-sample curves.',
     'features': FEATURES,
     'training_range': training_range,

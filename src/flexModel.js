@@ -4,7 +4,7 @@ import model from './flexModel.json' with {type: 'json'};
    the 3D lab in data ... the lab shows the closest real experiments next to
    the simulation"). Source: 274 individual FLEX (PSI-69) droplet-flame
    tests, cleaned + feature-engineered + fitted in
-   flame_in_freefall_data/ml/build_flex_model.py (logistic + linear
+   ML/build_flex_model.py (logistic + linear
    regression, both documented with honest train/test metrics in
    flexModel.json). This file only runs the already-fitted coefficients --
    no training happens in the browser.

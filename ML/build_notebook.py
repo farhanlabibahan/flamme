@@ -41,9 +41,9 @@ from pathlib import Path
 pd.set_option('display.max_columns', 30)
 pd.set_option('display.width', 160)
 
-ROOT = Path('..').resolve()          # flame_in_freefall_data/
-SRC = ROOT.parent / 'findings' / 'findings.csv'
-OUT = Path('.').resolve()            # flame_in_freefall_data/ml/
+ROOT = Path('..').resolve()          # repo root (ML/ is directly under it)
+SRC = ROOT / 'findings' / 'findings.csv'
+OUT = Path('.').resolve()            # ML/
 
 raw = pd.read_csv(SRC)
 print(raw.shape)
@@ -358,9 +358,9 @@ What actually works, in order of how much Colab buys you here:
   reconnects, and I can read the actual output you got rather than a screenshot.
 - **If you still want it in Colab** (to share with teammates, or because the next step —
   the ~24.5k-row grounding pipeline — benefits from Colab's free compute): push this
-  `ml/` folder to GitHub, then open it in Colab via
+  `ML/` folder to GitHub, then open it in Colab via
   `File → Open notebook → GitHub` and paste the repo URL, or go straight to
-  `https://colab.research.google.com/github/<user>/flamme/blob/main/flame_in_freefall_data/ml/feature_engineering.ipynb`.
+  `https://colab.research.google.com/github/<user>/flamme/blob/main/ML/feature_engineering.ipynb`.
   Colab will clone just that notebook; you'd still need a `!pip install` cell or a
   `!git clone` cell at the top to pull `findings.csv` in, since Colab starts from a blank
   VM with no access to your local files.
