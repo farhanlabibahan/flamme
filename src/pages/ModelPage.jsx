@@ -215,9 +215,12 @@ export default function ModelPage() {
           <button onClick={() => downloadFile('flamme-test-record-template.csv', csvTemplate(), 'text/csv')}>
             <FileSpreadsheet size={15}/> Download CSV template</button>
         </div>
-        <Table head={['#', 'Condition', 'Standard representation']} rows={
-          CONDITIONS.map(cond => <tr key={cond.n}><td>{cond.n}</td><td>{cond.name}</td><td>{cond.rep}</td></tr>)
-        }/>
+        <div className="md-cond-grid">
+          {CONDITIONS.map(cond => <div className="md-cond" key={cond.n}>
+            <span className="md-cond-n">{String(cond.n).padStart(2, '0')}</span>
+            <div><b>{cond.name}</b><span>{cond.rep}</span></div>
+          </div>)}
+        </div>
       </div>
     </section>
   </div>;
