@@ -23,7 +23,6 @@ export function FlammeProvider({children}) {
   const [drawer, setDrawer] = useState(null);
   const [reduced, setReduced] = useState(() => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   const [searched, setSearched] = useState(false);
-  const [advanced, setAdvanced] = useState(false);
   const [prompt, setPrompt] = useState('');
   const [recognized, setRecognized] = useState(null);
 
@@ -54,11 +53,11 @@ export function FlammeProvider({children}) {
   const ctx = useMemo(() => ({
     labRef, scenario, setScenario, mode, setMode, selected, setSelected,
     query, setQuery, filter, setFilter, drawer, setDrawer, reduced, setReduced,
-    searched, setSearched, advanced, setAdvanced, prompt, setPrompt, recognized, setRecognized,
+    searched, setSearched, prompt, setPrompt, recognized, setRecognized,
     ranked, results, record, source, brief, update, openSource, askFlame, clearRecognized,
     experiments, investigations, hasAnyField,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }), [scenario, mode, selected, query, filter, drawer, reduced, searched, advanced, prompt, recognized, ranked, results, record, source, brief]);
+  }), [scenario, mode, selected, query, filter, drawer, reduced, searched, prompt, recognized, ranked, results, record, source, brief]);
 
   return <Ctx.Provider value={ctx}>{children}</Ctx.Provider>;
 }

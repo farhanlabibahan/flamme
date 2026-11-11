@@ -7,7 +7,7 @@ export default function EvidencePage() {
   const {
     scenario, update, results, selected, setSelected,
     query, setQuery, filter, setFilter, investigations, record, source, brief,
-    setSearched, advanced, setAdvanced, ranked, openSource,
+    setSearched, ranked, openSource,
   } = useFlamme();
 
   const select = (label, key, items) => <label className="ev-field">
@@ -37,14 +37,13 @@ export default function EvidencePage() {
       {select('Material', 'material', [['Cotton–fiberglass (SIBAL)', 'Cotton–fiberglass (SIBAL)'], ['Silicone', 'Silicone'], ['PMMA', 'PMMA'], ['', 'Any']])}
       {numField('Oxygen', 'oxygen', {step: '0.1', unit: '%'})}
       {numField('Airflow', 'airflow', {step: '1', unit: 'cm/s'})}
-      <button className="ev-more" onClick={() => setAdvanced(!advanced)} aria-expanded={advanced}>More <ChevronDown size={14} className={advanced ? 'up' : ''}/></button>
-    </div>
-    {advanced && <div className="ev-filters ev-advanced">
       {select('Flow direction', 'direction', [['', 'Any'], ['Concurrent', 'Concurrent'], ['Opposed', 'Opposed']])}
-      {select('Sample width', 'geometry', [['', 'Unspecified'], ['5', '5 cm'], ['2', '2 cm']])}
+    </div>
+    <div className="ev-filters">
+      {numField('Sample width', 'geometry', {step: '0.5', unit: 'cm'})}
       {select('Outcome', 'outcome', [['spread', 'Spread-column entry'], ['burn', 'Burn-time entry'], ['burnLength', 'Burn length'], ['smoke', 'Smoke / particles'], ['heat', 'Heat release']])}
       <p className="ev-note"><ShieldCheck size={13}/> Missing inputs are never assumed.</p>
-    </div>}
+    </div>
 
     <div className="ev-split">
       <section className="ev-list" id="ev-list" aria-label="Matching records">

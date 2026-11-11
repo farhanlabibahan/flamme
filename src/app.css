@@ -485,10 +485,6 @@ mark.trace{background:none;color:inherit;padding:1px 4px;border-bottom:2px solid
 .ev-field input[type=number]{height:38px;background:var(--panel2);border:0;padding:0 10px;font:500 13px var(--sans);color:var(--ink);width:100%;appearance:textfield}
 .ev-field input[type=number]::-webkit-outer-spin-button,.ev-field input[type=number]::-webkit-inner-spin-button{margin-left:6px}
 .ev-field input[type=number]::placeholder{color:var(--dim)}
-.ev-more{display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 14px;background:transparent;color:var(--ink2);font:600 12.5px var(--disp)}
-.ev-more:hover{background:var(--panel2)}
-.ev-more .up{transform:rotate(180deg)}
-.ev-advanced{align-items:flex-end}
 .ev-note{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:12px;padding-bottom:10px}
 
 .ev-split{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:16px;align-items:start}
