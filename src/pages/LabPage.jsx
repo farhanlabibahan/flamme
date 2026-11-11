@@ -1,4 +1,5 @@
 import React, {useMemo, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 import {ArrowRight, Flame, FlaskConical, RotateCcw, Zap} from 'lucide-react';
 import {Enum, NumField, PANELS} from '../Lab.jsx';
 import {AGENTS, DEFAULT_PARAMS, DIRECTIONS, GRAVITY, MATERIALS, derive} from '../labModel.js';
@@ -48,6 +49,7 @@ function Section({panel, params, change}) {
 }
 
 export default function LabPage() {
+  const navigate = useNavigate();
   const [params, setParams] = useState(loadSaved);
   const change = (k, v) => setParams(p => ({...p, [k]: v}));
   const applyPreset = p => setParams({...DEFAULT_PARAMS, ...p.values});
@@ -90,6 +92,7 @@ export default function LabPage() {
       <header className="sc-head">
         <span className="sc-icon"><FlaskConical size={15}/></span>
         <span className="sc-title">Grounded in NASA FLEX data</span>
+        <button className="gr-model-link" onClick={() => navigate('/model')}>See the trained model →</button>
       </header>
       <div className="gr-body">
         <p className="gr-scope">The panels below are an <b>illustrative</b> solid-sample model (not fitted to data). This card is a genuine

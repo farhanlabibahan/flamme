@@ -468,6 +468,8 @@ mark.trace{background:none;color:inherit;padding:1px 4px;border-bottom:2px solid
 @media(max-width:800px){.ls-grid{grid-template-columns:1fr}.ls-presets{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
 .gr-card{margin-bottom:12px}
+.gr-model-link{margin-left:auto;font:600 12px var(--sans,inherit);color:var(--accent);background:none;border:0;cursor:pointer;padding:2px 4px}
+.gr-model-link:hover{text-decoration:underline}
 .gr-scope{font-size:13px;color:var(--muted);line-height:1.5;margin:0 0 14px;max-width:72ch}
 .gr-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:12px}
 .gr-stat{display:flex;flex-direction:column;gap:4px;padding:10px 12px;background:var(--panel2);border:1px solid var(--line)}
