@@ -138,16 +138,16 @@ export function createLab(host, initial) {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.6));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.NeutralToneMapping;
-  renderer.toneMappingExposure = 1.05;
-  renderer.setClearColor(0x05070b, 1);
+  renderer.toneMappingExposure = 1.6;
+  renderer.setClearColor(0x1a2533, 1);
   host.appendChild(renderer.domElement);
 
   const scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0x020306, 0.075);
+  scene.fog = new THREE.FogExp2(0x223042, 0.012);
   const pmrem = new THREE.PMREMGenerator(renderer);
   const envRT = pmrem.fromScene(new RoomEnvironment(), 0.04);
   scene.environment = envRT.texture;
-  scene.environmentIntensity = 0.1;
+  scene.environmentIntensity = 0.85;
 
   const camera = new THREE.PerspectiveCamera(38, 1, 0.05, 500);
   camera.position.set(...CAMS.hero.p);
@@ -162,28 +162,28 @@ export function createLab(host, initial) {
   const time = {value: 0};
 
   /* ----- lights ----- */
-  scene.add(new THREE.HemisphereLight(0x8fb4ff, 0x080a0e, .1));
-  const sun = new THREE.DirectionalLight(0xbcd2ff, .08); sun.position.set(2, 6, 3); scene.add(sun);
-  const spot = new THREE.SpotLight(0xd6e6ff, 6, 16, .5, .9, 1.3);
+  scene.add(new THREE.HemisphereLight(0xc4d6ff, 0x5a6472, 1.6));
+  const sun = new THREE.DirectionalLight(0xdce8ff, 1.1); sun.position.set(2, 6, 3); scene.add(sun);
+  const spot = new THREE.SpotLight(0xd6e6ff, 7, 18, .55, .85, 1.2);
   spot.position.set(0.3, 3.45, 0.4); spot.target.position.copy(DUCT_POS); scene.add(spot, spot.target);
   for (const [x, y, z, c, i] of [[-10, 2.4, -6.5, 0x2f7dff, 12], [10, 1.8, 6.5, 0x3aa6ff, 9], [-10, -2.6, 6.5, 0x1f5bd6, 7], [10, -2.8, -6.5, 0x2a60c8, 7], [0, 3.2, -6, 0x4f86ff, 6]]) {
-    const l = new THREE.PointLight(c, i * .18, 0, 1.6); l.position.set(x, y, z); scene.add(l);
+    const l = new THREE.PointLight(c, i * .44, 0, 1.6); l.position.set(x, y, z); scene.add(l);
   }
   const fireLight = new THREE.PointLight(0xff8a3d, 0, 0, 1.55); scene.add(fireLight);
   const igniteLight = new THREE.PointLight(0xffc27a, 0, 0, 2); scene.add(igniteLight);
 
   /* ----- materials ----- */
   const [wc, we] = panelCanvases(11);
-  const wallMat = own(new THREE.MeshStandardMaterial({map: tex(wc, 6, 2), emissiveMap: tex(we, 6, 2), emissive: 0xffffff, emissiveIntensity: .25, roughness: .62, metalness: .5}));
+  const wallMat = own(new THREE.MeshStandardMaterial({map: tex(wc, 6, 2), emissiveMap: tex(we, 6, 2), emissive: 0xffffff, emissiveIntensity: .55, roughness: .62, metalness: .5}));
   const [rc, re] = panelCanvases(29, {base: '#0e141e', lit: '#18212e', leds: .85, text: .9});
-  const rackMat = own(new THREE.MeshStandardMaterial({map: tex(rc), emissiveMap: tex(re), emissive: 0xffffff, emissiveIntensity: .35, roughness: .5, metalness: .55}));
+  const rackMat = own(new THREE.MeshStandardMaterial({map: tex(rc), emissiveMap: tex(re), emissive: 0xffffff, emissiveIntensity: .5, roughness: .5, metalness: .55}));
   const [cc, ce] = panelCanvases(53, {base: '#0a0e15', lit: '#10161f', leds: .2, text: .25});
-  const ceilMat = own(new THREE.MeshStandardMaterial({map: tex(cc, 6, 4.25), emissiveMap: tex(ce, 6, 4.25), emissive: 0xffffff, emissiveIntensity: .2, roughness: .7, metalness: .4}));
+  const ceilMat = own(new THREE.MeshStandardMaterial({map: tex(cc, 6, 4.25), emissiveMap: tex(ce, 6, 4.25), emissive: 0xffffff, emissiveIntensity: .5, roughness: .7, metalness: .4}));
   const [fc, fe] = floorCanvases();
-  const floorMat = own(new THREE.MeshStandardMaterial({map: tex(fc, 6, 4.25), emissiveMap: tex(fe, 6, 4.25), emissive: 0xffffff, emissiveIntensity: .15, roughness: .32, metalness: .78}));
-  const metal = own(new THREE.MeshStandardMaterial({color: 0x2a3340, roughness: .32, metalness: .92}));
+  const floorMat = own(new THREE.MeshStandardMaterial({map: tex(fc, 6, 4.25), emissiveMap: tex(fe, 6, 4.25), emissive: 0xffffff, emissiveIntensity: .42, roughness: .32, metalness: .78}));
+  const metal = own(new THREE.MeshStandardMaterial({color: 0x3a4554, roughness: .32, metalness: .88}));
   const metalLight = own(new THREE.MeshStandardMaterial({color: 0x8792a2, roughness: .28, metalness: .95}));
-  const darkMetal = own(new THREE.MeshStandardMaterial({color: 0x10151c, roughness: .45, metalness: .85}));
+  const darkMetal = own(new THREE.MeshStandardMaterial({color: 0x222b38, roughness: .45, metalness: .8}));
   const cyanGlow = own(new THREE.MeshBasicMaterial({color: new THREE.Color(.03, .12, .18), toneMapped: true}));
   const stripGlow = own(new THREE.MeshBasicMaterial({color: new THREE.Color(.05, .06, .08)}));
   const amberGlow = own(new THREE.MeshBasicMaterial({color: new THREE.Color(.5, .25, .08)}));
@@ -286,6 +286,9 @@ export function createLab(host, initial) {
   const glassMat = own(new THREE.MeshPhysicalMaterial({color: 0xa8ccff, roughness: .05, metalness: .1, transparent: true, opacity: .02, depthWrite: false, side: THREE.DoubleSide, envMapIntensity: .25}));
   for (const s of [-1, 1]) add(new THREE.PlaneGeometry(L, H), glassMat, 0, cy, s * DUCT.z, duct).renderOrder = 3;
   const glassTop = add(new THREE.PlaneGeometry(L, Z), glassMat, 0, DUCT.y1, 0, duct); glassTop.rotation.x = Math.PI / 2; glassTop.renderOrder = 3;
+  // dark interior: an unlit box whose far faces show through the glass, so the
+  // inside of the enclosure reads dark while the room outside is untouched
+  { const dark = own(new THREE.MeshBasicMaterial({color: 0x0a0f16, side: THREE.BackSide, transparent: true, opacity: .92, depthWrite: false})); add(new THREE.BoxGeometry(L - .02, H - .02, Z - .02), dark, 0, cy, 0, duct).renderOrder = -1; }
   add(new THREE.BoxGeometry(L, .05, Z), darkMetal, 0, DUCT.y0, 0, duct);
   // frame bars
   const bar = (w, h, d, x, y, z) => add(new THREE.BoxGeometry(w, h, d), metal, x, y, z, duct);
@@ -547,7 +550,7 @@ export function createLab(host, initial) {
   composer.addPass(new ShaderPass({uniforms: {tDiffuse: {value: null}},
     vertexShader: `varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.); }`,
     fragmentShader: `uniform sampler2D tDiffuse; varying vec2 vUv; void main(){ vec4 c=texture2D(tDiffuse,vUv);
-      vec2 q=vUv-.5; float v=smoothstep(.85,.2,length(q*vec2(1.1,1.25))); gl_FragColor=vec4(c.rgb*mix(.18,1.,v),c.a); }`}));
+      vec2 q=vUv-.5; float v=smoothstep(1.05,.3,length(q*vec2(1.1,1.25))); gl_FragColor=vec4(c.rgb*mix(.72,1.,v),c.a); }`}));
   composer.addPass(new OutputPass());
 
   /* ----- size ----- */
@@ -556,7 +559,12 @@ export function createLab(host, initial) {
     camera.aspect = w / h; camera.fov = w / h < 1 ? 52 : 38; camera.updateProjectionMatrix();
     renderer.setSize(w, h, false); composer.setSize(w, h); bloom.resolution.set(w / 2, h / 2);
   };
-  const ro = new ResizeObserver(fit); ro.observe(host); fit();
+  // throttle: ResizeObserver/fullscreen/drag-resize can fire many times per
+  // second — coalesce to one fit() per animation frame instead of re-sizing
+  // the renderer/composer/bloom buffers on every single callback.
+  let fitTimer = 0;
+  const scheduleFit = () => { clearTimeout(fitTimer); fitTimer = setTimeout(fit, 140); };
+  const ro = new ResizeObserver(scheduleFit); ro.observe(host); fit();
 
   /* ----- camera choreography ----- */
   let tween = null, lastInput = -10;

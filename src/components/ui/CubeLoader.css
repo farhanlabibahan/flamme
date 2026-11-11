@@ -1,0 +1,29 @@
+.cb-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:48px 20px;text-align:center;width:100%}
+.cb-full{min-height:70vh}
+.cb-overlay{position:absolute;inset:0;z-index:4;padding:0;background:color-mix(in srgb, var(--paper) 94%, transparent)}
+
+.cb-stage{position:relative;width:72px;height:72px;perspective:320px}
+.cb-cube{position:absolute;inset:0;transform-style:preserve-3d;animation:cbTumble 2.4s cubic-bezier(.45,.05,.55,.95) infinite}
+.cb-face{position:absolute;inset:0;border:1px solid rgba(255,255,255,.35);background:var(--accent);backface-visibility:visible}
+/* six faces, shaded from light to deep so the box reads as solid */
+.cb-front {transform:translateZ(36px);background:#1e3a8a}
+.cb-back  {transform:rotateY(180deg) translateZ(36px);background:#152a66}
+.cb-right {transform:rotateY(90deg) translateZ(36px);background:#2a4ba3}
+.cb-left  {transform:rotateY(-90deg) translateZ(36px);background:#12236a}
+.cb-top   {transform:rotateX(90deg) translateZ(36px);background:#3a5cb3}
+.cb-bottom{transform:rotateX(-90deg) translateZ(36px);background:#0c1a52}
+
+.cb-shadow{position:absolute;left:50%;bottom:-18px;width:64px;height:10px;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(11,11,13,.22),transparent);animation:cbShadow 2.4s cubic-bezier(.45,.05,.55,.95) infinite}
+
+@keyframes cbTumble{
+  0%   {transform:rotateX(-22deg) rotateY(0deg)}
+  50%  {transform:rotateX(18deg)  rotateY(180deg)}
+  100% {transform:rotateX(-22deg) rotateY(360deg)}
+}
+@keyframes cbShadow{
+  0%,100%{transform:translateX(-50%) scale(1)}
+  50%    {transform:translateX(-50%) scale(.7)}
+}
+
+.cb-msg{font:600 13px var(--disp);color:var(--ink2);letter-spacing:-.01em}
+@media(prefers-reduced-motion:reduce){.cb-cube,.cb-shadow{animation-duration:6s}}

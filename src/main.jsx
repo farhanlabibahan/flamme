@@ -1,88 +1,44 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {lazy, Suspense} from 'react';
 import {createRoot} from 'react-dom/client';
-import {ArrowRight, ArrowUpRight, BookOpen, Check, ChevronDown, Compass, ExternalLink, Flame, Info, Layers, Pause, Play, RotateCcw, Search, ShieldCheck, Wind, X} from 'lucide-react';
-import Lab from './Lab.jsx';
-import {experiments, investigations, display} from './data.js';
-import {initialScenario, rank, explain} from './science.js';
+import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom';
+import {FlammeProvider} from './context/FlammeContext.jsx';
+import Shell from './components/Shell.jsx';
+import LandingPage from './pages/LandingPage.jsx';
+import CubeLoader from './components/ui/CubeLoader.jsx';
+import {AskSkeleton, CompareSkeleton, EvidenceSkeleton} from './components/ui/Skeleton.jsx';
 import './app.css';
+import './components/ui/Skeleton.css';
 
-const DEMO = [
-  {title:'The question', body:'Which microgravity experiments are relevant to SIBAL at about 22.1% oxygen and 20 cm/s airflow?', target:'mission'},
-  {title:'Define the conditions', body:'Choose material, oxygen and flow. Unknown pressure is kept unknown—not guessed.', target:'scenario'},
-  {title:'Explore the chamber', body:'The guided keyframed sweep now runs through the ten controlled parameters. The flame response is illustrative — not measured footage or a combustion prediction.', target:'lab'},
-  {title:'Trace the evidence', body:'Open the highest-ranked Saffire II record and follow its source link and original table row.', target:'evidence'},
-  {title:'Compare responsibly', body:'Compare two observations while keeping material, thickness and missing-condition differences visible.', target:'comparison'}
-];
-const value = f => f?.status === 'ambiguous' ? `${display(f)} · verify` : display(f);
-const stat = (n,label) => <div className="mini-stat"><strong>{n}</strong><span>{label}</span></div>;
+/* Each sidebar app now lives at its own endpoint and its own lazy chunk:
+   /lab, /ask, /evidence, /compare. Previously the whole app was one
+   component that swapped a `view` string — every section's code (including
+   the Three.js lab) shipped in one bundle and re-rendered inside the same
+   tree, which is what made switching sections feel heavy. Real routes mean
+   the router only mounts the page you asked for, React.lazy code-splits
+   each one into its own file fetched on demand, and Shell's hover-prefetch
+   warms the next click before it happens. */
+const LabPage = lazy(() => import('./pages/LabPage.jsx'));
+const LabViewPage = lazy(() => import('./pages/LabViewPage.jsx'));
+const AskPage = lazy(() => import('./pages/AskPage.jsx'));
+const EvidencePage = lazy(() => import('./pages/EvidencePage.jsx'));
+const ComparePage = lazy(() => import('./pages/ComparePage.jsx'));
 
-function App(){
-  const labRef = useRef(null);
-  const [scenario,setScenario] = useState({...initialScenario});
-  const [view,setView] = useState('Explore');
-  const [mode,setMode] = useState('Illustrative visualization');
-  const [selected,setSelected] = useState('2-5');
-  const [compare,setCompare] = useState(['2-5','2-2']);
-  const [query,setQuery] = useState('');
-  const [filter,setFilter] = useState('All');
-  const [drawer,setDrawer] = useState(null);
-  const [demo,setDemo] = useState(-1);
-  const [reduced,setReduced] = useState(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-  const [searched,setSearched] = useState(false);
-  const [advanced,setAdvanced] = useState(false);
-
-  const ranked = useMemo(()=>rank(experiments,scenario),[scenario]);
-  const results = ranked.filter(({record}) => (filter==='All'||record.investigationId===filter) && `${record.sample.material} ${record.id}`.toLowerCase().includes(query.toLowerCase()));
-  const record = experiments.find(e=>e.id===selected) || experiments[0];
-  const source = investigations.find(i=>i.id===record.investigationId);
-  const brief = explain(record);
-  const update=(key,v)=>{setScenario(s=>({...s,[key]:v}));setSearched(false)};
-  const reset=()=>{labRef.current?.reset();setScenario({...initialScenario});setView('Explore');setMode('Illustrative visualization');setSelected('2-5');setCompare(['2-5','2-2']);setQuery('');setFilter('All');setDrawer(null);setSearched(false);setAdvanced(false);setDemo(0);window.scrollTo({top:0,behavior:'auto'})};
-  const exitDemo=()=>{labRef.current?.pause();setDemo(-1)};
-  const toStep=i=>{
-    if(i===2)requestAnimationFrame(()=>labRef.current?.start());
-    else labRef.current?.pause();
-    setDemo(i);
-    if(i===3){setSearched(true);setSelected(rank(experiments,scenario)[0].record.id);setView('Explore')}
-    if(i===4){setView('Compare');setCompare(['2-5','2-2'])}
-    if(i<4 && view!=='Explore')setView('Explore');
-  };
-  useEffect(()=>{if(demo<0)return;const timer=requestAnimationFrame(()=>document.getElementById(DEMO[demo].target)?.scrollIntoView({behavior:reduced?'instant':'smooth',block:'start'}));return()=>cancelAnimationFrame(timer)},[demo,view,reduced]);
-  const select=(label,key,items,help)=> <label className="field"><span>{label}<Info size={13} title={help}/></span><select value={scenario[key]} onChange={e=>update(key,e.target.value)}>{items.map(([v,t])=><option value={v} key={v}>{t}</option>)}</select></label>;
-  const toggleCompare=id=>setCompare(c=>c.includes(id)?c.filter(x=>x!==id):c.length<3?[...c,id]:c);
-  const openSource=id=>{if(id)setSelected(id);setDrawer('source')};
-  const nav=where=>{if(document.fullscreenElement)document.exitFullscreen?.();if(location.hash.startsWith('#studio'))history.replaceState(null,'',location.pathname);if(where==='compare')setView('Compare');else if(where==='source')openSource('2-5');else requestAnimationFrame(()=>document.getElementById('evidence')?.scrollIntoView({behavior:'smooth',block:'start'}))};
-
-  return <div className="app-shell">
-    <aside className="side-nav">
-      <button className="identity" onClick={()=>{setView('Explore');window.scrollTo({top:0,behavior:'smooth'})}} aria-label="Fire Navigator home"><span className="brand-flame"><Flame/></span><span>fire<span className="identity-light">navigator</span><small>MICROGRAVITY EVIDENCE</small></span></button>
-      <div className="nav-overline">WORKSPACE</div>
-      {[[Compass,'Explore'],[Layers,'Compare'],[BookOpen,'Sources']].map(([Icon,name])=><button key={name} className={`nav-link ${view===name?'active':''}`} onClick={()=>name==='Sources'?setDrawer('all'):setView(name)}><Icon size={19}/>{name}{name==='Compare'&&<em>{compare.length}</em>}</button>)}
-      <div className="side-foot"><span>Concept prototype · 2026</span><button onClick={()=>setDrawer('about')}><Info size={15}/> Scope & limitations</button></div>
-    </aside>
-    <main className="workspace">
-      <header className="topbar"><span>FIRE NAVIGATOR <b>/</b> {view==='Explore'?'Evidence explorer':'Comparison'}</span><div><span className="offline-badge">● LOCAL SOURCE EXCERPTS</span><button className="outline-btn" onClick={()=>demo<0?reset():exitDemo()}>{demo<0?<Play size={14}/>:<X size={14}/>} {demo<0?'Start guided demo':'Exit demo'}</button></div></header>
-      <div className="workspace-inner">
-        {demo>=0&&<section className="demo-rail" aria-label="Guided demonstration"><div className="demo-copy"><small>GUIDED DEMO · {demo+1} / {DEMO.length}</small><strong>{DEMO[demo].title}</strong><p>{DEMO[demo].body}</p></div><div className="demo-controls"><div className="step-dots">{DEMO.map((s,i)=><button aria-label={`Go to step ${i+1}: ${s.title}`} aria-current={i===demo?'step':undefined} className={i===demo?'active':''} key={s.title} onClick={()=>toStep(i)}/>)}</div><button className="quiet-btn" onClick={reset}><RotateCcw size={14}/> Reset</button>{demo<4&&<button className="accent-btn" onClick={()=>toStep(demo+1)}>Next step <ArrowRight size={16}/></button>}</div></section>}
-
-        {view==='Explore'?<>
-          <section className="mission" id="mission"><div className="eyebrow">FLAME IN FREEFALL / EVIDENCE EXPLORER</div><h1>Fire evidence, <span>without the guesswork.</span></h1><p>Find relevant microgravity experiments, compare conditions, and trace each observation to its source.</p><div className="mission-meta">{stat(investigations.length,'investigations')}{stat(experiments.length,'curated experiment rows')}{stat('0','measured videos bundled')}<span className="scope-badge">Not a safety certification</span></div></section>
-          <section className="studio-wrap" id="lab"><Lab ref={labRef} scenario={scenario} mode={mode} onMode={setMode} reduced={reduced} onReduced={setReduced} onNavigate={nav}/></section>
-          <section id="evidence" className="evidence-block"><div className="evidence-heading"><div><small>03 / INVESTIGATE</small><h2>Follow the evidence</h2></div><span>{results.length} records · transparent condition matching</span></div><div className="evidence-grid"><section className="surface scenario-panel" id="scenario"><div className="section-top"><small>01 / DEFINE</small><h2>Set the question</h2><p>Only controls that affect evidence ranking appear here.</p></div>
-              {select('Material','material',[['Cotton–fiberglass (SIBAL)','Cotton–fiberglass (SIBAL)'],['Silicone','Silicone'],['PMMA','PMMA'],['','Any material']],'Source-reported sample material.')}
-              <div className="field-pair">{select('Oxygen · vol %','oxygen',[['22.1','22.1'],['21.5','21.5'],['22.2','22.2'],['','Any']],'Matched within ±0.5 percentage points; approximate source values stay approximate.')}{select('Flow · cm/s','airflow',[['20','20'],['10','10'],['5','5'],['','Any']],'Matched within ±2 cm/s. BASS instrument readings are not airflow speeds.')}</div>
-              <button className="disclosure" onClick={()=>setAdvanced(!advanced)} aria-expanded={advanced}>Additional matching conditions <ChevronDown size={16}/></button>
-              {advanced&&<div className="advanced-content"><p className="availability-note">All bundled records are microgravity tests. Pressure is unreported and cannot be used for matching yet.</p>{select('Sample width · cm','geometry',[['','Unspecified'],['5','5'],['2','2']],'Exact-width matching only.')}{select('Outcome availability','outcome',[['spread','Reported spread-column entry'],['burn','Reported burn-time entry'],['burnLength','Reported burn length'],['smoke','Smoke / particles'],['heat','Heat release']],'Availability filter, not a prediction of the outcome.')}</div>}
-              <button className="accent-btn search-action" onClick={()=>{setSearched(true);setSelected(rank(experiments,scenario)[0].record.id);document.getElementById('evidence')?.scrollIntoView({behavior:reduced?'instant':'smooth',block:'start'})}}>Find relevant evidence <ArrowRight size={18}/></button>
-              <p className="safety-note"><ShieldCheck size={15}/> Missing inputs never become assumed measurements.</p>
-            </section><section className="surface result-panel"><div className="result-tools"><label><Search size={16}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search material or sample ID" aria-label="Search evidence"/></label><select aria-label="Filter investigation" value={filter} onChange={e=>setFilter(e.target.value)}><option value="All">All investigations</option>{investigations.map(i=><option value={i.id} key={i.id}>{i.name}</option>)}</select></div><div className="result-caption">{searched?'QUERY RESULTS':'CLOSEST BUNDLED RECORDS'}</div>{results.length===0?<div className="empty-result">No matching records. Remove a search filter or choose another scenario.</div>:results.map(({record:r,matched,evaluated,reasons,exact})=><article className={`result ${selected===r.id?'selected':''}`} key={r.id}><button className="result-select" onClick={()=>setSelected(r.id)}><span className="result-kicker">{r.investigationId==='PSI-99'?'SAFFIRE II':'BASS II'} / {r.id}<em>{matched} matched · {7-evaluated} unknown</em></span><strong>{r.sample.material}</strong><span className="result-conditions">{value(r.environment.oxygen)} O₂ · {value(r.flow.speed)} flow</span><span className="match-reasons">{reasons.filter(x=>x.state!=='unknown').slice(0,3).map(x=><span className={x.state} key={x.label}>{x.text}</span>)}</span><span className="result-class">{exact?'All indexed conditions match':'Partial analogue — inspect differences'}</span></button><button className={`compare-add ${compare.includes(r.id)?'on':''}`} aria-label={`${compare.includes(r.id)?'Remove':'Add'} ${r.id} ${compare.includes(r.id)?'from':'to'} comparison`} onClick={()=>toggleCompare(r.id)}>{compare.includes(r.id)?<Check size={17}/>:<Layers size={17}/>}</button></article>)}</section>
-            <section className="surface evidence-card"><div className="card-top"><div><small>EXPERIMENT {record.id} / {source.name}</small><h2>{record.sample.material}</h2></div><span className="source-pill">SOURCE RECORD</span></div><p className="record-context">{source.platform} · Source table row {record.source.row}</p><div className="evidence-segment observed"><span>OBSERVED</span><p>{brief.observed}</p>{record.investigationId==='PSI-99'&&<div className="measurement-row"><div><strong>{value(record.measurements.burn)}</strong><small>{record.measurements.burn.status==='qualitative'?'SOURCE BURN-TIME ENTRY':'REPORTED BURN TIME'}</small></div><div><strong>{value(record.measurements.spread)}</strong><small>SOURCE SPREAD-COLUMN ENTRY*</small></div></div>}</div><div className="evidence-segment"><span>INTERPRETATION · RULE-BASED</span><p>{brief.interpretation}</p></div><div className="evidence-segment limitation"><span>UNKNOWN / LIMITATIONS</span><p>{brief.limitations}</p></div><details className="raw-details"><summary>See original conditions <ChevronDown size={15}/></summary>{[['Thickness',record.sample.thickness],['Length',record.sample.length],['Width',record.sample.width],['Oxygen',record.environment.oxygen],['Pressure',record.environment.pressure],['Airflow',record.flow.speed],['Flow direction',record.flow.direction],['Ignition power',record.ignition.power],['Ignition time',record.ignition.duration]].map(([name,f])=><div key={name}><span>{name}</span><strong>{value(f)}</strong></div>)}</details><div className="card-actions"><button className="outline-btn" onClick={()=>openSource(record.id)}>Trace to NASA source <ArrowUpRight size={15}/></button><button className="quiet-btn" onClick={()=>{if(!compare.includes(record.id))toggleCompare(record.id);setView('Compare');if(demo>=0)setDemo(4)}}>Compare record <ArrowRight size={15}/></button></div></section></div></section>
-        </>:<section className="comparison-page" id="comparison"><div className="comparison-intro"><small>04 / COMPARE</small><h1>Compare observations.<br/><span>Keep the differences visible.</span></h1><p>These records are analogues, not a controlled material ranking. Their outcomes should not be attributed to a single changed variable.</p></div><div className="compare-warning"><Info size={18}/><span>Material, thickness and unreported conditions can confound comparisons. An unknown value is never treated as equal.</span></div>{compare.length<2?<div className="empty-result">Choose at least two records in Explore to compare them.</div>:<div className="compare-cards">{compare.map(id=>{const r=experiments.find(x=>x.id===id);if(!r)return null;return <article className="surface compare-card" key={id}><small>{r.investigationId} / {r.id}</small><h2>{r.sample.material}</h2>{[['Gravity',r.environment.gravity],['Oxygen',r.environment.oxygen],['Airflow',r.flow.speed],['Flow direction',r.flow.direction],['Pressure',r.environment.pressure],['Thickness',r.sample.thickness],['Sample length',r.sample.length],['Width',r.sample.width],['Ignition power',r.ignition.power],['Ignition time',r.ignition.duration],['Burn-time entry',r.measurements.burn],['Spread-column entry*',r.measurements.spread]].map(([name,f])=><div className="compare-line" key={name}><span>{name}</span><b>{value(f)}</b></div>)}<button className="outline-btn" onClick={()=>openSource(id)}>Source row {r.source.row} <ExternalLink size={14}/></button></article>})}</div>}<p className="compare-footnote">* The Saffire II CSV calls this column “µ-g Spread Length,” but sample 2-5 contains a value in mm/s. We preserve the source entry and flag the label conflict.</p></section>}
-        <footer className="page-foot">NASA PSI source excerpts · Fire Navigator concept prototype <span>No NASA endorsement · No safety certification · No validated flame prediction</span></footer>
-      </div>
-    </main>
-    {drawer&&<div className="modal-backdrop" onClick={()=>setDrawer(null)}><aside className="source-drawer" role="dialog" aria-modal="true" aria-label={drawer==='about'?'Scope and limitations':'Source information'} onClick={e=>e.stopPropagation()}><button className="drawer-close" aria-label="Close" onClick={()=>setDrawer(null)}><X/></button>{drawer==='about'?<><small>ABOUT THE PROTOTYPE</small><h2>Evidence discovery, not certification.</h2><p>Five real source-table rows are bundled. The interface ranks physical-condition similarity and generates a deterministic explanation. It does not call an AI model, simulate combustion physics, or contain measured video.</p><p>The 3D chamber is an interactive schematic. Changes to its appearance illustrate selected inputs; they do not predict a fire outcome.</p><p>NASA PSI investigation pages and DOIs require internet. Local data excerpts remain available offline.</p></>:drawer==='all'?<><small>DATA SOURCES</small><h2>Curated NASA PSI investigations</h2>{investigations.map(i=><div className="drawer-source" key={i.id}><strong>{i.name}</strong><p>{i.title} · {i.platform}</p><a href={i.url} target="_blank" rel="noreferrer">Open {i.id} <ExternalLink size={14}/></a><a href={`https://doi.org/${i.doi}`} target="_blank" rel="noreferrer">DOI {i.doi} <ExternalLink size={14}/></a></div>)}</>:<><small>DATA LINEAGE</small><h2>{source.name} · sample {record.id}</h2><p>{source.title} on {source.platform}. The displayed values come from local CSV <strong>{record.source.file}</strong>, row {record.source.row} (header is row 1).</p><div className="lineage-box">Source table → experiment {record.id} → observed card → cautious interpretation</div><p>{record.source.notes}</p><a href={source.url} target="_blank" rel="noreferrer">Open NASA PSI investigation <ExternalLink size={15}/></a><a href={`https://doi.org/${source.doi}`} target="_blank" rel="noreferrer">DOI {source.doi} <ExternalLink size={15}/></a><p className="drawer-warning">The animation is not a rendering of this experiment’s measured flame.</p></>}</aside></div>}
-  </div>;
+function App() {
+  return <BrowserRouter>
+    <FlammeProvider>
+      <Routes>
+        <Route path="/" element={<LandingPage/>}/>
+        <Route element={<Shell/>}>
+          <Route path="/lab" element={<Suspense fallback={<CubeLoader message="Loading lab…" fullHeight/>}><LabPage/></Suspense>}/>
+          <Route path="/ask" element={<Suspense fallback={<AskSkeleton/>}><AskPage/></Suspense>}/>
+          <Route path="/evidence" element={<Suspense fallback={<EvidenceSkeleton/>}><EvidencePage/></Suspense>}/>
+          <Route path="/compare" element={<Suspense fallback={<CompareSkeleton/>}><ComparePage/></Suspense>}/>
+        </Route>
+        <Route path="/lab/view" element={<Suspense fallback={<CubeLoader message="Loading lab…" fullHeight/>}><LabViewPage/></Suspense>}/>
+        <Route path="*" element={<Navigate to="/" replace/>}/>
+      </Routes>
+    </FlammeProvider>
+  </BrowserRouter>;
 }
 
 createRoot(document.getElementById('root')).render(<App/>);

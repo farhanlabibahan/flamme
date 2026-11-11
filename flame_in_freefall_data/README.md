@@ -13,6 +13,9 @@ Harvested 2026-10-01 from the NASA Physical Sciences Informatics (PSI) repositor
 | `ntrs_reports.csv` | 40 key NTRS reports/papers (results, summaries, workshop proceedings) with PDF links |
 | `catalog.json` | Same data as JSON for your app |
 | `psi_scraper.py` | Re-scrapes the full manifest (all ~73,700 files) and downloads selectively |
+| `cleaned/cleaned_values.csv` | Provenance-preserving long-format view of all 22 local experimental tables |
+| `cleaned/cleaning_report.csv` | Per-table encoding, row, and cell-quality counts |
+| `clean_tables.py` | Rebuilds the cleaned view without overwriting raw PSI exports |
 
 ## The investigations
 
@@ -42,3 +45,16 @@ python psi_scraper.py download --ids PSI-69 --categories "Raw Data" --ext csv,tx
 
 Raw data totals ~13.9 TB (flame videos, image sequences, sensor logs), so raw downloads are opt-in and filterable.
 FLEX and FLEX-2 also have 183 calibration files, which the scraper includes.
+
+## Cleaning the experimental tables
+
+The PSI tables are heterogeneous and should not be merged into a guessed wide schema. The cleaner keeps each source cell, source row, and source column, then emits a numeric value only when the cell contains one unambiguous scalar. Ranges, sequences, note-bearing values, qualitative outcomes, and ambiguous formatting remain available as raw text with an explicit status.
+
+The current run handles all 22 local tables, including the CP1252 FLEX export and BOM-prefixed UTF-8 files:
+
+```bash
+python3 flame_in_freefall_data/clean_tables.py
+python3 -m unittest discover -s flame_in_freefall_data -p 'test_*.py'
+```
+
+The raw files are untouched. The Saffire value `037 mm` is intentionally marked ambiguous because the source formatting does not establish whether it means `0.37 mm`; it must not silently become a model input.
