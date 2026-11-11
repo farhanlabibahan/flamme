@@ -4,8 +4,8 @@
 .rk{max-width:960px;margin:0 auto;padding:12px 4px 120px;color:var(--ink)}
 .rk-top{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;padding-bottom:26px;border-bottom:1px solid var(--ink)}
 .rk h1{font:600 clamp(28px,3.2vw,38px)/1.1 var(--disp);letter-spacing:-.025em;margin:0;color:var(--ink);max-width:640px}
-.rk-count{font:500 13px var(--sans);color:var(--ink);white-space:nowrap}
-.rk-count b{font:600 36px/1 var(--disp);letter-spacing:-.03em;color:var(--accent);margin-right:8px;vertical-align:-3px}
+.rk-count{display:inline-flex;align-items:baseline;gap:10px;color:var(--ink);font:500 13px var(--sans);white-space:nowrap;margin-bottom:6px}
+.rk-count b{font:600 40px/1 var(--disp);letter-spacing:-.03em;color:var(--red)}
 .rk-lede{font:400 14px/1.55 var(--sans);color:var(--ink);max-width:68ch;margin:0 0 16px}
 
 /* controls: segmented underline tabs, hairline sliders, no boxes */

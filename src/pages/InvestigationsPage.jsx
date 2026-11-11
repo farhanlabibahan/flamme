@@ -80,7 +80,8 @@ export default function InvestigationsPage() {
       <Layers size={17}/> Compare <em>{chosen.length}</em>
     </button>, document.body)}
 
-    {open && chosen.length > 0 && createPortal(<section className="surface iv-compare iv-compare-float" aria-label="Comparison">
+    {open && chosen.length > 0 && createPortal(<div className="iv-backdrop" onClick={() => setOpen(false)}/>, document.body)}
+    {open && chosen.length > 0 && createPortal(<section className="surface iv-compare iv-compare-float" role="dialog" aria-modal="true" aria-label="Comparison">
       <div className="iv-compare-head">
         <h2>Side-by-side</h2>
         <button className="iv-compare-close" aria-label="Close comparison" onClick={() => setOpen(false)}><X size={16}/></button>

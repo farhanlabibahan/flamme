@@ -1,5 +1,5 @@
 import React, {useMemo, useState} from 'react';
-import {AlertTriangle} from 'lucide-react';
+import {AlertTriangle, SlidersHorizontal, X} from 'lucide-react';
 import {findings} from '../ranking.js';
 import {predictFlex, flexModelMeta} from '../flexModel.js';
 import './GapsPage.css';
@@ -7,10 +7,8 @@ import './GapsPage.css';
 /* Real route: /gaps. Plan item 3 ("Map the gaps"): which combinations of
    O2 and gravity have been tested, and which have none. Built from the same
    111-finding catalog as Rankings (findings/findings.csv -> findingsData.json),
-   not a separate dataset. The bottom strip additionally runs the actual
-   trained FLEX model (src/flexModel.js) at each O2 band's midpoint, with
-   live sliders for pressure/droplet size/fuel so it isn't a static number --
-   moving a slider re-runs the real fitted model, not a lookup. */
+   not a separate dataset. The FLEX strip runs the actual trained model
+   (src/flexModel.js) at each O2 band's midpoint, live from the sliders. */
 
 const O2_BINS = [
   {label: '<16%', mid: 14, test: v => v < 16},
@@ -24,7 +22,7 @@ const O2_BINS = [
 const GRAVITY_ROWS = [
   {label: 'Microgravity', test: g => /microgravity/i.test(g) && !/vs/i.test(g)},
   {label: 'Earth 1-g', test: g => /1-?g/i.test(g) && !/microgravity/i.test(g)},
-  {label: 'Micro-g vs 1-g (comparison)', test: g => /microgravity/i.test(g) && /vs/i.test(g)},
+  {label: 'Micro-g vs 1-g', note: 'comparison', test: g => /microgravity/i.test(g) && /vs/i.test(g)},
 ];
 
 function o2Mid(f) {
@@ -52,15 +50,28 @@ export default function GapsPage() {
   const modelRow = useMemo(() => O2_BINS.map(col => predictFlex({o2Pct: col.mid, pressureAtm, dropletDiameterMm, fuelMethanol})),
     [pressureAtm, dropletDiameterMm, fuelMethanol]);
 
-  const maxCount = Math.max(1, ...grid.flatMap(r => r.cells.map(c => c.rows.length)));
-
+  const all = grid.flatMap(r => r.cells);
+  const filled = all.filter(c => c.rows.length > 0).length;
+  const total = all.length;
+  const maxCount = Math.max(1, ...all.map(c => c.rows.length));
   const pr = flexModelMeta.trainingRange.pressure_atm, dr = flexModelMeta.trainingRange.droplet_diameter_mm;
 
+  const detail = openCell && (() => {
+    const [rowLabel, colLabel] = openCell.split('::');
+    const match = grid.find(r => r.row.label === rowLabel)?.cells.find(c => c.col.label === colLabel);
+    return {rowLabel, colLabel, rows: match?.rows || []};
+  })();
+
   return <div className="gm reveal">
-    <header>
-      <span className="cmp-kicker">Gap map</span>
-      <h1>Which conditions has NASA actually tested?</h1>
-      <p className="gm-lede">An empty cell means the catalog doesn't document that combination — not that it was never tried.</p>
+    <header className="gm-top">
+      <div>
+        <span className="cmp-kicker">Gap map</span>
+        <h1>Which conditions has NASA actually tested?</h1>
+      </div>
+      <div className="gm-tally" aria-label="Coverage">
+        <span><b>{filled}</b> / {total}</span>
+        <small>cells with tests</small>
+      </div>
     </header>
 
     {documentedGaps.length > 0 && <section className="gm-known" aria-label="NASA-documented gaps">
@@ -69,58 +80,80 @@ export default function GapsPage() {
       <p className="gm-known-note">{documentedGaps[0].safety_implication}</p>
     </section>}
 
-    <section className="surface gm-grid-wrap">
-      <h2>Tests per gravity × oxygen band</h2>
-      <div className="gm-grid" style={{gridTemplateColumns: `160px repeat(${O2_BINS.length}, 1fr)`}}>
-        <div className="gm-corner"/>
+    <section className="gm-board" aria-label="Test coverage grid">
+      <div className="gm-board-head">
+        <h2>Tests per gravity × oxygen band</h2>
+        <div className="gm-legend" aria-hidden="true">
+          <span className="gm-sw gm-sw-empty"/>no tests
+          <span className="gm-sw gm-sw-low"/>few
+          <span className="gm-sw gm-sw-high"/>many
+        </div>
+      </div>
+
+      <div className="gm-grid" style={{gridTemplateColumns: `150px repeat(${O2_BINS.length}, minmax(0,1fr))`}}>
+        <div className="gm-corner">O₂</div>
         {O2_BINS.map(c => <div className="gm-colhead" key={c.label}>{c.label}</div>)}
+
         {grid.map(({row, cells}) => <React.Fragment key={row.label}>
-          <div className="gm-rowhead">{row.label}</div>
+          <div className="gm-rowhead">
+            <b>{row.label}</b>
+            {row.note && <small>{row.note}</small>}
+          </div>
           {cells.map(({col, rows}) => {
             const key = `${row.label}::${col.label}`;
             const open = openCell === key;
-            const intensity = rows.length ? 0.15 + 0.7 * (rows.length / maxCount) : 0;
-            return <button key={key} className={`gm-cell ${rows.length === 0 ? 'empty' : ''} ${open ? 'open' : ''}`}
-              style={rows.length ? {background: `color-mix(in srgb, var(--accent) ${Math.round(intensity * 100)}%, var(--panel))`} : undefined}
+            const level = rows.length / maxCount;
+            return <button key={key}
+              className={`gm-cell ${rows.length === 0 ? 'empty' : ''} ${open ? 'open' : ''}`}
+              style={rows.length ? {'--lvl': `${Math.round(18 + level * 72)}%`} : undefined}
               onClick={() => setOpenCell(open ? null : key)}
-              title={`${row.label} × O2 ${col.label}: ${rows.length} finding${rows.length === 1 ? '' : 's'}`}>
-              {rows.length || '—'}
+              aria-label={`${row.label}, O2 ${col.label}: ${rows.length} finding${rows.length === 1 ? '' : 's'}`}>
+              {rows.length ? <span className="gm-n">{rows.length}</span> : <span className="gm-none">no tests</span>}
             </button>;
           })}
         </React.Fragment>)}
 
-        <div className="gm-rowhead gm-model-label">FLEX model<small>predicted</small></div>
+        <div className="gm-rowhead gm-model-label"><b>FLEX model</b><small>predicted · live</small></div>
         {modelRow.map((pred, i) => {
           const pct = pred ? Math.round(pred.selfExtinguishProbability * 100) : null;
-          return <div key={O2_BINS[i].label} className={`gm-cell gm-model-cell ${pct == null ? 'empty' : ''}`}
+          return <div key={O2_BINS[i].label} className={`gm-model-cell ${pct == null ? 'empty' : ''}`}
             title={pct == null ? "Outside the model's trained range" : `${pct}% predicted self-extinguish probability`}
-            style={pct != null ? {background: `color-mix(in srgb, ${pct >= 50 ? 'var(--red)' : 'var(--green)'} ${20 + Math.abs(pct - 50)}%, var(--panel))`} : undefined}>
-            {pct != null ? `${pct}%` : '—'}
+            style={pct != null ? {'--p': `${pct}%`} : undefined}>
+            {pct != null ? <><span className="gm-pct">{pct}</span><small>%</small></> : <span className="gm-none">outside range</span>}
           </div>;
         })}
       </div>
 
-      <div className="gm-sliders">
-        <label>Pressure <b>{pressureAtm.toFixed(2)} atm</b>
-          <input type="range" min={pr[0]} max={pr[1]} step="0.01" value={pressureAtm} onChange={e => setPressureAtm(Number(e.target.value))}/></label>
-        <label>Droplet diameter <b>{dropletDiameterMm.toFixed(2)} mm</b>
-          <input type="range" min={dr[0]} max={dr[1]} step="0.01" value={dropletDiameterMm} onChange={e => setDropletDiameterMm(Number(e.target.value))}/></label>
-        <label>Fuel
-          <div className="gm-fuel-toggle">
-            <button className={fuelMethanol ? 'on' : ''} onClick={() => setFuelMethanol(true)}>Methanol</button>
-            <button className={!fuelMethanol ? 'on' : ''} onClick={() => setFuelMethanol(false)}>Heptane</button>
+      <div className="gm-controls">
+        <div className="gm-ctl-head"><SlidersHorizontal size={14}/> Model inputs</div>
+        <div className="gm-sliders">
+          <label><span>Pressure</span><b>{pressureAtm.toFixed(2)} atm</b>
+            <input type="range" min={pr[0]} max={pr[1]} step="0.01" value={pressureAtm} onChange={e => setPressureAtm(Number(e.target.value))}/></label>
+          <label><span>Droplet diameter</span><b>{dropletDiameterMm.toFixed(2)} mm</b>
+            <input type="range" min={dr[0]} max={dr[1]} step="0.01" value={dropletDiameterMm} onChange={e => setDropletDiameterMm(Number(e.target.value))}/></label>
+          <div className="gm-fuel">
+            <span>Fuel</span>
+            <div className="gm-fuel-toggle">
+              <button className={fuelMethanol ? 'on' : ''} onClick={() => setFuelMethanol(true)}>Methanol</button>
+              <button className={!fuelMethanol ? 'on' : ''} onClick={() => setFuelMethanol(false)}>Heptane</button>
+            </div>
           </div>
-        </label>
+        </div>
       </div>
     </section>
 
-    {openCell && (() => {
-      const [rowLabel, colLabel] = openCell.split('::');
-      const match = grid.find(r => r.row.label === rowLabel)?.cells.find(c => c.col.label === colLabel);
-      return <section className="surface gm-detail">
-        <h3>{rowLabel} × O2 {colLabel} — {match?.rows.length || 0} finding{match?.rows.length === 1 ? '' : 's'}</h3>
-        <ul>{match?.rows.map(f => <li key={f.finding_id}><b>{f.material_or_fuel || f.experiment}</b> — {f.finding}</li>)}</ul>
-      </section>;
-    })()}
+    {detail && <section className="gm-detail" aria-live="polite">
+      <header>
+        <div>
+          <small>{detail.rowLabel} · O₂ {detail.colLabel}</small>
+          <h3>{detail.rows.length} finding{detail.rows.length === 1 ? '' : 's'}</h3>
+        </div>
+        <button className="gm-close" aria-label="Close" onClick={() => setOpenCell(null)}><X size={16}/></button>
+      </header>
+      {detail.rows.length ? <ul>{detail.rows.map(f => <li key={f.finding_id}>
+        <b>{f.material_or_fuel || f.experiment}</b>
+        <span>{f.finding}</span>
+      </li>)}</ul> : <p className="gm-none-note">No test in the catalog covers this combination.</p>}
+    </section>}
   </div>;
 }
