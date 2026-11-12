@@ -1,107 +1,144 @@
 # Local judging — 240-second script
 
 **Team Flamme · NASA Space Apps 2026 · Challenge 8: Flame in Freefall**
-Target length: 3:55 to 4:00. Hard cap 4:00. Speak at a calm pace; the pauses in brackets are part of the story.
+Target: about 3:50. Hard cap 4:00. Speak slowly and confidently. Bracketed notes are for the editor and the team, not for the voiceover.
 
-Presenters: [Name 1], [Name 2], [Name 3], [Name 4]. Every member appears by name in the opening.
+**Cue key**
+- **[VISUAL]** what is on screen
+- **[MOTION]** motion-graphics or animation to build
+- **[WEB]** screen recording of the Flamme website
+- **[B-ROLL]** extra footage to cut in under the voice
+- **[SFX / MUSIC]** sound
 
----
-
-## 0:00 – 0:25 · Hook: the flame that changes shape
-
-**Visual:** Black screen. One candle flame, tall and yellow, on Earth. Cut to the same flame on the ISS: it shrinks into a small blue-tinged sphere, then flickers and goes out.
-
-> "On Earth, a flame is tall and teardrop-shaped. Hot air rises, fresh oxygen rushes in, and the flame feeds itself.
-> [pause]
-> Take away gravity, and the same flame changes. On the International Space Station, it forms a sphere, starves for air, and sometimes goes out on its own.
-> [pause]
-> This is a flame in freefall. And if a fire starts in a spacecraft, nobody can walk out of it."
+**Presenters:** [Name 1], [Name 2], [Name 3], [Name 4]. Everyone is named in the opening.
 
 ---
 
-## 0:25 – 0:55 · Problem: the evidence is scattered
+## SCENE 1 · The hook (0:00 – 0:25)
 
-**Visual:** Four logos or source names appear one by one: drop towers, parabolic flights, ISS experiments, Cygnus. Then a spreadsheet with mismatched columns.
+**[VISUAL]** Black screen. One candle flame on Earth: tall, yellow, teardrop-shaped.
+**[MOTION]** The flame lifts off a wick and drifts. It shrinks into a small glowing sphere, then flickers and goes out.
+**[B-ROLL]** Real ISS footage of a crew member at a window, shot wide, no face needed.
+**[SFX / MUSIC]** Low pulse under the voice. Silence on the word "out".
 
-> "NASA has decades of microgravity combustion results. They sit in drop towers, parabolic flights, ISS experiments like FLEX and BASS-II, and the Saffire fires on the Cygnus cargo ship.
+> "On Earth, a flame is tall. In space, it becomes a ball of light.
 > [pause]
-> But each test records its conditions differently. One gives oxygen but not pressure. Another leaves out the airflow. So two results can't be fairly compared, and nobody can easily see which conditions were tested, and which were never tried."
+> And sometimes, it just goes out.
+> [pause]
+> If that happens on a spacecraft, there is nowhere to walk to. We built something to make sure the crew knows about it before it happens."
 
 ---
 
-## 0:55 – 1:20 · Solution: what Flamme does
+## SCENE 2 · The problem (0:25 – 0:55)
 
-**Visual:** The Flamme home screen. Cursor types a plain-language question.
+**[VISUAL]** Four source logos appear one by one: drop towers, parabolic flights, ISS experiments, Cygnus cargo ship.
+**[MOTION]** The four logos merge into one messy spreadsheet. Columns jitter out of line.
+**[B-ROLL]** Close-up of a real lab test. Keep it short.
 
-> "Team Flamme built Flamme. You describe a flame experiment in ten standard conditions. Flamme searches real NASA records against those conditions, shows where the evidence has gaps, and runs a machine-learning model trained on NASA test data.
+> "NASA has decades of fire research. Experiments on the ISS. Fires on a cargo ship. Drop towers on the ground.
 > [pause]
-> Everything on screen links back to its NASA source."
+> But every test writes its results differently. One records the oxygen but not the pressure. Another leaves out the airflow.
+> [pause]
+> So you cannot compare them. Most people never see the gaps at all."
 
 ---
 
-## 1:20 – 2:35 · Live demo: the flame changes, and the model answers
+## SCENE 3 · What we built (0:55 – 1:20)
 
-**Visual, scene 1 (Earth to orbit):** Full-screen Lab. Tall flame on the bench at normal gravity. Press the gravity toggle. The flame becomes a sphere.
+**[VISUAL]** Our Flamme homepage, loaded at full screen.
+**[WEB]** Scroll slowly down the home page. Pause on the title line.
+**[MOTION]** Three glowing labels float in, one at a time: "Lab", "Evidence", "Ask".
 
-> "Watch the same flame when we switch from Earth to orbit. Gravity off. The flame stops rising and becomes a sphere. Now we lower the oxygen."
-
-**Visual, scene 2 (oxygen slider):** Drag oxygen from 21 percent down to 17 percent. Flame dims, then a status changes to "self-extinguishes."
-
-> "At 21 percent oxygen, this flame keeps burning. At 17 percent, it goes out. That is the kind of boundary a spacecraft fire crew needs to know about before a fire starts."
-
-**Visual, scene 3 (trained model card):** Scroll to the "Grounded in NASA FLEX data" card. Enter heptane, 14 percent oxygen, ISS pressure. Show the probability and the nearest real test with its PSI link.
-
-> "This card is different. It is a real model, trained on 273 usable droplet flames from NASA's FLEX experiment on the ISS. For heptane at 14 percent oxygen, it predicts the flame will likely self-extinguish. The closest real test is right here, with its NASA source."
-
-**Visual, scene 4 (the guardrail):** Set oxygen to 40 percent. The prediction is replaced by "outside the tested envelope."
-
-> "Now push oxygen to 40 percent. The model refuses to answer. FLEX only tested up to 34 percent. A tool that quietly guesses outside its data is more dangerous than no tool at all. So Flamme stops."
+> "This is Flamme. We took those scattered results and put them in one place. You describe a fire in plain words. Flamme finds the real NASA tests that match, shows where the evidence is missing, and runs a model we trained on NASA data.
+> [pause]
+> Every number links back to its source."
 
 ---
 
-## 2:35 – 3:15 · Impact: why this matters for crews
+## SCENE 4 · The live demo (1:20 – 2:35)
 
-**Visual:** Three number cards appear, one at a time, each with its source name in the corner.
+This is the most important part. Show, do not explain.
 
-> "Here is what the evidence already says.
-> [pause]
-> One. Heptane droplet flames in 13 to 16 percent oxygen: 11 of 14 went out on their own before the fuel was used up. Source: FLEX on the ISS.
-> [pause]
-> Two. Acrylic rods burned in orbit at 17.5 percent oxygen, while on Earth they needed 19 percent. Flames also spread faster in microgravity. Source: BASS-II.
-> [pause]
-> Three. For fabric fires, a distant smoke detector alarmed within two to three and a half minutes. For acrylic fires, it took 17 to 27 minutes. Source: Saffire.
-> [pause]
-> And future spacecraft may use oxygen-enriched air, between 26.5 and 34 percent. In that air, plastics that self-extinguish on the ISS can keep burning. The safety margin we rely on today disappears."
+### 4a · Earth to orbit (1:20 – 1:40)
+
+**[WEB]** Open the Lab. A tall flame sits in a glass chamber at normal gravity.
+**[MOTION]** Click the gravity switch. The flame loses its tail and turns into a sphere. Add a soft glow ring.
+**[SFX / MUSIC]** A whoosh on the switch, then a quiet hum.
+
+> "Here is the same flame, on Earth. Now we switch gravity off. The flame stops rising. It becomes a sphere."
+
+### 4b · Lower the oxygen (1:40 – 2:00)
+
+**[WEB]** Drag the oxygen slider from 21 percent down to 17 percent.
+**[MOTION]** The flame dims. A status badge changes from "Burning" to "Goes out on its own".
+**[SFX / MUSIC]** The music drops out for half a second when the flame goes out.
+
+> "At 21 percent oxygen, it keeps burning. Drop to 17, and it goes out. That line is exactly what a crew needs to know."
+
+### 4c · The trained model (2:00 – 2:20)
+
+**[WEB]** Scroll to the card "Grounded in NASA FLEX data". Choose heptane, 14 percent oxygen, ISS pressure.
+**[MOTION]** A probability bar fills to a high number. A card slides in with the closest real NASA test, with its source link.
+**[B-ROLL]** Short shot of a real droplet flame test from the NASA FLEX experiment, if you can cite the source.
+
+> "This card is different. It runs a real model, trained on 273 real droplet flames from NASA's FLEX experiment on the ISS. For this setup, it says the flame will likely go out. And here is the real test it is based on."
+
+### 4d · The guardrail (2:20 – 2:35)
+
+**[WEB]** Push oxygen to 40 percent. The prediction is replaced by a clear box: "Outside the tested range".
+**[MOTION]** The box shakes once, then holds still.
+
+> "Now push to 40 percent. The model says no. It was never tested there. Most tools guess. Ours tells you when it does not know."
 
 ---
 
-## 3:15 – 3:45 · Validity: why you can trust it
+## SCENE 5 · Why this matters (2:35 – 3:05)
 
-**Visual:** The `/model` page. Show the AUC of 0.895 and R² of 0.582, and the sentence about the tested envelope.
+**[VISUAL]** Three big number cards, one at a time. Each has its source tag in the corner.
+**[MOTION]** Each card flips in, the number counts up, the source tag slides under it.
+**[B-ROLL]** Cut-in of a smoke detector on a cabin wall, under the third card only.
 
-> "We are honest about what the model can do. It was trained on 273 usable tests. Its classifier separates the two outcomes with an AUC of 0.895, and its burning-rate regression explains about 58 percent of the variation in the held-out test set.
+> "Here is what the evidence already shows.
 > [pause]
-> It is not a certifier. It does not approve a material, and it does not predict a spacecraft fire. Every number is traceable to its source. Judges can rerun the pipeline in our repository and get the same metrics."
+> Card one. In heptane flames at 13 to 16 percent oxygen, eleven out of fourteen went out on their own. [Source: FLEX]
+> [pause]
+> Card two. Acrylic rods burned in orbit at 17.5 percent oxygen. On Earth they needed 19. [Source: BASS-II]
+> [pause]
+> Card three. For some plastic fires, the smoke alarm took up to 27 minutes to sound. [Source: Saffire]
+> [pause]
+> And future spacecraft may use richer oxygen. In that air, materials that stop burning on the ISS can keep going."
 
 ---
 
-## 3:45 – 4:00 · Close
+## SCENE 6 · Why you can trust it (3:05 – 3:25)
 
-**Visual:** Return to the single candle flame, now on the ISS. It burns steadily as a sphere.
+**[WEB]** Open the Model page. Highlight the two numbers: AUC 0.895 and R² 0.582.
+**[MOTION]** A simple checkmark stamp appears beside each number. A "source" line underlines the page.
+**[B-ROLL]** Screen recording of the repository, scrolling the README and the ML folder.
 
-> "A flame in freefall is not a safe flame. It is a flame we can finally understand, and that is what Flamme is for.
+> "We trained it on 273 real tests and checked it on tests it had never seen. Every result is traceable. Judges can run the same pipeline in our repository and get the same numbers."
+
+---
+
+## SCENE 7 · The ask and the close (3:25 – 3:50)
+
+**[VISUAL]** The sphere flame from the opening returns. This time it burns steadily on the ISS.
+**[MOTION]** The flame grows, then the Flamme logo wipes in across the bottom.
+**[SFX / MUSIC]** Music builds to one clear note and holds.
+
+> "A flame in freefall is not a safe flame. Until now, it was hard to read. Now the crew can see the line before the fire finds it.
 > [pause]
 > We are Team Flamme, from the University of Dhaka. Thank you."
 
+**[END CARD]** "Flamme · Team Flamme, University of Dhaka · Not a NASA product. Not NASA-endorsed." Hold for 3 seconds.
+
 ---
 
-## Production notes
+## Production checklist
 
-- **Under-18 rule:** no one under 18 appears on camera, in a recognisable voice, or by likeness. Use adult team members or hands only.
-- **Astronaut shot:** use an illustration, or an adult team member in a generic suit with no real astronaut's face or name. Do not imply a specific NASA crew member is involved.
-- **Attribution on camera:** name FLEX, BASS-II and Saffire out loud at least once each. This is what Relevance and NASA data usage score.
-- **AI disclosure:** if you narrate with AI voice or generate the sphere animation, say so in the AI_USE document; it is not required on screen.
-- **Not a NASA product:** keep the disclaimer on the final slide: "Team Flamme is not NASA and this is not NASA-endorsed."
-- **Subtitles:** the local judging video does not need subtitles, but the 30-second global cut does (see `global-judging-30s.md`).
-- **Rehearse offline:** the Lab and `/model` must work with Wi-Fi off. Pre-load the page and the `flexModel.json` before recording.
-- **Check the date and format** with your Local Lead before the run-of-show is final.
+- **Under-18 rule:** nobody under 18 on camera or recognisable by voice. Use adult members or hands only.
+- **Astronaut shots:** use stock or illustrated footage with no real crew member's face or name.
+- **Name the sources out loud:** FLEX, BASS-II and Saffire each at least once. This is what the Relevance and NASA data usage scores look at.
+- **Record the demo offline:** load the Lab and the Model page before recording, then switch Wi-Fi off.
+- **Audio:** test on a laptop speaker. Voice sits 6 to 10 dB above music.
+- **Confirm the format** with your Local Lead and the Judging Guide (published 13 November).

@@ -1,6 +1,6 @@
 # Judging scripts
 
-- `local-judging-240s.md`: 240-second local judging pitch (about 4 minutes), with timed sections, visuals and the demo beats.
-- `global-judging-30s.md`: 30-second global cut, with English subtitles.
+- `local-judging-240s.md`: about 4-minute local judging pitch. Seven scenes with timing, the live demo, and cues for motion graphics, website recordings and B-roll.
+- `global-judging-30s.md`: 30-second global cut with burned-in English subtitles.
 
-Every factual claim in these scripts comes from the repo: `README.md` (FLEX model metrics), `findings/findings.csv` and `findings/rankings.csv` (BASS-II, Saffire and FLEX findings). Re-check the numbers against those files after any data change.
+Facts come from the repo: `README.md` (FLEX model: 273 usable tests, AUC 0.895, R² 0.582), `findings/findings.csv` (heptane 11 of 14, BASS-II acrylic 17.5% vs 19% on Earth, Saffire alarm times). Re-check them after any data change.

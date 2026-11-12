@@ -1,51 +1,56 @@
 # Global judging — 30-second script
 
 **Team Flamme · NASA Space Apps 2026 · Challenge 8: Flame in Freefall**
-Required: English subtitles. Target length 28 to 30 seconds, about 70 spoken words.
+Target: 28 to 30 seconds. English subtitles are required and must be burned in.
 
-Criteria this cut must hit: team, problem, the thing working, NASA data usage, impact.
+**Cue key:** **[VISUAL]** on screen · **[MOTION]** motion graphics · **[WEB]** Flamme site recording · **[B-ROLL]** cut-in footage · **[SFX / MUSIC]** sound
 
 ---
 
-## Script
+**0:00 – 0:05 · Hook**
+**[VISUAL]** Candle flame on Earth, tall. Cut to the same flame as a sphere on the ISS.
+**[MOTION]** The flame shrinks and flickers out.
+**[SFX / MUSIC]** Low pulse, then silence on "out".
 
-**0:00 – 0:05 · Hook (visual: candle flame on Earth, then the same flame on the ISS as a sphere)**
-
-> "In space, a flame changes shape, and it can go out."
+> "In space, a flame can change shape, and go out."
 
 **0:05 – 0:12 · Problem**
+**[B-ROLL]** Short shot of a crew window with Earth below.
+**[MOTION]** A red warning line sits on an oxygen scale.
 
-> "On the ISS, a fire can starve and die at oxygen levels that burn fine on Earth. Crews need to know exactly where that line is."
+> "On the ISS, a fire can die at oxygen levels that burn fine on Earth. Crews need to know exactly where that line is."
 
-**0:12 – 0:20 · What it does (visual: Flamme lab, oxygen slider, model card)**
+**0:12 – 0:20 · Solution**
+**[WEB]** Flamme Lab. Drag the oxygen slider. The flame dims and a badge reads "Goes out on its own."
+**[MOTION]** A short glow pulse on the badge.
 
-> "Flamme answers fire-safety questions from real NASA test data, and every number links to its source."
+> "Flamme shows you that line, using real NASA test data. Every number links to its source."
 
-**0:20 – 0:27 · NASA data and impact (visual: three source tags: FLEX, BASS-II, Saffire)**
+**0:20 – 0:27 · NASA data and impact**
+**[VISUAL]** Three source tags slide in: FLEX, BASS-II, Saffire.
+**[MOTION]** The tags join together under a single bar, then the bar pulses once.
 
-> "It uses NASA's FLEX, BASS-II and Saffire records, and a model trained on 273 real droplet flames. Safer spacecraft start with better evidence."
+> "It is built on NASA's FLEX, BASS-II and Saffire records, and a model trained on 273 real flames. Safer spacecraft start with better evidence."
 
-**0:27 – 0:30 · Team (visual: team name and the end card)**
+**0:27 – 0:30 · Team and close**
+**[VISUAL]** Flamme logo. Then the end card.
+**[END CARD]** "Team Flamme · University of Dhaka · Not a NASA product."
 
 > "Team Flamme, University of Dhaka."
 
 ---
 
-## Subtitle file (English, for the 30-second cut)
+## Subtitles (burn these in)
 
 | # | Time | Subtitle |
 |---|---|---|
-| 1 | 00:00.000 – 00:05.000 | In space, a flame changes shape, and it can go out. |
-| 2 | 00:05.000 – 00:12.000 | On the ISS, a fire can starve and die at oxygen levels that burn fine on Earth. |
-| 3 | 00:12.000 – 00:20.000 | Flamme answers fire-safety questions from real NASA test data. |
-| 4 | 00:20.000 – 00:27.000 | It uses NASA's FLEX, BASS-II and Saffire records, and a model trained on 273 real droplet flames. |
+| 1 | 00:00.000 – 00:05.000 | In space, a flame can change shape, and go out. |
+| 2 | 00:05.000 – 00:12.000 | On the ISS, a fire can die at oxygen levels that burn fine on Earth. |
+| 3 | 00:12.000 – 00:20.000 | Crews need to know exactly where that line is. Flamme shows you where it is. |
+| 4 | 00:20.000 – 00:27.000 | Built on NASA's FLEX, BASS-II and Saffire records, and a model trained on 273 real flames. |
 | 5 | 00:27.000 – 00:30.000 | Safer spacecraft start with better evidence. Team Flamme, University of Dhaka. |
-
-Subtitles should be burned into the video, not supplied as a separate file only.
-
----
 
 ## Notes
 
-- Keep the same production rules as the 240-second cut: no one under 18 identifiable, no real astronaut's likeness, and "not NASA, not NASA-endorsed" on the end card.
-- Confirm the global cut length and format with the official Participants Guide and the Judging Guide published on 13 November. The 30-second limit comes from the build guide; verify it.
+- Same production rules as the 240-second cut: no one under 18 identifiable, no real crew member's likeness, and the "not NASA" line on the end card.
+- Confirm length and format with the Judging Guide (published 13 November).
