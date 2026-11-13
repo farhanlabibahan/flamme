@@ -9,3 +9,22 @@ flame_in_freefall_data/psi_data/*/Science Documents/
 flame_in_freefall_data/*.part
 capcut_edit/
 video/public/vo.mp4
+
+# Raw NASA PDF/manifest scrape dumps -- not used by the built site, too big for the repo
+flame_in_freefall_data/ntrs_pdfs/
+flame_in_freefall_data/ntrs_skip/
+flame_in_freefall_data/psi_manifest.csv
+flame_in_freefall_data/flame_in_freefall_data_catalog.xlsx
+
+# Early planning/pitch scratch exports -- not part of the deployed app (src/ + public/ + index.html)
+AI_Flow.html
+Ending.html
+Flame in Freefall.html
+Flame in Freefall.md
+Solution.html
+experiments_arrows.html
+flamme_team_intro.html
+dashboard/
+
+# Editor config, not needed for judges
+.vscode/
