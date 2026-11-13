@@ -4,7 +4,7 @@ import {rankFindings, gapsFor} from './ranking.js';
 
 async function post(body) {
   const r = await fetch('/api/ask', {method: 'POST', headers: {'content-type': 'application/json'}, body: JSON.stringify(body)});
-  if (!r.ok) throw new Error(`api ${r.status}`);
+  if (!r.ok) throw Object.assign(new Error(`api ${r.status}`), {status: r.status});
   return r.json();
 }
 
@@ -34,3 +34,8 @@ export async function siInterpret(question, parsed, scenario) {
   const points = (out.points || []).map(p => ({text: String(p.text || ''), sources: (p.finding_ids || []).filter(id => ok.has(id)).map(id => ok.get(id))})).filter(p => p.text && p.sources.length);
   return {summary: String(out.summary || ''), points, limits: String(out.limits || ''), scenario: sc, detectorGap: gaps.some(g => g.finding_id === 'GAP-DETECTOR-RESPONSE')};
 }
+
+// Citation helpers: PSI findings link to their PSI page; report findings (no PSI id) link to NTRS.
+const ntrsId = f => (String(f.source_file || '').match(/NTRS (\d+)/) || [])[1];
+export const citeLabel = f => `${f.psi_id || (ntrsId(f) ? `NTRS ${ntrsId(f)}` : 'NASA report')} \u00b7 ${f.experiment}`;
+export const citeUrl = f => f.psi_id ? `https://psi.nasa.gov/physci/repo/data/investigations/${f.psi_id}` : ntrsId(f) ? `https://ntrs.nasa.gov/citations/${ntrsId(f)}` : null;

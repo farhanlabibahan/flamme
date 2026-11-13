@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {ArrowRight, Search, ShieldCheck, Sparkles, X} from 'lucide-react';
-import {siParse, siInterpret} from '../ai.js';
+import {siParse, siInterpret, citeLabel, citeUrl} from '../ai.js';
 import {DETECTOR_SPINOFF} from '../missionContext.js';
 import {parsePrompt} from '../prompt.js';
 import {useFlamme} from '../context/FlammeContext.jsx';
@@ -19,9 +19,9 @@ export default function AskPage() {
       applyParsed(parsed);
       if (!parsed.in_scope) { setSi({status: 'done', data: {summary: 'This question is outside what the NASA PSI microgravity combustion data covers (for example rocket engines or propellants), so Flamme has no evidence to report.', points: [], limits: ''}}); return; }
       setSi({status: 'done', data: await siInterpret(prompt, parsed, scenarioNow)});
-    } catch {
+    } catch (e) {
       applyParsed(parsePrompt(prompt));
-      setSi({status: 'fallback'});
+      setSi({status: 'fallback', limited: e?.status === 429});
     }
   };
 
@@ -35,14 +35,17 @@ export default function AskPage() {
   return <section className="surface ask-panel ask-page reveal" id="ask">
     <div className="section-top"><h2><Sparkles size={18}/> Ask Flame</h2></div>
     <div className="ask-row">
-      <input value={prompt} onChange={e => setPrompt(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') askFlame(); }} placeholder="e.g. cotton-fiberglass at 22% oxygen with 20 cm/s opposed airflow" aria-label="Ask Flame a question"/>
+      <input value={prompt} onChange={e => setPrompt(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') askSI(); }} placeholder="e.g. cotton-fiberglass at 22% oxygen with 20 cm/s opposed airflow" aria-label="Ask Flame a question"/>
       <button className="accent-btn" onClick={askFlame}><Search size={16}/> Ask Flame</button>
       <button className="outline-btn" onClick={askSI} disabled={si?.status === 'loading'}><Sparkles size={16}/> {si?.status === 'loading' ? 'Analyzing…' : 'Interpret with SI'}</button>
     </div>
-    {si?.status === 'fallback' && <p className="ask-note">SI layer unavailable — showing keyword matching instead.</p>}
+    {si?.status === 'fallback' && <p className="ask-note">{si.limited ? 'Too many SI requests from this connection just now — showing keyword matching instead. Try again in a few minutes.' : 'SI layer unavailable — showing keyword matching instead.'}</p>}
     {si?.status === 'done' && <div className="si-answer">
+      {si.data.scenario && <p className="si-scope">Evidence ranked for: {si.data.scenario.o2_pct}% O₂ · {si.data.scenario.pressure_atm} atm · {si.data.scenario.gravity_g === 0 ? 'microgravity' : `${si.data.scenario.gravity_g} g`}</p>}
       <p><strong>{si.data.summary}</strong></p>
-      {si.data.points.length > 0 && <ul>{si.data.points.map((p, i) => <li key={i}>{p.text} {p.sources.map(f => <a key={f.finding_id} href={`https://psi.nasa.gov/physci/repo/search?q=${encodeURIComponent(f.psi_id)}`} target="_blank" rel="noreferrer">[{f.psi_id} · {f.experiment}]</a>)}</li>)}</ul>}
+      {si.data.points.length > 0 && <ul>{si.data.points.map((p, i) => <li key={i}>{p.text} {[...new Map(p.sources.map(f => [citeLabel(f), f])).values()].map(f => citeUrl(f)
+        ? <a key={f.finding_id} href={citeUrl(f)} target="_blank" rel="noreferrer">[{citeLabel(f)}]</a>
+        : <span key={f.finding_id}>[{citeLabel(f)}]</span>)}</li>)}</ul>}
       {si.data.limits && <p className="ask-note">Limits: {si.data.limits}</p>}
       {si.data.detectorGap && /detector|smoke|aerosol/i.test(`${si.data.summary} ${si.data.limits} ${si.data.points.map(p => p.text).join(' ')}`) && <p className="ask-note">Detector response is a documented evidence gap. Earth application: <a href={DETECTOR_SPINOFF.url} target="_blank" rel="noreferrer">NASA’s shuttle-derived smoke detector</a>.</p>}
       <p className="ask-note"><ShieldCheck size={12}/> Written by an LLM using only the NASA findings listed above; citations are checked against the retrieved rows.</p>

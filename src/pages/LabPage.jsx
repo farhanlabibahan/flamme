@@ -4,7 +4,7 @@ import {ArrowRight, Flame, RotateCcw, Zap} from 'lucide-react';
 import {Enum, NumField, PANELS} from '../Lab.jsx';
 import {AGENTS, DEFAULT_PARAMS, DIRECTIONS, GRAVITY, MATERIALS, derive} from '../labModel.js';
 import {flexModelMeta, nearestFlexTest, predictFlex} from '../flexModel.js';
-import {cfigModelMeta, nearestCfigTest, predictCfig} from '../cfigModel.js';
+import {FLAMES, cfigModelMeta, nearestCfigTest, predictCfig} from '../cfigModel.js';
 import './LabPage.css';
 
 /* Real route: /lab (sidebar entry). A setup page: pick a preset or tune the
@@ -61,10 +61,13 @@ export default function LabPage() {
     return {pred, nearest, pressureAtm};
   }, [params.oxygen, params.pressure]);
 
+  const [cfigFlame, setCfigFlame] = useState('normal');
+  const [cfigO2, setCfigO2] = useState(null);   // inverse flames only: override the lab O₂ to explore up to 85%
   const cfig = useMemo(() => {
     const pressureBar = params.pressure / 100;   // lab pressure is kPa; 100 kPa = 1 bar
-    return {pred: predictCfig({o2Pct: params.oxygen, pressureBar}), nearest: nearestCfigTest({o2Pct: params.oxygen, pressureBar})};
-  }, [params.oxygen, params.pressure]);
+    const o2Pct = cfigFlame === 'inverse' && cfigO2 != null ? cfigO2 : params.oxygen;
+    return {o2Pct, pred: predictCfig({o2Pct, pressureBar, flame: cfigFlame}), nearest: nearestCfigTest({o2Pct, pressureBar, flame: cfigFlame})};
+  }, [params.oxygen, params.pressure, cfigFlame, cfigO2]);
 
   const enter = () => {
     localStorage.setItem(LAB_PARAMS_KEY, JSON.stringify(params));
@@ -122,22 +125,31 @@ export default function LabPage() {
       <header className="lp-ground-head">
         <h2>Grounded in NASA CFI-G data (gaseous fuels)</h2>
       </header>
-      {cfig.pred ? <div className="lp-stats">
+      <div className="lp-flame-toggle" role="group" aria-label="Flame configuration">
+        <span>Flame configuration</span>
+        {FLAMES.map(f => <button key={f} className={cfigFlame === f ? 'on' : ''} aria-pressed={cfigFlame === f} onClick={() => setCfigFlame(f)}>{f === 'normal' ? 'Normal (ambient O₂)' : 'Inverse (O₂ from burner)'}</button>)}
+      </div>
+      {cfigFlame === 'inverse' && <label className="lp-o2-override">
+        <span>Oxygen <em>{cfig.o2Pct}%</em></span>
+        <input type="range" min={cfigModelMeta.rangeByFlame.inverse.o2_pct[0]} max={cfigModelMeta.rangeByFlame.inverse.o2_pct[1]} step="1" value={cfig.o2Pct} onChange={e => setCfigO2(Number(e.target.value))}/>
+        <small>Inverse-flame tests reach 85% O₂, beyond the lab’s 40% slider.</small>
+      </label>}
+      {cfig.pred ? <div className="lp-stats lp-stats-3">
         {Object.entries(cfig.pred).map(([fuel, p]) => <div key={fuel}>
           <span>Hot-ignition probability · {fuel}</span>
           <b>{Math.round(p * 100)}%</b>
-          <small>{cfigModelMeta.nTests} tests · held-out AUC {cfigModelMeta.metrics.auc} (5-fold {cfigModelMeta.metrics.cv5_auc_mean})</small>
         </div>)}
       </div> : <p className="lp-oor">
-        Outside the tested envelope: CFI-G covers O₂ {cfigModelMeta.trainingRange.o2_pct[0].toFixed(0)}–{cfigModelMeta.trainingRange.o2_pct[1].toFixed(0)}%
-        and {cfigModelMeta.trainingRange.p_bar[0].toFixed(2)}–{cfigModelMeta.trainingRange.p_bar[1].toFixed(2)} bar.
+        Outside the tested envelope: {cfigFlame}-flame CFI-G tests cover O₂ {cfigModelMeta.rangeByFlame[cfigFlame].o2_pct[0].toFixed(0)}–{cfigModelMeta.rangeByFlame[cfigFlame].o2_pct[1].toFixed(0)}%
+        and {cfigModelMeta.rangeByFlame[cfigFlame].p_bar[0].toFixed(2)}–{cfigModelMeta.rangeByFlame[cfigFlame].p_bar[1].toFixed(2)} bar.
       </p>}
       {cfig.nearest && <p className="lp-nearest">
         <span>Closest test</span>
         {cfig.nearest.fuel} · {cfig.nearest.o2_pct}% O₂ · {cfig.nearest.pressure_bar} bar · {cfig.nearest.hot_ignition ? 'hot ignition' : 'no hot ignition'}
         {' '}<a href={cfig.nearest.source_url} target="_blank" rel="noreferrer">PSI-159 row {cfig.nearest.source_row} ↗</a>
       </p>}
-      <p className="lp-nearest"><span>Scope</span>Gaseous-fuel flames, not solid materials. Modest skill: it beats always guessing “ignites” ({Math.round(cfigModelMeta.metrics.majority_class_accuracy * 100)}% accuracy) by only a few points on held-out tests.</p>
+      {cfig.pred && <p className="lp-nearest"><span>Model</span>{cfigModelMeta.nTests} tests ({cfigModelMeta.nByFlame.normal} normal + {cfigModelMeta.nByFlame.inverse} inverse) · held-out AUC {cfigModelMeta.metrics.auc} (5-fold {cfigModelMeta.metrics.cv5_auc_mean})</p>}
+      <p className="lp-nearest"><span>Scope</span>Gaseous-fuel flames, not solid materials. It ranks flames better than chance (AUC {cfigModelMeta.metrics.auc}) but does not beat always guessing “ignites” on accuracy ({Math.round(cfigModelMeta.metrics.accuracy * 100)}% vs {Math.round(cfigModelMeta.metrics.majority_class_accuracy * 100)}% on held-out tests): hot ignition is the common outcome, especially for inverse flames.</p>
     </section>
 
     <div className="lp-grid">

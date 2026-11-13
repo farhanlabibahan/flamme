@@ -73,3 +73,5 @@
   .rk-detail dl dt{margin-top:10px}
 }
 @media(prefers-reduced-motion:reduce){.rk-chev{transition:none}}
+
+.rk-tag{display:inline-block;margin-left:6px;padding:1px 6px;border:1px solid var(--line3);font:500 10.5px var(--sans);color:var(--muted);vertical-align:1px}

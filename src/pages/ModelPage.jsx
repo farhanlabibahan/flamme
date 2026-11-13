@@ -132,7 +132,7 @@ export default function ModelPage() {
     <header>
       <span className="cmp-kicker">Model</span>
       <h1>The trained model behind the Lab</h1>
-      <p className="md-lede">Trained offline in <a href="https://github.com/farhanlabibahan/flamme/blob/main/ML/build_flex_model.py" target="_blank" rel="noreferrer">ML/build_flex_model.py <ExternalLink size={14}/></a>.</p>
+      <p className="md-lede">Trained offline in <a href="https://github.com/farhanlabibahan/flamme/blob/main/ML/build_flex_model.py" target="_blank" rel="noreferrer">ML/build_flex_model.py <ExternalLink size={14}/></a>. A second, smaller model (CFI-G hot ignition, gaseous fuels, normal and inverse flames up to 85% O₂; held-out AUC 0.83, but no better than always guessing “ignites” on accuracy) is trained in <a href="https://github.com/farhanlabibahan/flamme/blob/main/ML/build_cfig_model.py" target="_blank" rel="noreferrer">ML/build_cfig_model.py <ExternalLink size={14}/></a> and shown on the Lab page; this page documents the FLEX model.</p>
     </header>
 
     <section className="surface md-diagram">

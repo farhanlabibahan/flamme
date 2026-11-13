@@ -53,3 +53,17 @@ const esc = v => { const t = v == null ? '' : String(v); return /[",\n]/.test(t)
    condition ranges kept separate from text, so it loads straight into pandas/R. */
 export function exportRows(ranked) { return ranked.map((r, i) => ({rank: i + 1, score: r.score, ...r.f})); }
 export function toCsv(rows) { return [CSV_COLS.join(','), ...rows.map(r => CSV_COLS.map(c => esc(r[c])).join(','))].join('\n'); }
+
+/* "Controls & equipment": which kind of spacecraft fire-safety hardware or procedure a finding informs.
+   Derived from the finding's own text (finding + safety_implication) with these fixed patterns, so
+   the filter on /rankings is reproducible. A finding can carry more than one tag. */
+export const CONTROL_PATTERNS = {
+  'Detection': /detector|alarm|smoke properties|sensing|sensors?\b|gas monitoring|monitoring/i,
+  'Suppression': /suppress|inerting|inert-gas|(?<!self-)extinguisher|(?<!self-)extinguishing|backup/i,
+  'Ventilation & airflow': /ventilation|\bfans?\b|airflow|low-fan|fans-down|venting/i,
+  'Atmosphere & life support': /scrubb|masks|oxygen storage|oxygen generators|cabin oxygen|oxygen to ~/i,
+};
+export const controlTags = f => {
+  const t = `${f.finding} ${f.safety_implication}`;
+  return Object.entries(CONTROL_PATTERNS).filter(([, re]) => re.test(t)).map(([k]) => k);
+};

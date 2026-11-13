@@ -1,6 +1,6 @@
 import React, {useMemo, useState} from 'react';
 import {AlertTriangle, ChevronDown, ExternalLink} from 'lucide-react';
-import {DEFAULT_WEIGHTS, exportRows, findings, gapsFor, rankFindings, scenarios, toCsv} from '../ranking.js';
+import {CONTROL_PATTERNS, DEFAULT_WEIGHTS, controlTags, exportRows, findings, gapsFor, rankFindings, scenarios, toCsv} from '../ranking.js';
 import './RankingsPage.css';
 
 /* Real route: /rankings. Scores every finding in the full catalog (115 rows
@@ -10,6 +10,7 @@ import './RankingsPage.css';
    the weights and the ranking recomputes live. */
 const PRESETS = {...scenarios, custom: {label: 'Custom', o2_pct: 30, pressure_atm: 0.69, gravity_g: 0}};
 const THEMES = ['All', ...[...new Set(findings.map(f => f.theme))].sort()];
+const CONTROLS = ['All', ...Object.keys(CONTROL_PATTERNS)];
 const SEV_LABEL = {3: 'Direct threat', 2: 'Design info', 1: 'Background'};
 const urlOf = s => (s.match(/https?:\/\/\S+/) || [])[0];
 
@@ -20,14 +21,15 @@ export default function RankingsPage() {
   const [custom, setCustom] = useState(PRESETS.custom);
   const [w, setW] = useState(DEFAULT_WEIGHTS);
   const [theme, setTheme] = useState('All');
+  const [control, setControl] = useState('All');
   const [open, setOpen] = useState(null);
   const sc = key === 'custom' ? custom : PRESETS[key];
   const ranked = useMemo(() => rankFindings(sc, w), [sc, w]);
-  const shown = ranked.map((r, i) => ({...r, rank: i + 1})).filter(r => theme === 'All' || r.f.theme === theme);
+  const shown = ranked.map((r, i) => ({...r, rank: i + 1})).filter(r => (theme === 'All' || r.f.theme === theme) && (control === 'All' || controlTags(r.f).includes(control)));
   const gaps = gapsFor(sc);
   const download = fmt => {
     const rows = exportRows(shown.map(r => ({...r, score: r.score})));
-    const body = fmt === 'csv' ? toCsv(rows) : JSON.stringify({scenario: sc, weights: w, theme, findings: rows}, null, 1);
+    const body = fmt === 'csv' ? toCsv(rows) : JSON.stringify({scenario: sc, weights: w, theme, control, findings: rows}, null, 1);
     const a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob([body], {type: fmt === 'csv' ? 'text/csv' : 'application/json'}));
     a.download = `flamme-findings-${key}.${fmt}`; a.click(); URL.revokeObjectURL(a.href);
@@ -38,7 +40,7 @@ export default function RankingsPage() {
   return <div className="rk reveal">
     <header className="rk-top">
       <h1>What matters most for this crew environment?</h1>
-      <span className="rk-count"><b>{ranked.length}</b> findings</span>
+      <span className="rk-count"><b>{shown.length}</b> of {ranked.length} findings</span>
     </header>
 
     <section className="rk-controls">
@@ -63,6 +65,12 @@ export default function RankingsPage() {
           <span>Theme</span>
           <select value={theme} onChange={e => setTheme(e.target.value)}>
             {THEMES.map(t => <option key={t} value={t}>{t}</option>)}
+          </select>
+        </label>
+        <label className="rk-field rk-theme">
+          <span>Controls &amp; equipment</span>
+          <select value={control} onChange={e => setControl(e.target.value)}>
+            {CONTROLS.map(t => <option key={t} value={t}>{t === 'All' ? 'All findings' : t}</option>)}
           </select>
         </label>
         <div className="rk-export">
@@ -96,7 +104,7 @@ export default function RankingsPage() {
           <button className="rk-row" aria-expanded={isOpen} onClick={() => setOpen(isOpen ? null : f.finding_id)}>
             <span className="rk-rank">{String(r.rank).padStart(2, '0')}</span>
             <span className="rk-main"><b>{f.finding}</b>
-              <small>{f.experiment} · {f.theme} · <span className={`sev s${f.severity}`}>{SEV_LABEL[f.severity]}</span> · {f.confidence}</small></span>
+              <small>{f.experiment} · {f.theme} · <span className={`sev s${f.severity}`}>{SEV_LABEL[f.severity]}</span> · {f.confidence}{controlTags(f).map(t => <span key={t} className="rk-tag">{t}</span>)}</small></span>
             <span className="rk-score">{r.score.toFixed(1)}</span><ChevronDown size={15} className="rk-chev"/>
           </button>
           {isOpen && <div className="rk-detail">
@@ -113,7 +121,7 @@ export default function RankingsPage() {
           </div>}
         </li>;
       })}
-      {!shown.length && <li className="rk-empty">No findings in this theme.</li>}
+      {!shown.length && <li className="rk-empty">No findings match this theme and control type.</li>}
     </ol>
   </div>;
 }

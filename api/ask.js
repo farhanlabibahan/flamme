@@ -19,6 +19,23 @@ Reply with ONE JSON object and nothing else:
  "limits": "what the evidence does not cover, including any provided gaps"}
 Every point must cite at least one provided finding_id. If the rows do not answer the question, say so in summary and return an empty points array.`;
 
+// Best-effort protection for the public endpoint (in-memory, so per warm serverless instance):
+//  - a per-IP rate limit, so one visitor cannot burn the shared free-tier quota
+//  - a short cache of identical requests, so repeating a question costs nothing
+const WINDOW_MS = 10 * 60 * 1000, MAX_PER_WINDOW = 30, CACHE_TTL_MS = 10 * 60 * 1000, CACHE_MAX = 200;
+const hits = new Map(), cache = new Map();
+function limited(ip) {
+  const now = Date.now(), recent = (hits.get(ip) || []).filter(t => now - t < WINDOW_MS);
+  recent.push(now); hits.set(ip, recent);
+  if (hits.size > 5000) for (const [k, v] of hits) if (!v.some(t => now - t < WINDOW_MS)) hits.delete(k);
+  return recent.length > MAX_PER_WINDOW ? Math.ceil((recent[0] + WINDOW_MS - now) / 1000) : 0;
+}
+const remember = (key, val) => {
+  if (cache.size >= CACHE_MAX) cache.delete(cache.keys().next().value);
+  cache.set(key, {val, at: Date.now()});
+};
+const recall = key => { const c = cache.get(key); return c && Date.now() - c.at < CACHE_TTL_MS ? c.val : null; };
+
 async function callModel(system, user) {
   const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
@@ -40,14 +57,21 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({error: 'POST only'});
   if (!process.env.GROQ_API_KEY) return res.status(503).json({error: 'SI layer not configured'});
   try {
+    const ip = String(req.headers?.['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown').split(',')[0].trim();
+    const wait = limited(ip);
+    if (wait) { res.setHeader('Retry-After', String(wait)); return res.status(429).json({error: 'Too many requests', retry_after_s: wait}); }
     const {mode, question, rows, gaps} = req.body || {};
     const q = String(question || '').slice(0, 500);
     if (!q) return res.status(400).json({error: 'question required'});
-    if (mode === 'parse') return res.status(200).json(await callModel(PARSE_SYSTEM, q));
+    const ckey = JSON.stringify([mode, q, rows, gaps]);
+    const hit = recall(ckey);
+    if (hit) return res.status(200).json(hit);
+    if (mode === 'parse') { const out = await callModel(PARSE_SYSTEM, q); remember(ckey, out); return res.status(200).json(out); }
     if (mode === 'interpret') {
       const safeRows = (Array.isArray(rows) ? rows : []).slice(0, 6);
       const safeGaps = (Array.isArray(gaps) ? gaps : []).slice(0, 3);
       const out = await callModel(INTERPRET_SYSTEM, `Question: ${q}\n\nFindings:\n${JSON.stringify(safeRows)}\n\nKnown evidence gaps:\n${JSON.stringify(safeGaps)}`);
+      remember(ckey, out);
       return res.status(200).json(out);
     }
     return res.status(400).json({error: 'bad mode'});

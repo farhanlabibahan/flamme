@@ -100,7 +100,7 @@ export default function LandingPage() {
           <a className="l-final-ghost" href="https://github.com/farhanlabibahan/flamme" target="_blank" rel="noreferrer">View source <ArrowUpRight size={15}/></a>
         </div>
         <div className="l-final-links">
-          <div><b>Product</b><a onClick={() => jump('Lab')}>Lab</a><a onClick={() => jump('Ask')}>Ask</a><a onClick={() => jump('Evidence')}>Evidence</a><a onClick={() => jump('Rankings')}>Rankings</a></div>
+          <div><b>Product</b><a onClick={() => jump('Lab')}>Lab</a><a onClick={() => jump('Ask')}>Ask</a><a onClick={() => jump('Evidence')}>Evidence</a><a onClick={() => jump('Rankings')}>Rankings</a><a onClick={() => jump('Investigations')}>Investigations</a><a onClick={() => jump('Gaps')}>Gap map</a><a onClick={() => jump('Model')}>Model</a><a onClick={() => jump('Sources')}>Sources</a></div>
           <div><b>Sources</b><a href="https://psi.nasa.gov" target="_blank" rel="noreferrer">NASA PSI</a><a href="https://github.com/farhanlabibahan/flamme" target="_blank" rel="noreferrer">GitHub</a></div>
         </div>
         <p className="l-credit">{CREDIT}</p>

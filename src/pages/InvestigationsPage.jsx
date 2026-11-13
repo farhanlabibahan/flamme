@@ -1,10 +1,11 @@
-import React, {useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {createPortal} from 'react-dom';
-import {Check, ExternalLink, Layers, X} from 'lucide-react';
+import {Check, ChevronDown, ExternalLink, Layers, X} from 'lucide-react';
 import invs from '../investigationsData.json';
 import {findings, rankFindings, scenarios} from '../ranking.js';
 import {BACKGROUND} from '../missionContext.js';
 import guide from '../guideFacts.json';
+import variation from '../variationData.json';
 import './InvestigationsPage.css';
 
 /* Real route: /investigations. Browse all 24 PSI combustion investigations,
@@ -17,6 +18,24 @@ const uniq = k => ['All', ...new Set(invs.map(i => i[k]))];
 const PILLARS = ['All', 'Prevention', 'Detection', 'Suppression'];
 const byId = Object.fromEntries(findings.map(f => [f.finding_id, f]));
 
+/* "What varied, what stayed the same" for one investigation, computed from its PSI test-matrix rows
+   (findings/build_variation.py -> src/variationData.json). */
+function Variation({id}) {
+  const v = variation[id];
+  if (!v) return <p className="iv-var-none">PSI has no test-matrix table for this investigation, so its conditions can’t be compared test by test. See the objective in the comparison view.</p>;
+  return <div className="iv-var">
+    <p className="iv-var-n">Across <b>{v.rows}</b> {v.rows === 1 ? 'row' : 'rows'} in its PSI table(s):</p>
+    <div className="iv-var-cols">
+      <div><h4>Varied between tests</h4>
+        {v.varied.length ? <dl>{v.varied.map(x => <React.Fragment key={x.label}><dt>{x.label}</dt><dd>{x.value}</dd></React.Fragment>)}</dl> : <p className="iv-var-none">Nothing in the table’s condition columns varied.</p>}</div>
+      <div><h4>Held the same</h4>
+        {v.constant.length ? <dl>{v.constant.map(x => <React.Fragment key={x.label}><dt>{x.label}</dt><dd>{x.value}</dd></React.Fragment>)}</dl> : <p className="iv-var-none">No condition column stayed fixed.</p>}</div>
+    </div>
+    {v.recorded.length > 0 && <p className="iv-var-rec"><b>Also recorded:</b> {v.recorded.join(' · ')}</p>}
+    {v.notes.map(n => <p key={n} className="iv-var-note">{n}</p>)}
+  </div>;
+}
+
 export default function InvestigationsPage() {
   const [scn, setScn] = useState('moon');
   const [pillar, setPillar] = useState('All');
@@ -24,6 +43,13 @@ export default function InvestigationsPage() {
   const [fuel, setFuel] = useState('All');
   const [sel, setSel] = useState(['PSI-69', 'PSI-25']);
   const [open, setOpen] = useState(false);
+  const [exp, setExp] = useState([]);
+  useEffect(() => {
+    if (!open) return;
+    const onKey = e => { if (e.key === 'Escape') setOpen(false); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open]);
   const ranked = useMemo(() => {
     const score = Object.fromEntries(rankFindings(scenarios[scn]).map(r => [r.f.finding_id, r.score]));
     return invs.map(i => {
@@ -47,6 +73,8 @@ export default function InvestigationsPage() {
     ['Safety pillars', i => i.pillars.join(', ') || 'Fundamental science'],
     ['PSI listed dates', i => i.start || i.end ? `${i.start || '?'}–${i.end || '?'}` : 'not stated'],
     ['Test-matrix rows', i => i.test_rows || 'none in tables'], ['O₂ tested (linked findings)', o2],
+    ['Varied between tests', i => variation[i.id]?.varied.map(x => x.label).join(', ') || (variation[i.id] ? 'nothing in the table' : 'no test table')],
+    ['Held the same', i => variation[i.id]?.constant.map(x => `${x.label}: ${x.value}`).join(' · ') || (variation[i.id] ? 'none' : 'no test table')],
     ['Linked findings', i => i.n], [`Best score · ${scenarios[scn].label}`, i => i.best ?? '—'],
     ['Objective (PSI)', i => i.objective],
     ['Researcher’s Guide (2015)', i => guide[i.id] ? `${guide[i.id].objective} · ${guide[i.id].hardware} · ${guide[i.id].dates}` : 'not covered by the guide'], ['Keywords', i => i.keywords],
@@ -72,8 +100,10 @@ export default function InvestigationsPage() {
         return <li key={i.id} className={`surface iv-item ${on ? 'on' : ''}`}>
           <button className="iv-pick" aria-pressed={on} aria-label={`${on ? 'Remove' : 'Add'} ${i.name} ${on ? 'from' : 'to'} comparison`} disabled={!on && sel.length >= MAX} title={!on && sel.length >= MAX ? `Limit of ${MAX} reached. Remove one to add another.` : undefined} onClick={() => toggle(i.id)}>{on && <Check size={14}/>}</button>
           <div className="iv-main"><b>{i.name}</b> <span className="iv-id">{i.id}</span>
-            <small>{i.hardware} · {i.fuel} · {i.pillars.join(' / ') || 'Fundamental'}</small></div>
-          <div className="iv-score" title={i.n ? `${i.n} linked findings` : 'No linked findings'}>{i.best != null ? i.best.toFixed(1) : '—'}<small>{i.n} findings</small></div>
+            <small>{i.hardware} · {i.fuel} · {i.pillars.join(' / ') || 'Fundamental'}</small>
+            <button className="iv-var-btn" aria-expanded={exp.includes(i.id)} onClick={() => setExp(e => e.includes(i.id) ? e.filter(x => x !== i.id) : [...e, i.id])}>What varied between tests <ChevronDown size={13} className={exp.includes(i.id) ? 'up' : ''}/></button></div>
+          <div className="iv-score" title={i.n ? `${i.n} linked findings` : 'No linked findings'}>{i.best != null ? i.best.toFixed(1) : '—'}<small>{i.n} {i.n === 1 ? 'finding' : 'findings'}</small></div>
+          {exp.includes(i.id) && <div className="iv-detail"><Variation id={i.id}/></div>}
         </li>;
       })}
       {!shown.length && <li className="rk-empty">No investigations match these filters.</li>}

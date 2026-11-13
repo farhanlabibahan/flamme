@@ -18,9 +18,10 @@ export default function SourcesPage() {
       <span className="cmp-kicker">Sources</span>
       <h1>Every NASA source Flamme cites</h1>
       <p className="sp-lede">{allInvestigations.length} NASA PSI combustion investigations behind Evidence, Rankings and the Gap map,
-        plus the same PSI-69 (FLEX) source behind the trained model on the Lab and Model pages. For filtering, ranking and
+        plus the PSI-69 (FLEX) and PSI-159 (CFI-G) sources behind the two trained models on the Lab page. For filtering, ranking and
         side-by-side comparison, use <button className="sp-link" onClick={() => navigate('/investigations')}>Investigations <ExternalLink size={12}/></button>.</p>
     </header>
+    <h2 className="cmp-kicker">NASA PSI investigations</h2>
     <ul className="sp-list">
       {allInvestigations.map(i => <li key={i.id}>
         <div className="sp-main">
@@ -37,6 +38,7 @@ export default function SourcesPage() {
     {/* Built from flame_in_freefall_data/ntrs_reports.csv by findings/build_findings_data.py:
         only reports at least one finding cites. "Real-incident lesson" marks reports behind the
         Apollo 1, Apollo 13 and Mir rows, which are accident lessons, not controlled experiments. */}
+    <h2 className="cmp-kicker">NASA technical reports (NTRS)</h2>
     <ul className="sp-list">
       {reports.map(r => <li key={r.id}>
         <div className="sp-main">

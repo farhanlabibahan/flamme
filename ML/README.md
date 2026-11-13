@@ -73,10 +73,21 @@ natural next step, not done here.
 python3 build_cfig_model.py     # numpy + pandas only (no sklearn needed)
 ```
 
-Logistic regression on the 179 CFI-G *normal-flame* tests: did the gaseous-fuel flame hot-ignite,
-from O₂ %, pressure (bar) and fuel family (propane / ethane / butane). Held-out test AUC 0.73
-(n=45), 5-fold CV AUC 0.71, accuracy 0.84 vs 0.74 for always guessing "ignites" — modest skill,
-reported as such. Training range O₂ 18–40 %, 0.51–3.04 bar; outside it the model returns null.
-Output `../src/cfigModel.json`, consumed by `../src/cfigModel.js`, shown on `/lab` under the FLEX card.
-Not a solid-material model, and fuel dilution (e.g. "30% butane") is not modelled.
+Logistic regression on **325 CFI-G tests** from PSI-159: 179 *normal-flame* tests (O₂ 18–40 %) plus 146
+*inverse-flame* tests (oxidiser fed from the burner, O₂ 12–85 % — the highest-oxygen microgravity
+tests in PSI). Question: did the gaseous-fuel flame hot-ignite, from O₂ %, pressure (bar), fuel
+family (propane / ethane / butane) and flame configuration. Eight inverse rows marked "flash"
+are ambiguous and excluded.
+
+Honest results (seeded 75/25 split, n_test=82): held-out AUC 0.83, 5-fold CV AUC 0.81 (min 0.74),
+but accuracy 0.805 against 0.809 for always guessing "ignites" — the model ranks flames better than
+chance without beating the majority guess on accuracy, because hot ignition is the common outcome
+(74 % of normal, 90 % of inverse tests). Per type, held-out AUC is 0.76 (normal) and 0.97 (inverse).
+Before the inverse table was added, the normal-flame-only model had AUC 0.73 on 45 held-out tests.
+Inverse-flame "O₂" is the oxidiser-stream concentration, not the ambient atmosphere, so the flame
+configuration is an explicit input and each is only predicted inside its own tested range
+(normal 18–40 % O₂ and 0.51–3.04 bar; inverse 12–85 % O₂ and 0.50–3.31 bar); outside it the
+model returns null. Output `../src/cfigModel.json`, consumed by `../src/cfigModel.js`, shown on `/lab`
+under the FLEX card with a Normal / Inverse toggle. Not a solid-material model, and fuel dilution
+(e.g. "30% butane") is not modelled.
 Not extended: BASS / BASS-II / SLICE / SAFFIRE tables are test logs without an outcome column.

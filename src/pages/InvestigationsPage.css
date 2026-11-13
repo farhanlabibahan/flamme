@@ -46,3 +46,16 @@
 .iv-compare tbody tr:last-child th,.iv-compare tbody tr:last-child td{border-bottom:0}
 
 @media(max-width:900px){.iv-compare-float{width:calc(100vw - 32px)}.iv-float-compare{right:16px}}
+
+/* "what varied between tests" panel */
+.iv-var-btn{display:inline-flex;align-items:center;gap:5px;margin-top:6px;border:0;background:none;padding:0;color:var(--accent);font:600 12px var(--sans);cursor:pointer}
+.iv-var-btn:hover{text-decoration:underline}.iv-var-btn svg{transition:transform .2s}.iv-var-btn svg.up{transform:rotate(180deg)}
+.iv-detail{grid-column:1/-1;border-top:1px solid var(--line2);padding-top:12px}
+.iv-var-n{margin:0 0 10px;font-size:12.5px;color:var(--muted)}
+.iv-var-cols{display:grid;grid-template-columns:3fr 2fr;gap:20px}
+.iv-var h4{margin:0 0 6px;font:600 10.5px var(--disp);letter-spacing:.1em;text-transform:uppercase;color:var(--ink)}
+.iv-var dl{margin:0;display:grid;grid-template-columns:max-content 1fr;gap:4px 12px;font-size:12.5px}
+.iv-var dt{color:var(--muted)}.iv-var dd{margin:0;color:var(--ink);overflow-wrap:anywhere}
+.iv-var-none{margin:0;font-size:12.5px;color:var(--dim)}
+.iv-var-rec,.iv-var-note{margin:10px 0 0;font-size:12px;color:var(--muted)}.iv-var-note{font-style:italic}
+@media(max-width:700px){.iv-var-cols{grid-template-columns:1fr}}

@@ -98,3 +98,13 @@
   .lp-regime{align-items:flex-start;text-align:left}
 }
 @media(prefers-reduced-motion:reduce){.lp-enter,.lp-preset{transition:none}}
+
+.lp-stats-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:900px){.lp-stats-3{grid-template-columns:1fr}}
+
+.lp-flame-toggle{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 10px}
+.lp-flame-toggle span{font:600 10.5px var(--disp);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-right:4px}
+.lp-flame-toggle button{border:1px solid var(--line2);padding:5px 9px;font-size:12px;background:var(--panel);cursor:pointer}
+.lp-flame-toggle button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.lp-o2-override{display:grid;gap:4px;margin:0 0 10px;font-size:12.5px}
+.lp-o2-override em{font-style:normal;font-weight:600}.lp-o2-override small{color:var(--muted)}

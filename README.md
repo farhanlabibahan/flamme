@@ -26,18 +26,18 @@ extinguishes.
 
 | Page | What it does |
 |---|---|
-| **Lab** (`/lab`, `/lab/view`) | Interactive 3D chamber with a hand-built illustrative flame-response model (`src/labModel.js`), plus a **"Grounded in NASA FLEX data"** card driven by a real trained model (see [Machine learning](#machine-learning) below) — shown side by side, never blended. |
+| **Lab** (`/lab`, `/lab/view`) | Interactive 3D chamber with a hand-built illustrative flame-response model (`src/labModel.js`), plus a **"Grounded in NASA FLEX data"** card (liquid droplets) and a **"Grounded in NASA CFI-G data"** card (gaseous fuels, normal and inverse flames up to 85% O₂), each driven by a real trained model (see [Machine learning](#machine-learning) below) — shown side by side, never blended. |
 | **Evidence** (`/evidence`) | Search/filter over 5 curated, fully source-traced sample records (Saffire II, BASS II) with explicit provenance (file, row, DOI, caveats). |
-| **Ask** (`/ask`) | Deterministic keyword/regex parser reads a plain-language question into structured conditions — explicitly labelled "not an AI model." |
-| **Rankings** (`/rankings`) | Scores all 115 findings in the full catalog against a chosen crew environment (ISS, transit, Moon, Mars), same formula as `findings/rank_findings.py`. |
-| **Investigations** (`/investigations`) | Browse and compare up to 4 of the full 24-investigation NASA PSI/NTRS catalog side by side. |
+| **Ask** (`/ask`) | Plain-language questions about microgravity fire safety. **Ask Flame** uses a deterministic keyword/regex parser (no AI). **Interpret with SI** sends the question to an LLM that reads it into conditions, then writes a short answer grounded only in the top-ranked findings (see [The SI layer](#the-si-layer)); if the SI service is unavailable or rate-limited the page falls back to the keyword parser and says so. |
+| **Rankings** (`/rankings`) | Scores all 115 findings in the full catalog against a chosen crew environment (ISS, transit, Moon, Mars), same formula as `findings/rank_findings.py`. Filter by theme or by **Controls & equipment** (Detection, Suppression, Ventilation & airflow, Atmosphere & life support — tagged from each finding's text by fixed patterns in `src/ranking.js`); export CSV/JSON. |
+| **Investigations** (`/investigations`) | Browse and compare up to 4 of the full 24-investigation NASA PSI/NTRS catalog side by side. Each investigation with a PSI test table has a **What varied between tests** panel (conditions that varied vs. were held the same, computed from `cleaned_values.csv` by `findings/build_variation.py`); 4 investigations have no test table. |
 | **Gap map** (`/gaps`) | Heatmap of which gravity-regime × oxygen-band combinations the 115-finding catalog's experiments actually cover vs. don't (real-incident lessons are excluded from coverage) — plan item "map the gaps." |
 | **Model** (`/model`) | The exact fitted parameters (coefficients, confusion matrix, held-out metrics) of the trained FLEX model, plus the ten-condition reporting schema (downloadable JSON Schema + CSV template) every page's data follows, so the "grounded" claim in the Lab is independently checkable. |
 | **Sources** (`/sources`) | Every NASA source Flamme cites, in one place: the 24 PSI investigations plus the 20 NTRS technical reports quoted by Rankings findings (Apollo 1, Apollo 13 and Mir reports marked as real-incident lessons). |
 
 ## Machine learning
 
-Everything here is in [`ML/`](ML/) — two small, fully documented, re-runnable pipelines.
+Everything here is in [`ML/`](ML/) — small, fully documented, re-runnable pipelines: the FLEX model (sections 1–7 below), a CFI-G hot-ignition model (`ML/build_cfig_model.py`, see [`ML/README.md`](ML/README.md) §3; held-out AUC 0.83 but no better than always guessing "ignites" on accuracy), and a findings notebook.
 Pushed to the browser as plain coefficients (no backend, no `.pkl`, nothing to load at
 request time): the model trains once offline in Python, and the browser only runs the
 already-fitted arithmetic (standardize → dot product → sigmoid). See `src/flexModel.js`
@@ -155,6 +155,39 @@ A second pipeline, `ML/build_notebook.py` → `ML/feature_engineering.ipynb`, ap
 cleaning/feature-engineering discipline to the curated `findings.csv` (111 rows when the notebook was last run; used by
 Rankings/Gap map), independently of the FLEX model above.
 
+## The SI layer
+
+"SI" here means a language model used for two narrow jobs, behind one serverless endpoint
+(`api/ask.js`, Vercel; Groq's OpenAI-compatible API, model `openai/gpt-oss-120b` by default):
+
+1. **parse** — turn a free-text question into scenario fields (material, O₂, airflow, direction, pressure, gravity) and flag out-of-scope questions (e.g. rocket propellants).
+2. **interpret** — Flamme ranks the 115 findings for that scenario (`src/ranking.js`) and sends **only the top 5 rows plus known evidence gaps**. The model must answer from those rows and cite their IDs; the browser drops any citation that was not among the rows it sent (`src/ai.js`).
+
+The ranking, the data and every number shown come from the deterministic pipeline, not the model. If
+the endpoint is down, unconfigured or rate-limited (30 requests per IP per 10 minutes, plus a
+10-minute cache of identical requests; in-memory, so per serverless instance), Ask falls back to the keyword parser.
+The SI answer is a summary of NASA findings, not a safety assessment.
+
+Setup: put `GROQ_API_KEY` in a local `.env` (gitignored) and in Vercel → Environment Variables
+(Production). `npm run dev` also serves `/api/ask` locally (see `vite.config.js`); `node scripts/test-ask.mjs`
+calls it without a browser. Optional `GROQ_MODEL` overrides the model.
+
+## Challenge coverage
+
+How the build maps onto the *Flame in Freefall* brief (see the NASA Space Apps challenge page for the full text):
+
+| Brief asks for | Where in Flamme |
+|---|---|
+| Summarise and organise the microgravity combustion data | Investigations, Sources, Evidence, `findings/` pipeline |
+| Compare tests within an investigation: what varied, what stayed the same | Investigations → *What varied between tests* |
+| Rank / prioritise findings for fire safety | Rankings (crew environment, weights, export) |
+| Interpret results with AI | Ask → *Interpret with SI*, grounded and cited |
+| Exploration atmospheres (e.g. Moon-base 30% O₂ / 10.2 psi) | Rankings scenario presets; Gap map; Lab |
+| Highest-oxygen and ignition behaviour | CFI-G model incl. inverse flames to 85% O₂ (Lab, Model) |
+| Research informing next-generation controls and equipment | Rankings → *Controls & equipment* |
+| Where evidence is missing | Gap map; evidence-gap notices in Rankings and Ask |
+| Earth applications of the research | Landing page ("Fire safety on Earth, too"), Gap map detector link |
+
 ## How evidence is represented
 
 Every record separates four concepts so the interface never invents precision the source
@@ -175,13 +208,18 @@ excluded from numeric matching rather than silently parsed as `0.37mm`.
 ├── src/                       React app (Vite)
 │   ├── pages/                 One file per route: Lab, Evidence, Ask, Rankings,
 │   │                          Investigations, Gaps, Model, Sources
+│   ├── ai.js                  Client for the SI layer (grounded, citation-checked)
+│   ├── cfigModel.js/.json     CFI-G hot-ignition model (normal + inverse flames)
+│   ├── variationData.json     What varied/held constant per investigation (generated)
 │   ├── labModel.js            Illustrative solid-sample flame-response model
 │   ├── flexModel.js           Client-side inference for the trained FLEX model
 │   ├── flexModel.json         Exported model parameters (generated by ML/)
 │   ├── science.js             Deterministic 5-row matching/explanation logic
 │   └── ranking.js             JS port of findings/rank_findings.py
+├── api/ask.js                 Serverless SI endpoint (Groq), rate-limited
 ├── ML/                        Data cleaning + feature engineering + model training
 │   ├── build_flex_model.py    FLEX pipeline → src/flexModel.json
+│   ├── build_cfig_model.py    CFI-G pipeline → src/cfigModel.json
 │   ├── build_notebook.py      Generates feature_engineering.ipynb
 │   └── README.md              Full pipeline write-up
 ├── flame_in_freefall_data/    PSI/NTRS catalog, manifests, downloaded tables, reports
@@ -196,7 +234,7 @@ excluded from numeric matching rather than silently parsed as `0.37mm`.
 ```sh
 npm install
 npm run dev          # http://localhost:5173
-npm test             # vitest
+npm test             # node:test (src/science.test.js)
 npm run build         # production build
 npm run preview
 ```
@@ -205,6 +243,12 @@ Python tooling (data pipelines, `ML/`) needs Python 3 with `pandas`, `numpy`,
 `scikit-learn` (`pip install pandas numpy scikit-learn jupyter nbformat`).
 
 ## Limitations and responsible-use boundaries
+
+- SI answers are only as good as the five findings they are given, and the language model can still
+  phrase them imperfectly; every point is shown with its cited NASA source so it can be checked.
+- The CFI-G model covers gaseous fuels only and does not beat the majority guess on accuracy;
+  inverse-flame O₂ is the oxidiser-stream concentration, not a cabin atmosphere.
+- Some PSI tables are test logs or planned matrices without measured outcomes; the *What varied* panel says so.
 
 - The Evidence demo covers 5 curated records; Rankings/Investigations/Gap map cover
   the full 115-finding catalog, which is itself a curated subset of the ~24,500-row raw PSI

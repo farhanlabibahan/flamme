@@ -1,0 +1,565 @@
+{
+ "PSI-10": {
+  "varied": [
+   {
+    "label": "Flame type",
+    "value": "Normal, Inverse"
+   },
+   {
+    "label": "Fuel",
+    "value": "C2H4, C3H8"
+   },
+   {
+    "label": "O₂ mole fraction",
+    "value": "21.2–85 % (58 distinct values)"
+   },
+   {
+    "label": "Initial pressure",
+    "value": "0.425–3.01 atm (129 distinct values)"
+   }
+  ],
+  "constant": [],
+  "recorded": [
+   "Gas flow rates (mg/s)",
+   "Adiabatic flame temperature",
+   "Stoichiometric mixture fraction",
+   "Fuel fraction before/after test"
+  ],
+  "notes": [],
+  "rows": 327
+ },
+ "PSI-100": {
+  "varied": [
+   {
+    "label": "Flow direction",
+    "value": "Concurrent, Opposed"
+   }
+  ],
+  "constant": [
+   {
+    "label": "Material",
+    "value": "SIBAL Fabric"
+   },
+   {
+    "label": "Thickness",
+    "value": ".33 cm"
+   },
+   {
+    "label": "Length",
+    "value": "94 cm"
+   },
+   {
+    "label": "Width",
+    "value": "40.6 cm"
+   },
+   {
+    "label": "Air flow",
+    "value": "30 cm/s"
+   }
+  ],
+  "recorded": [
+   "Camera views"
+  ],
+  "notes": [],
+  "rows": 2
+ },
+ "PSI-101": {
+  "varied": [
+   {
+    "label": "Sample material",
+    "value": "Kapton, Silicone, Lampwick, Pyrell, Teflon"
+   },
+   {
+    "label": "Inlet velocity",
+    "value": "0, 1, 2, 8, 8.1 cm/s"
+   },
+   {
+    "label": "Test duration",
+    "value": "60, 120 s"
+   },
+   {
+    "label": "Primary aging time",
+    "value": "1, 11, 720 s"
+   }
+  ],
+  "constant": [
+   {
+    "label": "Primary mixing time",
+    "value": "8 s"
+   }
+  ],
+  "recorded": [
+   "Rt/R0 (aerosol aging ratio)",
+   "Net aging time"
+  ],
+  "notes": [],
+  "rows": 109
+ },
+ "PSI-102": {
+  "varied": [
+   {
+    "label": "Sample material",
+    "value": "Teflon, Kapton, Silicone Rubber, Lampwick, Dibutyl Phthalate"
+   },
+   {
+    "label": "Air flow",
+    "value": "5, 10 cm/s"
+   },
+   {
+    "label": "Aging duration",
+    "value": "1, 20 min"
+   }
+  ],
+  "constant": [],
+  "recorded": [
+   "Weight-loss rate (mg/min)"
+  ],
+  "notes": [],
+  "rows": 8
+ },
+ "PSI-106": {
+  "varied": [
+   {
+    "label": "Fuel mixture",
+    "value": "100% CH4, 70% CH4, 40% CH4, 20% C2H4, 100% C2H6, 100% C2H4"
+   }
+  ],
+  "constant": [],
+  "recorded": [
+   "Test dates"
+  ],
+  "notes": [],
+  "rows": 12
+ },
+ "PSI-107": {
+  "varied": [
+   {
+    "label": "Fuel",
+    "value": "Propylene, 75 % Propylene, 50 % Propylene, Propane, Ethylene, 75% Propylene (+1 more)"
+   },
+   {
+    "label": "Nozzle diameter",
+    "value": "0.406, 0.762, 1.6 mm"
+   },
+   {
+    "label": "Air velocity",
+    "value": "-5.92–85.3 cm/s (62 distinct values)"
+   },
+   {
+    "label": "Fuel rate",
+    "value": "0–4.4 mg/s (275 distinct values)"
+   }
+  ],
+  "constant": [],
+  "recorded": [
+   "Ignition and flame-off times (GMT)"
+  ],
+  "notes": [],
+  "rows": 469
+ },
+ "PSI-142": {
+  "varied": [
+   {
+    "label": "Data sets (published figures)",
+    "value": "CFE limit with ozone, CFE limit without ozone, CFE and HFE Predicted vs Measured, Measured and computed DME/O2/O3 CFE and HFE, CH2O PLIF and thermometry, nC7/nC10/nC12 chemiluminescence (+2 more)"
+   }
+  ],
+  "constant": [],
+  "recorded": [
+   "Figure numbers and publication links"
+  ],
+  "notes": [],
+  "rows": 8
+ },
+ "PSI-159": {
+  "varied": [
+   {
+    "label": "Flame type",
+    "value": "Normal, Inverse"
+   },
+   {
+    "label": "Fuel",
+    "value": "Ethane, Propane, Butane, 30% butane, 30% propane, 50% butane (+1 more)"
+   },
+   {
+    "label": "O₂ mole fraction (high-O₂ inverse-flame table)",
+    "value": "12–85 % (12 distinct values)"
+   },
+   {
+    "label": "O₂ mole fraction (normal-flame table)",
+    "value": "18–40 % (139 distinct values)"
+   },
+   {
+    "label": "Pressure",
+    "value": "0.495–3.31 bar (11 distinct values)"
+   }
+  ],
+  "constant": [],
+  "recorded": [
+   "Burn time",
+   "Self-extinguished vs. flow terminated",
+   "Hot ignition",
+   "Peak burner temperature",
+   "Adiabatic flame temperature"
+  ],
+  "notes": [],
+  "rows": 333
+ },
+ "PSI-20": {
+  "varied": [
+   {
+    "label": "Burner size",
+    "value": "25, 50 mm"
+   },
+   {
+    "label": "Fuel (diluted with N₂)",
+    "value": "100% C2H4, 50% C2H4, 100% CH4"
+   },
+   {
+    "label": "O₂ concentrations tried",
+    "value": "21, 25, 26.5, 34, 40 %"
+   }
+  ],
+  "constant": [],
+  "recorded": [
+   "Flames ignited per day"
+  ],
+  "notes": [
+   "Chamber pressure was also varied but the PSI summary table does not list it.",
+   "Two O₂ cells in the PSI table read 2100% and 3400%; these look like entry errors and are left out here."
+  ],
+  "rows": 18
+ },
+ "PSI-21": {
+  "varied": [
+   {
+    "label": "Test type",
+    "value": "Methane based test, Ethylene based test, Improved coflow tests"
+   },
+   {
+    "label": "Fuel flow-controller max",
+    "value": "0.1, 0.2 slpm"
+   },
+   {
+    "label": "N₂ flow-controller max",
+    "value": "0.02, 0.05, 0.1, 0.2 slpm"
+   },
+   {
+    "label": "Fuel concentration range",
+    "value": "0–100 % (11 values)"
+   }
+  ],
+  "constant": [],
+  "recorded": [
+   "Flames ignited per day"
+  ],
+  "notes": [
+   "The table is a per-test-day summary, not per-flame data."
+  ],
+  "rows": 32
+ },
+ "PSI-22": {
+  "varied": [
+   {
+    "label": "Burner type",
+    "value": "First round of tests with coflow burner, Second round of tests with gas-jet burner"
+   },
+   {
+    "label": "Electrode polarity",
+    "value": "positive, negative"
+   },
+   {
+    "label": "Fuel concentration",
+    "value": "25–100 % (7 distinct values)"
+   }
+  ],
+  "constant": [],
+  "recorded": [
+   "Flames ignited per day"
+  ],
+  "notes": [],
+  "rows": 32
+ },
+ "PSI-23": {
+  "varied": [
+   {
+    "label": "Diluent",
+    "value": "First round of tests with nitrogen-diluted fuel and oxygen, Second round of tests with helium-diluted fuel and oxygen"
+   },
+   {
+    "label": "Atmosphere",
+    "value": "~21% O2 with N₂, ~30% and ~21% O2 with He, ~21% O2 with He, ~30% O2 with He, ~30% O2 with N₂"
+   }
+  ],
+  "constant": [],
+  "recorded": [
+   "Flames ignited per day"
+  ],
+  "notes": [
+   "Pressure is about 1 atm but rises and O₂ falls as the chamber fills with combustion products."
+  ],
+  "rows": 18
+ },
+ "PSI-25": {
+  "varied": [
+   {
+    "label": "Fuel sample",
+    "value": "49 distinct descriptions"
+   },
+   {
+    "label": "Initial O₂",
+    "value": "13.6–22.2 % (50 distinct values)"
+   },
+   {
+    "label": "Flow-restrictor setting",
+    "value": "0, 1, 2"
+   }
+  ],
+  "constant": [],
+  "recorded": [
+   "Final O₂, CO and CO₂",
+   "Radiometer gain",
+   "Total frames shot"
+  ],
+  "notes": [
+   "Fan and air displays are instrument readings, not calibrated flow speeds."
+  ],
+  "rows": 129
+ },
+ "PSI-26": {
+  "varied": [
+   {
+    "label": "Fuel sample",
+    "value": "34 distinct descriptions"
+   }
+  ],
+  "constant": [],
+  "recorded": [
+   "Test dates and run order"
+  ],
+  "notes": [
+   "This table is a test log: it has no measured outcomes."
+  ],
+  "rows": 122
+ },
+ "PSI-39": {
+  "varied": [
+   {
+    "label": "Pressure",
+    "value": "0.5–5 atm (7 distinct values)"
+   },
+   {
+    "label": "O₂ mole fraction",
+    "value": "17, 21 %"
+   },
+   {
+    "label": "He mole fraction",
+    "value": "0, 29, 59 %"
+   },
+   {
+    "label": "Fuel",
+    "value": "[.60]/[.40] C12H26/iso-dodecane, [.75]/[.25] C12H26/iso-dodecane, C12H26"
+   },
+   {
+    "label": "Fibre-supported droplet",
+    "value": "Yes, No"
+   }
+  ],
+  "constant": [],
+  "recorded": [
+   "Test dates and times"
+  ],
+  "notes": [
+   "This table is a test log: it has no measured outcomes."
+  ],
+  "rows": 87
+ },
+ "PSI-47": {
+  "varied": [
+   {
+    "label": "Sampled location",
+    "value": "Sampled air near Express rack 4, Sampled separated Velcro and the air near Port rack 6 and in Node 1"
+   }
+  ],
+  "constant": [],
+  "recorded": [
+   "Hardware description"
+  ],
+  "notes": [],
+  "rows": 2
+ },
+ "PSI-68": {
+  "varied": [
+   {
+    "label": "Fuel",
+    "value": "Heptane, Propanol, IsoOctane, n-Octane, Decane, Ethanol"
+   },
+   {
+    "label": "Initial droplet diameter",
+    "value": "1.5 - 5 mm (planned range)"
+   },
+   {
+    "label": "Ambient gas",
+    "value": "O2/N2 or O2/He (planned range)"
+   },
+   {
+    "label": "O₂ mole fraction",
+    "value": "0.17; 0.21;0.25; 0.3 (planned range)"
+   },
+   {
+    "label": "Pressure",
+    "value": "0.5; 1.0; 1.5; 2.0; or 3.0 (planned range)"
+   },
+   {
+    "label": "Flow velocity",
+    "value": "0.1 - 5 cm/s (planned range)"
+   }
+  ],
+  "constant": [
+   {
+    "label": "Temperature",
+    "value": "25 °C"
+   }
+  ],
+  "recorded": [],
+  "notes": [
+   "This table lists the planned test matrix, not measured results."
+  ],
+  "rows": 8
+ },
+ "PSI-69": {
+  "varied": [
+   {
+    "label": "Fuel",
+    "value": "Methanol, Heptane"
+   },
+   {
+    "label": "Pressure",
+    "value": "0.693–3.05 atm (182 distinct values)"
+   },
+   {
+    "label": "O₂ mole fraction",
+    "value": "12–34 % (15 distinct values)"
+   },
+   {
+    "label": "CO₂ mole fraction",
+    "value": "0–70 % (14 distinct values)"
+   },
+   {
+    "label": "He mole fraction",
+    "value": "0–45 % (10 distinct values)"
+   },
+   {
+    "label": "Initial droplet diameter",
+    "value": "1.1–4.67 mm (163 distinct values)"
+   }
+  ],
+  "constant": [],
+  "recorded": [
+   "Visible-flame extinction diameter",
+   "Burning rate",
+   "Burn time",
+   "How the test ended (extinction, completion, disruption)"
+  ],
+  "notes": [],
+  "rows": 274
+ },
+ "PSI-98": {
+  "varied": [
+   {
+    "label": "O₂",
+    "value": "21.5 - 21.7, ~ 21.5 %"
+   },
+   {
+    "label": "Flow direction",
+    "value": "Concurrent, Opposed"
+   }
+  ],
+  "constant": [
+   {
+    "label": "Material",
+    "value": "SIBAL Fabric"
+   },
+   {
+    "label": "Thickness",
+    "value": "0.37 cm"
+   },
+   {
+    "label": "Length",
+    "value": "40.6 cm"
+   },
+   {
+    "label": "Width",
+    "value": "94 cm"
+   },
+   {
+    "label": "Air flow",
+    "value": "20 cm/s"
+   },
+   {
+    "label": "Ignition power",
+    "value": "182 W"
+   },
+   {
+    "label": "Ignition time",
+    "value": "8 s"
+   }
+  ],
+  "recorded": [
+   "Burn time",
+   "Camera views"
+  ],
+  "notes": [],
+  "rows": 2
+ },
+ "PSI-99": {
+  "varied": [
+   {
+    "label": "Material",
+    "value": "Silicone, Cotton-Fiberglass (SIBAL), PMMA & Nomex, PMMA"
+   },
+   {
+    "label": "Thickness",
+    "value": "037 mm, 0.27 mm, 0.61 mm, 1.03 mm, 0.85 and 0.37 mm, See Fig. 5 (+1 more)"
+   },
+   {
+    "label": "O₂",
+    "value": "~ 22.1, ~ 21.5, 22.1 to 22.0, 22.0 to 21.9"
+   },
+   {
+    "label": "Ignition power",
+    "value": "80, 97 W"
+   },
+   {
+    "label": "Ignition time",
+    "value": "9.2, 30 s"
+   },
+   {
+    "label": "Flow direction",
+    "value": "Concurrent, Opposed"
+   }
+  ],
+  "constant": [
+   {
+    "label": "Length",
+    "value": "29 cm"
+   },
+   {
+    "label": "Width",
+    "value": "5 cm"
+   },
+   {
+    "label": "Air flow",
+    "value": "20 cm/s"
+   }
+  ],
+  "recorded": [
+   "Burn time",
+   "Burn and spread length in microgravity",
+   "1-g comparison burn length and spread rate",
+   "Camera views"
+  ],
+  "notes": [],
+  "rows": 9
+ }
+}
