@@ -2,7 +2,7 @@
 //   {mode:'parse', question}              -> structured scenario fields
 //   {mode:'interpret', question, rows, gaps} -> summary grounded ONLY in rows
 // Uses Groq's free, OpenAI-compatible API. Needs GROQ_API_KEY in Vercel env vars.
-const MODEL = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
+const MODEL = process.env.GROQ_MODEL || 'openai/gpt-oss-120b';
 
 const PARSE_SYSTEM = `You convert a fire-safety question into scenario fields for a NASA microgravity combustion database.
 Reply with ONE JSON object and nothing else, with keys:
@@ -24,12 +24,14 @@ async function callModel(system, user) {
     method: 'POST',
     headers: {'content-type': 'application/json', authorization: `Bearer ${process.env.GROQ_API_KEY}`},
     body: JSON.stringify({
-      model: MODEL, temperature: 0.1, max_tokens: 900,
+      model: MODEL, temperature: 0.1, max_tokens: 2500,
+      // gpt-oss models reason before answering; keep that short so the JSON is not cut off
+      ...(MODEL.startsWith('openai/gpt-oss') && {reasoning_effort: 'low'}),
       response_format: {type: 'json_object'},
       messages: [{role: 'system', content: system}, {role: 'user', content: user}],
     }),
   });
-  if (!r.ok) throw new Error(`model ${r.status}`);
+  if (!r.ok) throw new Error(`groq ${r.status}: ${(await r.text()).slice(0, 300)}`);
   const j = await r.json();
   return JSON.parse(j.choices?.[0]?.message?.content || '{}');
 }
@@ -50,6 +52,7 @@ export default async function handler(req, res) {
     }
     return res.status(400).json({error: 'bad mode'});
   } catch (e) {
+    console.error('[api/ask]', e?.cause?.code || '', e?.message);
     return res.status(502).json({error: 'SI request failed'});
   }
 }

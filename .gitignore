@@ -34,3 +34,7 @@ dashboard/
 # part of the deployed Flamme web app
 scripts/
 video/
+
+# local secrets
+.env
+.env.*

@@ -8,10 +8,12 @@ async function post(body) {
   return r.json();
 }
 
+const num = v => { const n = parseFloat(String(v ?? '').replace(/[^0-9.\-]/g, '')); return Number.isFinite(n) ? String(n) : ''; };
+
 export const siParse = async question => {
   const p = await post({mode: 'parse', question});
   return {
-    material: p.material || '', oxygen: p.oxygen ? String(p.oxygen) : '', airflow: p.airflow ? String(p.airflow) : '',
+    material: p.material || '', oxygen: num(p.oxygen), airflow: num(p.airflow),
     direction: p.direction || '', pressure_atm: p.pressure_atm ?? null, gravity_g: p.gravity_g ?? null, in_scope: p.in_scope !== false,
   };
 };
