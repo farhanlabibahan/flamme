@@ -11,3 +11,4 @@
 .sp-links{display:flex;align-items:center;gap:14px;flex:0 0 auto}
 .sp-links a{display:inline-flex;align-items:center;gap:4px;color:var(--muted);font:600 12px var(--disp)}
 .sp-links a:hover{color:var(--accent)}
+.sp-tag{font:600 10.5px var(--disp);letter-spacing:.02em;color:var(--red);border:1px solid var(--red);padding:1px 6px}

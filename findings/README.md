@@ -6,14 +6,17 @@
 |---|---|
 | `build_findings.py` | Computes findings from the 22 PSI test tables -> `findings_tables.csv` (no API key needed) |
 | `extract_findings_from_pdfs.py` | Optional (needs API credits): Claude API pulls more findings from PDFs -> `findings_ai.csv` |
-| `_report_rows.jsonl` + `report_rows_to_csv.py` | 52 findings read by hand (by Claude) from 18 NASA reports, with page + quote -> `findings_reports.csv` |
+| `_report_rows.jsonl` + `report_rows_to_csv.py` | 56 findings read by hand (by Claude) from 20 NASA reports, with page + quote -> `findings_reports.csv`. Includes 4 `real-incident lesson` rows from the Apollo 1 and Apollo 13 review board reports (NTRS 19820066930, 19700076776); a row's optional `caveat` overrides the default |
 | `merge_findings.py` | Combines both -> `findings.csv` |
 | `rank_findings.py` + `scenarios.json` | Step 3: scores every finding for ISS / transit / Moon / Mars -> `rankings.csv` (method: `RANKING_METHOD.md`) |
+| `build_findings_data.py` | Packs `findings.csv` + `scenarios.json` + severity -> `src/findingsData.json` (Rankings, Gap map) and the cited NTRS reports -> `src/reportsData.json` (Sources page) |
 
 ```bash
 python3 findings/build_findings.py
 python3 findings/report_rows_to_csv.py
 python3 findings/merge_findings.py
+python3 findings/rank_findings.py
+python3 findings/build_findings_data.py
 # optional, needs API credits - would ADD AI-extracted rows:
 # after downloading PDFs and setting ANTHROPIC_API_KEY:
 python3 findings/extract_findings_from_pdfs.py --limit 3   # test first

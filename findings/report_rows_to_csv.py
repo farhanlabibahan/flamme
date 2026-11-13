@@ -19,7 +19,8 @@ for line in open(os.path.join(HERE, "_report_rows.jsonl"), encoding="utf-8"):
         "n_tests": j["n"], "finding": j["finding"], "safety_implication": j["impl"],
         "evidence_type": "report_extracted", "confidence": j["conf"],
         "source_file": f"NTRS {j['src']} - {t.get('title','')} ({t.get('year','')}) {t.get('pdf_url','')}",
-        "caveat": "Extracted from the NASA report by reading it; check the quote on the cited page.",
+        # a row may carry its own caveat (e.g. real incidents, which are not controlled experiments)
+        "caveat": j.get("caveat") or "Extracted from the NASA report by reading it; check the quote on the cited page.",
         "page": j["page"], "quote": j["quote"],
     })
 with open(os.path.join(HERE, "findings_reports.csv"), "w", newline="", encoding="utf-8") as fh:

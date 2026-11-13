@@ -2,6 +2,7 @@ import React from 'react';
 import {useNavigate} from 'react-router-dom';
 import {ExternalLink} from 'lucide-react';
 import allInvestigations from '../investigationsData.json';
+import reports from '../reportsData.json';
 import './SourcesPage.css';
 
 /* Real route: /sources. Every NASA source Flamme cites, in one place —
@@ -28,6 +29,22 @@ export default function SourcesPage() {
         <div className="sp-links">
           <a href={i.url} target="_blank" rel="noreferrer">PSI page <ExternalLink size={12}/></a>
           {i.doi && <a href={`https://doi.org/${i.doi}`} target="_blank" rel="noreferrer">DOI <ExternalLink size={12}/></a>}
+        </div>
+      </li>)}
+    </ul>
+
+    {/* Built from flame_in_freefall_data/ntrs_reports.csv by findings/build_findings_data.py:
+        only reports at least one finding cites. "Real-incident lesson" marks reports behind the
+        Apollo 1, Apollo 13 and Mir rows, which are accident lessons, not controlled experiments. */}
+    <ul className="sp-list">
+      {reports.map(r => <li key={r.id}>
+        <div className="sp-main">
+          <strong>{r.title}</strong><span className="sp-id">NTRS {r.id}</span>
+          {r.incident && <span className="sp-tag">Real-incident lesson</span>}
+          <small>{r.year} · {r.topic} · {r.findings} {r.findings === 1 ? 'finding' : 'findings'}</small>
+        </div>
+        <div className="sp-links">
+          <a href={r.url} target="_blank" rel="noreferrer">NTRS page <ExternalLink size={12}/></a>
         </div>
       </li>)}
     </ul>

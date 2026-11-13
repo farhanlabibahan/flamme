@@ -3,8 +3,9 @@ import {AlertTriangle, ChevronDown, ExternalLink} from 'lucide-react';
 import {DEFAULT_WEIGHTS, exportRows, findings, gapsFor, rankFindings, scenarios, toCsv} from '../ranking.js';
 import './RankingsPage.css';
 
-/* Real route: /rankings. Scores every finding in the full catalog (111 rows
-   from 24 PSI investigations + NTRS reports) for a chosen crew environment.
+/* Real route: /rankings. Scores every finding in the full catalog (115 rows
+   from 24 PSI investigations + NTRS reports, incl. Apollo 1 / Apollo 13 / Mir
+   real-incident lessons) for a chosen crew environment.
    Same formula as findings/rank_findings.py; edit O2 / pressure / gravity or
    the weights and the ranking recomputes live. */
 const PRESETS = {...scenarios, custom: {label: 'Custom', o2_pct: 30, pressure_atm: 0.69, gravity_g: 0}};

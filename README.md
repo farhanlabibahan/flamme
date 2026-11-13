@@ -29,11 +29,11 @@ extinguishes.
 | **Lab** (`/lab`, `/lab/view`) | Interactive 3D chamber with a hand-built illustrative flame-response model (`src/labModel.js`), plus a **"Grounded in NASA FLEX data"** card driven by a real trained model (see [Machine learning](#machine-learning) below) — shown side by side, never blended. |
 | **Evidence** (`/evidence`) | Search/filter over 5 curated, fully source-traced sample records (Saffire II, BASS II) with explicit provenance (file, row, DOI, caveats). |
 | **Ask** (`/ask`) | Deterministic keyword/regex parser reads a plain-language question into structured conditions — explicitly labelled "not an AI model." |
-| **Rankings** (`/rankings`) | Scores all 111 findings in the full catalog against a chosen crew environment (ISS, transit, Moon, Mars), same formula as `findings/rank_findings.py`. |
+| **Rankings** (`/rankings`) | Scores all 115 findings in the full catalog against a chosen crew environment (ISS, transit, Moon, Mars), same formula as `findings/rank_findings.py`. |
 | **Investigations** (`/investigations`) | Browse and compare up to 4 of the full 24-investigation NASA PSI/NTRS catalog side by side. |
-| **Gap map** (`/gaps`) | Heatmap of which gravity-regime × oxygen-band combinations the 111-finding catalog actually covers vs. doesn't — plan item "map the gaps." |
+| **Gap map** (`/gaps`) | Heatmap of which gravity-regime × oxygen-band combinations the 115-finding catalog's experiments actually cover vs. don't (real-incident lessons are excluded from coverage) — plan item "map the gaps." |
 | **Model** (`/model`) | The exact fitted parameters (coefficients, confusion matrix, held-out metrics) of the trained FLEX model, plus the ten-condition reporting schema (downloadable JSON Schema + CSV template) every page's data follows, so the "grounded" claim in the Lab is independently checkable. |
-| **Sources** (`/sources`) | Every NASA PSI investigation Flamme cites, in one place. |
+| **Sources** (`/sources`) | Every NASA source Flamme cites, in one place: the 24 PSI investigations plus the 20 NTRS technical reports quoted by Rankings findings (Apollo 1, Apollo 13 and Mir reports marked as real-incident lessons). |
 
 ## Machine learning
 
@@ -152,7 +152,7 @@ same pipeline applied to BASS/BASS-II/Saffire row-level data instead — not don
 explicitly flagged as the natural next step in `ML/README.md`.
 
 A second pipeline, `ML/build_notebook.py` → `ML/feature_engineering.ipynb`, applies the same
-cleaning/feature-engineering discipline to the 111-row curated `findings.csv` (used by
+cleaning/feature-engineering discipline to the curated `findings.csv` (111 rows when the notebook was last run; used by
 Rankings/Gap map), independently of the FLEX model above.
 
 ## How evidence is represented
@@ -207,8 +207,12 @@ Python tooling (data pipelines, `ML/`) needs Python 3 with `pandas`, `numpy`,
 ## Limitations and responsible-use boundaries
 
 - The Evidence demo covers 5 curated records; Rankings/Investigations/Gap map cover
-  the full 111-finding catalog, which is itself a curated subset of the ~24,500-row raw PSI
+  the full 115-finding catalog, which is itself a curated subset of the ~24,500-row raw PSI
   export.
+- Four catalog rows are real-incident lessons from the Apollo 1 (1967) and Apollo 13 (1970)
+  review board reports, alongside the existing Mir (1997) row. They are not controlled
+  experiments: they appear in Rankings, are excluded from Gap-map coverage, and are not
+  used to fit any model.
 - The Lab's solid-sample flame response is illustrative, not fitted to data — only the
   separate FLEX card is a trained model, and only within its tested envelope.
 - The FLEX model's n=274 (222–257 after dropping missing targets) is honestly small;

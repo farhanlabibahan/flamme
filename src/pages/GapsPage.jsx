@@ -6,9 +6,12 @@ import './GapsPage.css';
 
 /* Real route: /gaps. Plan item 3 ("Map the gaps"): which combinations of
    O2 and gravity have been tested, and which have none. Built from the same
-   111-finding catalog as Rankings (findings/findings.csv -> findingsData.json),
-   not a separate dataset. The FLEX strip runs the actual trained model
-   (src/flexModel.js) at each O2 band's midpoint, live from the sliders. */
+   115-finding catalog as Rankings (findings/findings.csv -> findingsData.json),
+   not a separate dataset. Real-incident lessons (Apollo 1, Apollo 13, Mir) are
+   not experiments, so they never count as test coverage here. The FLEX strip
+   runs the actual trained model (src/flexModel.js) at each O2 band's midpoint,
+   live from the sliders. */
+const isIncident = f => f.metric === 'real-incident lesson';
 
 const O2_BINS = [
   {label: '<16%', mid: 14, test: v => v < 16},
@@ -36,7 +39,7 @@ export default function GapsPage() {
   const [pressureAtm, setPressureAtm] = useState(1);
   const [dropletDiameterMm, setDropletDiameterMm] = useState(1.7);
   const [fuelMethanol, setFuelMethanol] = useState(true);
-  const measured = useMemo(() => findings.filter(f => f.evidence_type !== 'evidence_gap'), []);
+  const measured = useMemo(() => findings.filter(f => f.evidence_type !== 'evidence_gap' && !isIncident(f)), []);
   const documentedGaps = useMemo(() => findings.filter(f => f.evidence_type === 'evidence_gap'), []);
 
   const grid = useMemo(() => GRAVITY_ROWS.map(row => ({
