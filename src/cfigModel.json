@@ -1,0 +1,1497 @@
+{
+ "source": "NASA PSI PSI-159 (ACME CFI-G), 179 normal-flame tests, from PSI-159_Experimental table_CFI-G_Normal Flames.csv",
+ "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159",
+ "source_file": "PSI-159_Experimental table_CFI-G_Normal Flames.csv",
+ "generated_by": "ML/build_cfig_model.py",
+ "scope_note": "Gaseous-fuel (propane/ethane/butane blends) flames on a spherical burner in microgravity. Not a solid-material flammability model; use as nearest-evidence comparison for high-oxygen conditions. Fuel dilution percentage is not modelled.",
+ "target": "hot ignition (yes/no)",
+ "features": [
+  "o2_pct",
+  "p_bar",
+  "f_propane",
+  "f_ethane"
+ ],
+ "training_range": {
+  "o2_pct": [
+   17.969,
+   39.97
+  ],
+  "p_bar": [
+   0.507,
+   3.04
+  ],
+  "f_propane": [
+   0.0,
+   1.0
+  ],
+  "f_ethane": [
+   0.0,
+   1.0
+  ]
+ },
+ "classifier": {
+  "intercept": 1.3571246352353974,
+  "coef": [
+   0.5293226440303819,
+   0.21017077039953208,
+   0.3011578799138085,
+   1.239540627227838
+  ],
+  "scaler_mean": [
+   32.18061493798883,
+   1.2793846547486032,
+   0.3128491620111732,
+   0.22905027932960895
+  ],
+  "scaler_scale": [
+   8.249972803758487,
+   0.673208179954318,
+   0.4636534954468475,
+   0.4202216663484131
+  ],
+  "metrics": {
+   "n_train": 134,
+   "n_test": 45,
+   "auc": 0.733,
+   "accuracy": 0.844,
+   "base_rate_hot_ignition": 0.737,
+   "majority_class_accuracy": 0.737,
+   "cv5_auc_mean": 0.71,
+   "cv5_auc_min": 0.623
+  }
+ },
+ "tests": [
+  {
+   "source_row": 2,
+   "fuel": "ethane",
+   "o2_pct": 39.39,
+   "pressure_bar": 0.944,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 3,
+   "fuel": "ethane",
+   "o2_pct": 38.98,
+   "pressure_bar": 0.944,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 4,
+   "fuel": "ethane",
+   "o2_pct": 38.63,
+   "pressure_bar": 0.944,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 5,
+   "fuel": "ethane",
+   "o2_pct": 38.29,
+   "pressure_bar": 0.944,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 6,
+   "fuel": "ethane",
+   "o2_pct": 38.04,
+   "pressure_bar": 0.944,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 7,
+   "fuel": "ethane",
+   "o2_pct": 37.99,
+   "pressure_bar": 0.944,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 8,
+   "fuel": "ethane",
+   "o2_pct": 37.61,
+   "pressure_bar": 0.944,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 9,
+   "fuel": "ethane",
+   "o2_pct": 37.34,
+   "pressure_bar": 0.944,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 10,
+   "fuel": "ethane",
+   "o2_pct": 36.96,
+   "pressure_bar": 0.944,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 11,
+   "fuel": "ethane",
+   "o2_pct": 36.45,
+   "pressure_bar": 0.944,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 12,
+   "fuel": "ethane",
+   "o2_pct": 21.01,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 13,
+   "fuel": "ethane",
+   "o2_pct": 20.96,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 14,
+   "fuel": "ethane",
+   "o2_pct": 18.02,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 15,
+   "fuel": "ethane",
+   "o2_pct": 17.97,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 16,
+   "fuel": "50% butane",
+   "o2_pct": 39.57,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 17,
+   "fuel": "50% butane",
+   "o2_pct": 39.3,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 18,
+   "fuel": "50% butane",
+   "o2_pct": 39.05,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 19,
+   "fuel": "50% butane",
+   "o2_pct": 38.81,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 20,
+   "fuel": "50% butane",
+   "o2_pct": 38.62,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 21,
+   "fuel": "50% butane",
+   "o2_pct": 38.25,
+   "pressure_bar": 1.013,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 22,
+   "fuel": "50% butane",
+   "o2_pct": 38.25,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 23,
+   "fuel": "50% butane",
+   "o2_pct": 38.12,
+   "pressure_bar": 1.013,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 24,
+   "fuel": "50% butane",
+   "o2_pct": 38.12,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 25,
+   "fuel": "50% butane",
+   "o2_pct": 38.07,
+   "pressure_bar": 1.013,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 26,
+   "fuel": "50% butane",
+   "o2_pct": 23.41,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 27,
+   "fuel": "50% butane",
+   "o2_pct": 23.36,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 28,
+   "fuel": "50% butane",
+   "o2_pct": 23.33,
+   "pressure_bar": 1.013,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 29,
+   "fuel": "50% butane",
+   "o2_pct": 23.33,
+   "pressure_bar": 1.013,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 30,
+   "fuel": "50% butane",
+   "o2_pct": 23.33,
+   "pressure_bar": 1.013,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 31,
+   "fuel": "50% butane",
+   "o2_pct": 23.33,
+   "pressure_bar": 1.013,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 32,
+   "fuel": "50% butane",
+   "o2_pct": 39.26,
+   "pressure_bar": 0.507,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 33,
+   "fuel": "50% butane",
+   "o2_pct": 38.46,
+   "pressure_bar": 0.507,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 34,
+   "fuel": "50% butane",
+   "o2_pct": 37.72,
+   "pressure_bar": 0.507,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 35,
+   "fuel": "50% butane",
+   "o2_pct": 36.93,
+   "pressure_bar": 0.507,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 36,
+   "fuel": "50% butane",
+   "o2_pct": 35.85,
+   "pressure_bar": 0.507,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 37,
+   "fuel": "50% butane",
+   "o2_pct": 35.42,
+   "pressure_bar": 0.507,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 38,
+   "fuel": "50% butane",
+   "o2_pct": 35.42,
+   "pressure_bar": 0.507,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 39,
+   "fuel": "50% butane",
+   "o2_pct": 35.38,
+   "pressure_bar": 0.507,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 40,
+   "fuel": "50% butane",
+   "o2_pct": 35.29,
+   "pressure_bar": 0.507,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 41,
+   "fuel": "50% butane",
+   "o2_pct": 20.97,
+   "pressure_bar": 0.507,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 42,
+   "fuel": "50% butane",
+   "o2_pct": 20.86,
+   "pressure_bar": 0.507,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 43,
+   "fuel": "50% butane",
+   "o2_pct": 20.75,
+   "pressure_bar": 0.507,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 44,
+   "fuel": "50% butane",
+   "o2_pct": 20.67,
+   "pressure_bar": 0.507,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 45,
+   "fuel": "50% butane",
+   "o2_pct": 20.67,
+   "pressure_bar": 0.507,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 46,
+   "fuel": "propane",
+   "o2_pct": 39.54,
+   "pressure_bar": 0.944,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 47,
+   "fuel": "propane",
+   "o2_pct": 39.4,
+   "pressure_bar": 0.944,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 48,
+   "fuel": "propane",
+   "o2_pct": 39.13,
+   "pressure_bar": 0.944,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 49,
+   "fuel": "propane",
+   "o2_pct": 38.68,
+   "pressure_bar": 0.944,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 50,
+   "fuel": "propane",
+   "o2_pct": 37.95,
+   "pressure_bar": 0.944,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 51,
+   "fuel": "propane",
+   "o2_pct": 37.77,
+   "pressure_bar": 0.944,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 52,
+   "fuel": "propane",
+   "o2_pct": 37.71,
+   "pressure_bar": 0.944,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 53,
+   "fuel": "propane",
+   "o2_pct": 37.65,
+   "pressure_bar": 0.944,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 54,
+   "fuel": "propane",
+   "o2_pct": 36.64,
+   "pressure_bar": 0.944,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 55,
+   "fuel": "propane",
+   "o2_pct": 36.64,
+   "pressure_bar": 0.944,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 56,
+   "fuel": "propane",
+   "o2_pct": 36.64,
+   "pressure_bar": 0.944,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 57,
+   "fuel": "propane",
+   "o2_pct": 36.64,
+   "pressure_bar": 0.944,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 58,
+   "fuel": "propane",
+   "o2_pct": 21.25,
+   "pressure_bar": 1.013,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 59,
+   "fuel": "propane",
+   "o2_pct": 21.25,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 60,
+   "fuel": "propane",
+   "o2_pct": 21.22,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 61,
+   "fuel": "propane",
+   "o2_pct": 21.2,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 62,
+   "fuel": "propane",
+   "o2_pct": 21.18,
+   "pressure_bar": 1.013,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 63,
+   "fuel": "propane",
+   "o2_pct": 21.18,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 64,
+   "fuel": "propane",
+   "o2_pct": 21.16,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 65,
+   "fuel": "propane",
+   "o2_pct": 21.14,
+   "pressure_bar": 1.013,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 66,
+   "fuel": "30% butane",
+   "o2_pct": 39.45,
+   "pressure_bar": 1.013,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 67,
+   "fuel": "30% butane",
+   "o2_pct": 39.45,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 68,
+   "fuel": "30% butane",
+   "o2_pct": 39.41,
+   "pressure_bar": 1.013,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 69,
+   "fuel": "30% butane",
+   "o2_pct": 39.41,
+   "pressure_bar": 1.013,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 70,
+   "fuel": "30% butane",
+   "o2_pct": 39.41,
+   "pressure_bar": 1.013,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 71,
+   "fuel": "30% butane",
+   "o2_pct": 39.41,
+   "pressure_bar": 1.013,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 72,
+   "fuel": "30% butane",
+   "o2_pct": 39.41,
+   "pressure_bar": 1.013,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 73,
+   "fuel": "30% butane",
+   "o2_pct": 39.41,
+   "pressure_bar": 1.013,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 74,
+   "fuel": "30% butane",
+   "o2_pct": 39.41,
+   "pressure_bar": 1.013,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 75,
+   "fuel": "30% butane",
+   "o2_pct": 39.41,
+   "pressure_bar": 1.013,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 76,
+   "fuel": "30% butane",
+   "o2_pct": 39.41,
+   "pressure_bar": 1.013,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 77,
+   "fuel": "30% butane",
+   "o2_pct": 39.41,
+   "pressure_bar": 1.013,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 78,
+   "fuel": "30% butane",
+   "o2_pct": 39.41,
+   "pressure_bar": 1.013,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 79,
+   "fuel": "30% butane",
+   "o2_pct": 39.41,
+   "pressure_bar": 1.013,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 80,
+   "fuel": "30% butane",
+   "o2_pct": 39.41,
+   "pressure_bar": 1.013,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 81,
+   "fuel": "30% butane",
+   "o2_pct": 39.41,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 82,
+   "fuel": "30% butane",
+   "o2_pct": 38.92,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 83,
+   "fuel": "30% butane",
+   "o2_pct": 38.44,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 84,
+   "fuel": "30% butane",
+   "o2_pct": 21.11,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 85,
+   "fuel": "30% butane",
+   "o2_pct": 21.11,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 86,
+   "fuel": "30% butane",
+   "o2_pct": 21.1,
+   "pressure_bar": 1.013,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 87,
+   "fuel": "30% butane",
+   "o2_pct": 21.1,
+   "pressure_bar": 1.013,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 88,
+   "fuel": "30% butane",
+   "o2_pct": 21.1,
+   "pressure_bar": 1.013,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 89,
+   "fuel": "30% butane",
+   "o2_pct": 21.1,
+   "pressure_bar": 1.013,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 90,
+   "fuel": "30% propane",
+   "o2_pct": 21.07,
+   "pressure_bar": 2.027,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 91,
+   "fuel": "30% propane",
+   "o2_pct": 21.07,
+   "pressure_bar": 2.027,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 92,
+   "fuel": "30% propane",
+   "o2_pct": 21.07,
+   "pressure_bar": 2.027,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 93,
+   "fuel": "30% propane",
+   "o2_pct": 21.07,
+   "pressure_bar": 2.027,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 94,
+   "fuel": "30% propane",
+   "o2_pct": 21.07,
+   "pressure_bar": 2.027,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 95,
+   "fuel": "30% propane",
+   "o2_pct": 21.06,
+   "pressure_bar": 2.027,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 96,
+   "fuel": "30% propane",
+   "o2_pct": 21.06,
+   "pressure_bar": 2.027,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 97,
+   "fuel": "30% propane",
+   "o2_pct": 21.06,
+   "pressure_bar": 2.027,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 98,
+   "fuel": "30% propane",
+   "o2_pct": 21.06,
+   "pressure_bar": 2.027,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 99,
+   "fuel": "30% propane",
+   "o2_pct": 21.06,
+   "pressure_bar": 2.027,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 100,
+   "fuel": "30% propane",
+   "o2_pct": 21.05,
+   "pressure_bar": 2.027,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 101,
+   "fuel": "30% propane",
+   "o2_pct": 21.02,
+   "pressure_bar": 2.027,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 102,
+   "fuel": "30% propane",
+   "o2_pct": 21.67,
+   "pressure_bar": 3.04,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 103,
+   "fuel": "30% propane",
+   "o2_pct": 21.67,
+   "pressure_bar": 3.04,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 104,
+   "fuel": "30% propane",
+   "o2_pct": 21.67,
+   "pressure_bar": 3.04,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 105,
+   "fuel": "30% propane",
+   "o2_pct": 21.67,
+   "pressure_bar": 3.04,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 106,
+   "fuel": "30% propane",
+   "o2_pct": 21.67,
+   "pressure_bar": 3.04,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 107,
+   "fuel": "30% propane",
+   "o2_pct": 21.67,
+   "pressure_bar": 3.04,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 108,
+   "fuel": "30% propane",
+   "o2_pct": 21.67,
+   "pressure_bar": 3.04,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 109,
+   "fuel": "30% propane",
+   "o2_pct": 21.67,
+   "pressure_bar": 3.04,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 110,
+   "fuel": "30% propane",
+   "o2_pct": 21.66,
+   "pressure_bar": 3.04,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 111,
+   "fuel": "30% propane",
+   "o2_pct": 21.64,
+   "pressure_bar": 3.04,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 112,
+   "fuel": "30% propane",
+   "o2_pct": 21.64,
+   "pressure_bar": 3.04,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 113,
+   "fuel": "30% propane",
+   "o2_pct": 21.64,
+   "pressure_bar": 3.04,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 114,
+   "fuel": "30% propane",
+   "o2_pct": 39.96,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 115,
+   "fuel": "30% propane",
+   "o2_pct": 39.73,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 116,
+   "fuel": "30% propane",
+   "o2_pct": 39.48,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 117,
+   "fuel": "30% propane",
+   "o2_pct": 38.95,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 118,
+   "fuel": "30% propane",
+   "o2_pct": 37.12,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 119,
+   "fuel": "30% propane",
+   "o2_pct": 35.75,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 120,
+   "fuel": "30% propane",
+   "o2_pct": 35.57,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 121,
+   "fuel": "30% propane",
+   "o2_pct": 35.37,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 122,
+   "fuel": "30% propane",
+   "o2_pct": 35.24,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 123,
+   "fuel": "30% propane",
+   "o2_pct": 21.0,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 124,
+   "fuel": "30% propane",
+   "o2_pct": 20.91,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 125,
+   "fuel": "30% propane",
+   "o2_pct": 20.89,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 126,
+   "fuel": "30% ethane",
+   "o2_pct": 38.87,
+   "pressure_bar": 0.507,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 127,
+   "fuel": "30% ethane",
+   "o2_pct": 37.59,
+   "pressure_bar": 0.507,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 128,
+   "fuel": "30% ethane",
+   "o2_pct": 36.39,
+   "pressure_bar": 0.507,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 129,
+   "fuel": "30% ethane",
+   "o2_pct": 34.08,
+   "pressure_bar": 0.507,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 130,
+   "fuel": "30% ethane",
+   "o2_pct": 33.49,
+   "pressure_bar": 0.507,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 131,
+   "fuel": "30% ethane",
+   "o2_pct": 33.24,
+   "pressure_bar": 0.507,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 132,
+   "fuel": "30% ethane",
+   "o2_pct": 39.85,
+   "pressure_bar": 2.027,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 133,
+   "fuel": "30% ethane",
+   "o2_pct": 39.66,
+   "pressure_bar": 2.027,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 134,
+   "fuel": "30% ethane",
+   "o2_pct": 39.48,
+   "pressure_bar": 2.027,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 135,
+   "fuel": "30% ethane",
+   "o2_pct": 39.2,
+   "pressure_bar": 2.027,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 136,
+   "fuel": "30% ethane",
+   "o2_pct": 38.89,
+   "pressure_bar": 2.027,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 137,
+   "fuel": "30% ethane",
+   "o2_pct": 38.42,
+   "pressure_bar": 2.027,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 138,
+   "fuel": "30% ethane",
+   "o2_pct": 38.36,
+   "pressure_bar": 2.027,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 139,
+   "fuel": "30% ethane",
+   "o2_pct": 38.21,
+   "pressure_bar": 2.027,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 140,
+   "fuel": "30% ethane",
+   "o2_pct": 39.97,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 141,
+   "fuel": "30% ethane",
+   "o2_pct": 39.5,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 142,
+   "fuel": "30% ethane",
+   "o2_pct": 39.0,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 143,
+   "fuel": "30% ethane",
+   "o2_pct": 37.93,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 144,
+   "fuel": "30% ethane",
+   "o2_pct": 37.21,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 145,
+   "fuel": "30% ethane",
+   "o2_pct": 21.0,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 146,
+   "fuel": "30% ethane",
+   "o2_pct": 20.96,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 147,
+   "fuel": "30% ethane",
+   "o2_pct": 20.93,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 148,
+   "fuel": "30% ethane",
+   "o2_pct": 20.89,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 149,
+   "fuel": "30% ethane",
+   "o2_pct": 20.84,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 150,
+   "fuel": "30% ethane",
+   "o2_pct": 20.75,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 151,
+   "fuel": "30% ethane",
+   "o2_pct": 20.72,
+   "pressure_bar": 1.013,
+   "hot_ignition": false,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 152,
+   "fuel": "30% ethane",
+   "o2_pct": 20.72,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 153,
+   "fuel": "30% butane",
+   "o2_pct": 38.86,
+   "pressure_bar": 0.507,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 154,
+   "fuel": "30% butane",
+   "o2_pct": 38.32,
+   "pressure_bar": 0.507,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 155,
+   "fuel": "30% butane",
+   "o2_pct": 37.85,
+   "pressure_bar": 0.507,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 156,
+   "fuel": "30% butane",
+   "o2_pct": 37.21,
+   "pressure_bar": 0.507,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 157,
+   "fuel": "30% butane",
+   "o2_pct": 35.54,
+   "pressure_bar": 0.507,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 158,
+   "fuel": "30% butane",
+   "o2_pct": 39.85,
+   "pressure_bar": 2.027,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 159,
+   "fuel": "30% butane",
+   "o2_pct": 39.65,
+   "pressure_bar": 2.027,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 160,
+   "fuel": "30% butane",
+   "o2_pct": 39.54,
+   "pressure_bar": 2.027,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 161,
+   "fuel": "30% butane",
+   "o2_pct": 39.43,
+   "pressure_bar": 2.027,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 162,
+   "fuel": "30% butane",
+   "o2_pct": 39.25,
+   "pressure_bar": 2.027,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 163,
+   "fuel": "30% butane",
+   "o2_pct": 39.08,
+   "pressure_bar": 2.027,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 164,
+   "fuel": "30% butane",
+   "o2_pct": 38.96,
+   "pressure_bar": 2.027,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 165,
+   "fuel": "30% butane",
+   "o2_pct": 38.93,
+   "pressure_bar": 2.027,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 166,
+   "fuel": "30% butane",
+   "o2_pct": 38.55,
+   "pressure_bar": 2.027,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 167,
+   "fuel": "30% butane",
+   "o2_pct": 38.48,
+   "pressure_bar": 2.027,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 168,
+   "fuel": "30% butane",
+   "o2_pct": 38.41,
+   "pressure_bar": 2.027,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 169,
+   "fuel": "30% butane",
+   "o2_pct": 39.93,
+   "pressure_bar": 2.027,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 170,
+   "fuel": "30% butane",
+   "o2_pct": 39.42,
+   "pressure_bar": 2.027,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 171,
+   "fuel": "30% butane",
+   "o2_pct": 38.93,
+   "pressure_bar": 2.027,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 172,
+   "fuel": "30% butane",
+   "o2_pct": 38.83,
+   "pressure_bar": 2.027,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 173,
+   "fuel": "30% butane",
+   "o2_pct": 38.72,
+   "pressure_bar": 2.027,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 174,
+   "fuel": "30% butane",
+   "o2_pct": 38.62,
+   "pressure_bar": 2.027,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 175,
+   "fuel": "30% butane",
+   "o2_pct": 39.78,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 176,
+   "fuel": "30% butane",
+   "o2_pct": 39.49,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 177,
+   "fuel": "30% butane",
+   "o2_pct": 38.85,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 178,
+   "fuel": "30% butane",
+   "o2_pct": 38.54,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 179,
+   "fuel": "30% butane",
+   "o2_pct": 38.27,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  },
+  {
+   "source_row": 180,
+   "fuel": "30% butane",
+   "o2_pct": 38.08,
+   "pressure_bar": 1.013,
+   "hot_ignition": true,
+   "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-159"
+  }
+ ]
+}

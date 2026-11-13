@@ -3,6 +3,8 @@ import {createPortal} from 'react-dom';
 import {Check, ExternalLink, Layers, X} from 'lucide-react';
 import invs from '../investigationsData.json';
 import {findings, rankFindings, scenarios} from '../ranking.js';
+import {BACKGROUND} from '../missionContext.js';
+import guide from '../guideFacts.json';
 import './InvestigationsPage.css';
 
 /* Real route: /investigations. Browse all 24 PSI combustion investigations,
@@ -43,10 +45,11 @@ export default function InvestigationsPage() {
   const ROWS = [
     ['Hardware', i => i.hardware], ['Platform', i => i.platform], ['Fuel phase', i => i.fuel],
     ['Safety pillars', i => i.pillars.join(', ') || 'Fundamental science'],
-    ['Active', i => i.start || i.end ? `${i.start || '?'}–${i.end || '?'}` : 'not stated'],
+    ['PSI listed dates', i => i.start || i.end ? `${i.start || '?'}–${i.end || '?'}` : 'not stated'],
     ['Test-matrix rows', i => i.test_rows || 'none in tables'], ['O₂ tested (linked findings)', o2],
     ['Linked findings', i => i.n], [`Best score · ${scenarios[scn].label}`, i => i.best ?? '—'],
-    ['Objective', i => i.objective], ['Keywords', i => i.keywords],
+    ['Objective (PSI)', i => i.objective],
+    ['Researcher’s Guide (2015)', i => guide[i.id] ? `${guide[i.id].objective} · ${guide[i.id].hardware} · ${guide[i.id].dates}` : 'not covered by the guide'], ['Keywords', i => i.keywords],
   ];
   const Seg = ({label, val, set, opts}) => <div className="iv-seg"><small>{label}</small><div>{opts.map(o => <button key={o} className={val === o ? 'on' : ''} onClick={() => set(o)}>{o}</button>)}</div></div>;
 
@@ -54,6 +57,7 @@ export default function InvestigationsPage() {
     <header>
       <span className="cmp-kicker">Investigations</span>
       <h1>Compare the 24 NASA combustion investigations</h1>
+      <p className="iv-bg">Background reading: <a href={BACKGROUND.combustion} target="_blank" rel="noreferrer">NASA Combustion Science <ExternalLink size={11}/></a> · <a href={BACKGROUND.guide} target="_blank" rel="noreferrer">Researcher’s Guide to ISS Combustion Science <ExternalLink size={11}/></a> · <a href={BACKGROUND.video} target="_blank" rel="noreferrer">ScienceCast video <ExternalLink size={11}/></a></p>
     </header>
     <section className="surface iv-filters">
       <div className="iv-seg"><small>Rank for</small><div>{Object.entries(scenarios).map(([k, s]) => <button key={k} className={scn === k ? 'on' : ''} onClick={() => setScn(k)}>{s.label.split(' (')[0]}</button>)}</div></div>

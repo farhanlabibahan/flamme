@@ -66,3 +66,17 @@ clearly-labeled side-by-side comparison, not blended into the illustrative solid
 curves: that would misrepresent the physics. Grounding the solid-sample model itself needs
 BASS/BASS-II/Saffire row-level data (same cleaning approach, different source table) — a
 natural next step, not done here.
+
+## 3. `build_cfig_model.py` — second trained model: CFI-G hot ignition (PSI-159)
+
+```bash
+python3 build_cfig_model.py     # numpy + pandas only (no sklearn needed)
+```
+
+Logistic regression on the 179 CFI-G *normal-flame* tests: did the gaseous-fuel flame hot-ignite,
+from O₂ %, pressure (bar) and fuel family (propane / ethane / butane). Held-out test AUC 0.73
+(n=45), 5-fold CV AUC 0.71, accuracy 0.84 vs 0.74 for always guessing "ignites" — modest skill,
+reported as such. Training range O₂ 18–40 %, 0.51–3.04 bar; outside it the model returns null.
+Output `../src/cfigModel.json`, consumed by `../src/cfigModel.js`, shown on `/lab` under the FLEX card.
+Not a solid-material model, and fuel dilution (e.g. "30% butane") is not modelled.
+Not extended: BASS / BASS-II / SLICE / SAFFIRE tables are test logs without an outcome column.

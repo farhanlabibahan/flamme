@@ -4,6 +4,7 @@ import {ArrowRight, ArrowUpRight, Atom, BookOpen, Flame, Microscope, Satellite} 
 import MicroFlame from '../components/MicroFlame.jsx';
 import FlameOrb from '../components/FlameOrb.jsx';
 import HeroGrid from '../components/HeroGrid.jsx';
+import {INCIDENTS, SPINOFFS, CREDIT} from '../missionContext.js';
 
 const SOURCES = [
   {name: 'NASA PSI', icon: Satellite},
@@ -68,6 +69,29 @@ export default function LandingPage() {
       </ol>
     </section>
 
+    <section className="l-why">
+      <h2>Why fire in space is different</h2>
+      <ul className="l-why-row">
+        {INCIDENTS.map(i => <li key={i.name}>
+          <b>{i.name}</b><em>{i.year}</em>
+          <p>{i.d}</p>
+          <a href={i.url} target="_blank" rel="noreferrer">NASA lessons learned <ArrowUpRight size={13}/></a>
+        </li>)}
+      </ul>
+    </section>
+
+    <section className="l-why">
+      <h2>Fire safety on Earth, too</h2>
+      <ul className="l-why-row">
+        {SPINOFFS.map(i => <li key={i.name}>
+          <b>{i.name}</b><em>{i.era}</em>
+          <p>{i.d}</p>
+          <p><small>{i.link}</small></p>
+          <a href={i.url} target="_blank" rel="noreferrer">NASA Spinoff <ArrowUpRight size={13}/></a>
+        </li>)}
+      </ul>
+    </section>
+
     <section className="l-final" id="cta">
       <div className="l-final-card">
         <h2>Explore the evidence with Flamme</h2>
@@ -79,6 +103,7 @@ export default function LandingPage() {
           <div><b>Product</b><a onClick={() => jump('Lab')}>Lab</a><a onClick={() => jump('Ask')}>Ask</a><a onClick={() => jump('Evidence')}>Evidence</a><a onClick={() => jump('Rankings')}>Rankings</a></div>
           <div><b>Sources</b><a href="https://psi.nasa.gov" target="_blank" rel="noreferrer">NASA PSI</a><a href="https://github.com/farhanlabibahan/flamme" target="_blank" rel="noreferrer">GitHub</a></div>
         </div>
+        <p className="l-credit">{CREDIT}</p>
       </div>
     </section>
   </div>;

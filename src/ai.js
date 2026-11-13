@@ -30,5 +30,5 @@ export async function siInterpret(question, parsed, scenario) {
   const out = await post({mode: 'interpret', question, rows: top.map(pick), gaps: gaps.map(g => ({finding_id: g.finding_id, finding: g.finding}))});
   const ok = new Map(top.map(f => [f.finding_id, f]));
   const points = (out.points || []).map(p => ({text: String(p.text || ''), sources: (p.finding_ids || []).filter(id => ok.has(id)).map(id => ok.get(id))})).filter(p => p.text && p.sources.length);
-  return {summary: String(out.summary || ''), points, limits: String(out.limits || ''), scenario: sc};
+  return {summary: String(out.summary || ''), points, limits: String(out.limits || ''), scenario: sc, detectorGap: gaps.some(g => g.finding_id === 'GAP-DETECTOR-RESPONSE')};
 }

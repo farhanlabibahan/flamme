@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {ArrowRight, Search, ShieldCheck, Sparkles, X} from 'lucide-react';
 import {siParse, siInterpret} from '../ai.js';
+import {DETECTOR_SPINOFF} from '../missionContext.js';
 import {parsePrompt} from '../prompt.js';
 import {useFlamme} from '../context/FlammeContext.jsx';
 
@@ -43,6 +44,7 @@ export default function AskPage() {
       <p><strong>{si.data.summary}</strong></p>
       {si.data.points.length > 0 && <ul>{si.data.points.map((p, i) => <li key={i}>{p.text} {p.sources.map(f => <a key={f.finding_id} href={`https://psi.nasa.gov/physci/repo/search?q=${encodeURIComponent(f.psi_id)}`} target="_blank" rel="noreferrer">[{f.psi_id} · {f.experiment}]</a>)}</li>)}</ul>}
       {si.data.limits && <p className="ask-note">Limits: {si.data.limits}</p>}
+      {si.data.detectorGap && /detector|smoke|aerosol/i.test(`${si.data.summary} ${si.data.limits} ${si.data.points.map(p => p.text).join(' ')}`) && <p className="ask-note">Detector response is a documented evidence gap. Earth application: <a href={DETECTOR_SPINOFF.url} target="_blank" rel="noreferrer">NASA’s shuttle-derived smoke detector</a>.</p>}
       <p className="ask-note"><ShieldCheck size={12}/> Written by an LLM using only the NASA findings listed above; citations are checked against the retrieved rows.</p>
     </div>}
     {recognized && <div className="ask-chips">

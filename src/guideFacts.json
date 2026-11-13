@@ -1,0 +1,65 @@
+{
+ "_source": "A Researcher's Guide to: Combustion Science (NASA, Oct 2015), ISS mini-book PDF",
+ "_url": "https://www.nasa.gov/missions/station/a-researchers-guide-to-combustion-science/",
+ "_note": "Paraphrased summary of the guide's per-experiment table. Experiments the guide does not cover (CFI, BASS-II, Saffire, SAME-R, CFI-G) are omitted. 2015 expectations (e.g. ACME 'expected 2016') are the guide's, not PSI's.",
+ "PSI-69": {
+  "objective": "Heptane and methanol droplet flammability limits in O2/N2 mixtures with added inert suppressants",
+  "hardware": "CIR with MDCA",
+  "dates": "ISS; operating at time of guide"
+ },
+ "PSI-68": {
+  "objective": "Follow-on to FLEX: broader fuels and surrogates, soot, slow convective flows, droplet interactions",
+  "hardware": "CIR / MDCA",
+  "dates": "not given"
+ },
+ "PSI-26": {
+  "objective": "Burning and extinction of solid samples; whether materials burn as well or better in microgravity with adequate ventilation",
+  "hardware": "MSG using the SPICE flow duct",
+  "dates": "began operations March 2012"
+ },
+ "PSI-102": {
+  "objective": "Particle-size distribution of smoke from spacecraft materials, to inform smoke detector design",
+  "hardware": "MSG",
+  "dates": "conducted 2007 and 2010"
+ },
+ "PSI-47": {
+  "objective": "Background aerosol particulate levels on the ISS",
+  "hardware": "not given",
+  "dates": "not given"
+ },
+ "PSI-107": {
+  "objective": "Transition from non-sooting to sooting flames, to support simple predictions of soot emissions",
+  "hardware": "MSG",
+  "dates": "conducted 2009"
+ },
+ "PSI-106": {
+  "objective": "Lifting and lifted flames, supporting fuel efficiency and lower pollutant emissions",
+  "hardware": "MSG using SPICE hardware",
+  "dates": "operated 2012"
+ },
+ "PSI-20": {
+  "objective": "Materials flammability (ignition and extinction) and test relevance for low and partial gravity, using a gas-fed porous burner to simulate solid and liquid fuels",
+  "hardware": "CIR (ACME)",
+  "dates": "expected 2016"
+ },
+ "PSI-21": {
+  "objective": "Predictive accuracy for sooty pure-fuel and near-extinction dilute flames using lifted coflow flames",
+  "hardware": "CIR (ACME)",
+  "dates": "expected 2016"
+ },
+ "PSI-22": {
+  "objective": "Flame-ion production and electric-field (up to 10 kV) control of non-premixed flames",
+  "hardware": "CIR (ACME)",
+  "dates": "expected 2016"
+ },
+ "PSI-23": {
+  "objective": "Structure, dynamics and extinction of sooty and soot-free spherical flames",
+  "hardware": "CIR (ACME)",
+  "dates": "expected 2016"
+ },
+ "PSI-10": {
+  "objective": "Soot inception and control in oxygen-enriched non-premixed flames",
+  "hardware": "CIR (ACME)",
+  "dates": "expected 2016"
+ }
+}

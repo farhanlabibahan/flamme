@@ -11,3 +11,5 @@ import invData from './investigationsData.json' with {type:'json'};
 test('investigation catalog covers all 24 PSI investigations with linked findings resolvable',()=>{assert.equal(invData.length,24);const ids=new Set(rankFindings(scenarios.iss).map(r=>r.f.finding_id));assert.ok(invData.every(i=>i.finding_ids.every(id=>ids.has(id))))});
 import {toCsv,exportRows} from './ranking.js';
 test('CSV export keeps one row per finding, quotes commas, and leaves unknown ranges blank',()=>{const rows=exportRows(rankFindings(scenarios.moon));const lines=toCsv(rows).split('\n');assert.ok(lines.length>=rows.length+1);assert.match(lines[0],/^rank,score,finding_id/);assert.ok(rows.every(r=>r.score>0))});
+import {predictCfig, nearestCfigTest} from './cfigModel.js';
+test('CFI-G model refuses to extrapolate and returns valid probabilities inside its range',()=>{assert.equal(predictCfig({o2Pct:60,pressureBar:1}),null);const p=predictCfig({o2Pct:30,pressureBar:0.69});assert.ok(Object.values(p).every(v=>v>0&&v<1));assert.equal(nearestCfigTest({o2Pct:30,pressureBar:0.69}).source_url.includes('PSI-159'),true)});

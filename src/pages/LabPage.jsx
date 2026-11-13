@@ -4,6 +4,7 @@ import {ArrowRight, Flame, RotateCcw, Zap} from 'lucide-react';
 import {Enum, NumField, PANELS} from '../Lab.jsx';
 import {AGENTS, DEFAULT_PARAMS, DIRECTIONS, GRAVITY, MATERIALS, derive} from '../labModel.js';
 import {flexModelMeta, nearestFlexTest, predictFlex} from '../flexModel.js';
+import {cfigModelMeta, nearestCfigTest, predictCfig} from '../cfigModel.js';
 import './LabPage.css';
 
 /* Real route: /lab (sidebar entry). A setup page: pick a preset or tune the
@@ -60,6 +61,11 @@ export default function LabPage() {
     return {pred, nearest, pressureAtm};
   }, [params.oxygen, params.pressure]);
 
+  const cfig = useMemo(() => {
+    const pressureBar = params.pressure / 100;   // lab pressure is kPa; 100 kPa = 1 bar
+    return {pred: predictCfig({o2Pct: params.oxygen, pressureBar}), nearest: nearestCfigTest({o2Pct: params.oxygen, pressureBar})};
+  }, [params.oxygen, params.pressure]);
+
   const enter = () => {
     localStorage.setItem(LAB_PARAMS_KEY, JSON.stringify(params));
     window.open('/lab/view', '_blank', 'noopener');
@@ -110,6 +116,28 @@ export default function LabPage() {
           : grounded.nearest.self_extinguished ? `self-extinguished at ${grounded.nearest.extinction_diameter_mm ?? '?'} mm` : 'burned to completion'}
         {' '}<a href={grounded.nearest.source_url} target="_blank" rel="noreferrer">{grounded.nearest.report_id} ↗</a>
       </p>}
+    </section>
+
+    <section className="lp-ground" aria-label="Grounded ignition estimate">
+      <header className="lp-ground-head">
+        <h2>Grounded in NASA CFI-G data (gaseous fuels)</h2>
+      </header>
+      {cfig.pred ? <div className="lp-stats">
+        {Object.entries(cfig.pred).map(([fuel, p]) => <div key={fuel}>
+          <span>Hot-ignition probability · {fuel}</span>
+          <b>{Math.round(p * 100)}%</b>
+          <small>{cfigModelMeta.nTests} tests · held-out AUC {cfigModelMeta.metrics.auc} (5-fold {cfigModelMeta.metrics.cv5_auc_mean})</small>
+        </div>)}
+      </div> : <p className="lp-oor">
+        Outside the tested envelope: CFI-G covers O₂ {cfigModelMeta.trainingRange.o2_pct[0].toFixed(0)}–{cfigModelMeta.trainingRange.o2_pct[1].toFixed(0)}%
+        and {cfigModelMeta.trainingRange.p_bar[0].toFixed(2)}–{cfigModelMeta.trainingRange.p_bar[1].toFixed(2)} bar.
+      </p>}
+      {cfig.nearest && <p className="lp-nearest">
+        <span>Closest test</span>
+        {cfig.nearest.fuel} · {cfig.nearest.o2_pct}% O₂ · {cfig.nearest.pressure_bar} bar · {cfig.nearest.hot_ignition ? 'hot ignition' : 'no hot ignition'}
+        {' '}<a href={cfig.nearest.source_url} target="_blank" rel="noreferrer">PSI-159 row {cfig.nearest.source_row} ↗</a>
+      </p>}
+      <p className="lp-nearest"><span>Scope</span>Gaseous-fuel flames, not solid materials. Modest skill: it beats always guessing “ignites” ({Math.round(cfigModelMeta.metrics.majority_class_accuracy * 100)}% accuracy) by only a few points on held-out tests.</p>
     </section>
 
     <div className="lp-grid">

@@ -1,5 +1,6 @@
 import React, {useMemo, useState} from 'react';
-import {AlertTriangle, SlidersHorizontal, X} from 'lucide-react';
+import {DETECTOR_SPINOFF} from '../missionContext.js';
+import {AlertTriangle, ExternalLink, SlidersHorizontal, X} from 'lucide-react';
 import {findings} from '../ranking.js';
 import {predictFlex, flexModelMeta} from '../flexModel.js';
 import './GapsPage.css';
@@ -79,7 +80,7 @@ export default function GapsPage() {
 
     {documentedGaps.length > 0 && <section className="gm-known" aria-label="NASA-documented gaps">
       <h2><AlertTriangle size={16}/> Gaps the sources call out directly</h2>
-      <ul>{documentedGaps.map(g => <li key={g.finding_id}>{g.finding}</li>)}</ul>
+      <ul>{documentedGaps.map(g => <li key={g.finding_id}>{g.finding}{g.finding_id === 'GAP-DETECTOR-RESPONSE' && <> <a href={DETECTOR_SPINOFF.url} target="_blank" rel="noreferrer">Earth application: NASA’s shuttle-derived smoke detector (fewer nuisance alarms) <ExternalLink size={11}/></a></>}</li>)}</ul>
       <p className="gm-known-note">{documentedGaps[0].safety_implication}</p>
     </section>}
 
