@@ -43,19 +43,19 @@ export function FlammeProvider({children}) {
 
   const update = (key, v) => { setScenario(s => ({...s, [key]: v})); setSearched(false); };
   const openSource = id => { if (id) setSelected(id); setDrawer('source'); };
-  const askFlame = () => {
-    const parsed = parsePrompt(prompt);
+  const applyParsed = parsed => {
     setRecognized(parsed);
     const merged = {...scenario, ...(parsed.material && {material: parsed.material}), ...(parsed.oxygen && {oxygen: parsed.oxygen}), ...(parsed.airflow && {airflow: parsed.airflow}), ...(parsed.direction && {direction: parsed.direction})};
     setScenario(merged);
   };
+  const askFlame = () => applyParsed(parsePrompt(prompt));
   const clearRecognized = key => { setRecognized(r => r && ({...r, [key]: ''})); update(key, ''); };
 
   const ctx = useMemo(() => ({
     labRef, scenario, setScenario, mode, setMode, selected, setSelected,
     query, setQuery, filter, setFilter, drawer, setDrawer, reduced, setReduced,
     searched, setSearched, prompt, setPrompt, recognized, setRecognized,
-    ranked, results, record, source, brief, update, openSource, askFlame, clearRecognized,
+    ranked, results, record, source, brief, update, openSource, askFlame, applyParsed, scenarioNow: scenario, clearRecognized,
     experiments, investigations, hasAnyField,
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }), [scenario, mode, selected, query, filter, drawer, reduced, searched, prompt, recognized, ranked, results, record, source, brief]);
