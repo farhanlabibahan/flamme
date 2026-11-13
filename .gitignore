@@ -28,3 +28,9 @@ dashboard/
 
 # Editor config, not needed for judges
 .vscode/
+
+# Video-production tooling (voiceover/b-roll scripts, Remotion render project) --
+# the demo videos are already rendered and linked in the submission; this isn't
+# part of the deployed Flamme web app
+scripts/
+video/
