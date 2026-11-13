@@ -12,6 +12,7 @@ export const theme = {
     cyan: "#FFFFFF", // tags and data
     cyanSoft: "rgba(255, 255, 255, 0.35)",
     danger: "#BDBDBD",
+    red: "#FF3B3B", // the only colour: key words
   },
   fonts: {
     display: "Space Grotesk, system-ui, sans-serif",

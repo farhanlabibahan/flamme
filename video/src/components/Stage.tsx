@@ -13,8 +13,8 @@ import { theme } from "../theme";
 // Layer 1: black background with a perspective grid that drifts forward.
 export const GridBg: React.FC<{ tilt?: number }> = ({ tilt = 0 }) => {
   const frame = useCurrentFrame();
-  const drift = (frame * 1.4) % 80;
-  const glowX = 50 + Math.sin(frame / 90) * 8;
+  const drift = 0; // steady background (no drifting grid)
+  const glowX = 50;
   return (
     <AbsoluteFill style={{ background: theme.colors.bg, overflow: "hidden" }}>
       <div

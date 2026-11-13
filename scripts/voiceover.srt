@@ -1,0 +1,291 @@
+1
+00:00:01,970 --> 00:00:06,760
+Imagine you are an astronaut, you are hundreds of kilometres above Earth,
+
+2
+00:00:07,130 --> 00:00:09,760
+aboard the International Space Station.
+
+3
+00:00:10,270 --> 00:00:12,180
+Suddenly, something catches fire.
+
+4
+00:00:12,870 --> 00:00:15,360
+On Earth, we know what fire looks like.
+
+5
+00:00:15,950 --> 00:00:19,920
+Hot air rises, flames stretch upwards, we know how to respond.
+
+6
+00:00:20,150 --> 00:00:23,640
+But in space, there is no familiar up or down.
+
+7
+00:00:23,950 --> 00:00:26,280
+The flame doesn't behave the way we expect.
+
+8
+00:00:26,810 --> 00:00:29,630
+It can become almost spherical, burn differently
+
+9
+00:00:29,650 --> 00:00:34,960
+and even continue burning under conditions where we might expect it to go out.
+
+10
+00:00:35,350 --> 00:00:37,020
+And here is the frightening part.
+
+11
+00:00:37,350 --> 00:00:40,800
+You can't simply evacuate a spacecraft when there is a fire.
+
+12
+00:00:41,490 --> 00:00:46,180
+The people inside depend on us understanding exactly how fire behaves.
+
+13
+00:00:47,010 --> 00:00:48,140
+So here is our question.
+
+14
+00:00:48,570 --> 00:00:51,410
+How can we make better fire safety decisions
+
+15
+00:00:51,430 --> 00:00:57,680
+when the science itself is scattered, difficult to compare, and inaccessible to most people?
+
+16
+00:00:59,130 --> 00:01:04,560
+NASA has conducted incredible experiments to understand fire in space.
+
+17
+00:01:04,950 --> 00:01:08,460
+From experiments aboard the ISS to the Saffire missions,
+
+18
+00:01:09,130 --> 00:01:11,420
+researchers have collected valuable evidence.
+
+19
+00:01:11,850 --> 00:01:13,340
+But there is a problem.
+
+20
+00:01:13,830 --> 00:01:18,040
+The evidence is spread across different missions, reports, and experiments.
+
+21
+00:01:18,630 --> 00:01:23,120
+One experiment records airflow, another records oxygen concentration,
+
+22
+00:01:23,410 --> 00:01:26,350
+another may leave important conditions unreported.
+
+23
+00:01:26,370 --> 00:01:32,060
+It's like trying to compare two experiments when neither one is speaking the same language.
+
+24
+00:01:32,410 --> 00:01:37,170
+We have the evidence, but we need a better way to connect it, understand it,
+
+25
+00:01:37,190 --> 00:01:38,300
+and explore it.
+
+26
+00:01:38,810 --> 00:01:40,860
+And that's where Flammé comes in.
+
+27
+00:01:41,850 --> 00:01:46,840
+Introducing Flammé developed by Team Flammé from the University of Dhaka.
+
+28
+00:01:47,190 --> 00:01:48,660
+Our vision is simple.
+
+29
+00:01:48,910 --> 00:01:53,510
+Make space fire research understandable, comparable, and accessible.
+
+30
+00:01:53,530 --> 00:01:56,480
+And we started by building two things,
+
+31
+00:01:56,990 --> 00:01:59,330
+a common language for describing experiments
+
+32
+00:01:59,350 --> 00:02:05,680
+and an interactive laboratory where anyone can explore how fire behaves in space.
+
+33
+00:02:07,430 --> 00:02:09,140
+First we asked ourselves,
+
+34
+00:02:09,530 --> 00:02:14,220
+what if every space fire experiment could be described using the same set of conditions?
+
+35
+00:02:14,950 --> 00:02:18,510
+So we created a standard catalogue of 10 conditions
+
+36
+00:02:18,530 --> 00:02:24,140
+covering everything from material being burned to oxygen, airflow, gravity,
+
+37
+00:02:24,310 --> 00:02:27,260
+ignition, and suppression.
+
+38
+00:02:30,150 --> 00:02:35,420
+This gives us a foundation for comparing experiments consistently.
+
+39
+00:02:35,810 --> 00:02:39,440
+But we didn't want people to just read about microgravity fire.
+
+40
+00:02:39,670 --> 00:02:41,960
+We wanted them to experience it.
+
+41
+00:02:42,150 --> 00:02:45,340
+So we built an interactive 3D flame laboratory.
+
+42
+00:02:46,030 --> 00:02:46,830
+Let's take a look.
+
+43
+00:02:46,850 --> 00:02:51,590
+Look at that.
+
+44
+00:02:51,760 --> 00:02:56,910
+Instead of the familiar candle-like flame, we see a much more spherical flame.
+
+45
+00:02:57,140 --> 00:02:59,950
+As gravity increases, the flame changes shape.
+
+46
+00:03:00,560 --> 00:03:03,090
+Now the flame begins to weaken.
+
+47
+00:03:04,020 --> 00:03:07,590
+And we can explore how different suppression agents affect the flame.
+
+48
+00:03:07,700 --> 00:03:11,630
+Every change helps explain how different conditions can influence combustion.
+
+49
+00:03:12,220 --> 00:03:16,900
+Our current flame behaviour is illustrative, not a computational fluid dynamics simulation.
+
+50
+00:03:16,920 --> 00:03:24,250
+It demonstrates expected trends rather than claiming to reproduce NASA experimental measurements.
+
+51
+00:03:25,000 --> 00:03:29,820
+But this is our starting point, making an otherwise inaccessible scientific phenomenon
+
+52
+00:03:29,840 --> 00:03:32,190
+something people can actually explore.
+
+53
+00:03:34,160 --> 00:03:36,570
+But Flammé is bigger than a 3D simulation.
+
+54
+00:03:36,900 --> 00:03:41,200
+Imagine a researcher comparing two materials before choosing one for a spacecraft.
+
+55
+00:03:41,220 --> 00:03:46,580
+Imagine an engineer asking whether a material that extinguishes itself on Earth might
+
+56
+00:03:46,600 --> 00:03:50,190
+continue burning under gentle airflow in microgravity.
+
+57
+00:03:50,880 --> 00:03:55,540
+Imagine a student in Bangladesh exploring a phenomenon that they would otherwise never
+
+58
+00:03:55,560 --> 00:03:56,820
+have access to.
+
+59
+00:03:56,840 --> 00:03:58,750
+That's the impact we want to create.
+
+60
+00:03:58,800 --> 00:04:02,630
+Our next step is to turn Flammé into an evidence-driven research platform.
+
+61
+00:04:03,240 --> 00:04:06,620
+We plan to build a source-linked database of NASA experiments,
+
+62
+00:04:06,640 --> 00:04:09,580
+compare their conditions, identify gaps in existing research,
+
+63
+00:04:09,600 --> 00:04:15,090
+and eventually ground our flame model in real experimental data.
+
+64
+00:04:15,360 --> 00:04:20,700
+We also want to publish our standard reporting format so future experiments can contribute
+
+65
+00:04:20,720 --> 00:04:22,750
+evidence in a consistent way.
+
+66
+00:04:24,200 --> 00:04:28,180
+Space exploration is about going where humanity has never gone before.
+
+67
+00:04:28,200 --> 00:04:30,890
+But going further also means preparing for dangers
+
+68
+00:04:31,260 --> 00:04:32,750
+we cannot afford to misunderstand.
+
+69
+00:04:33,640 --> 00:04:36,110
+Fire doesn't follow our intuition in space.
+
+70
+00:04:36,240 --> 00:04:38,460
+And safety cannot depend on intuition alone.
+
+71
+00:04:38,480 --> 00:04:42,210
+We are team Flammé from the University of Dhaka.
+
+72
+00:04:42,980 --> 00:04:46,590
+Understanding fire beyond Earth to protect the people who explore it.
+
+73
+00:04:46,860 --> 00:04:47,350
+Thank you.
