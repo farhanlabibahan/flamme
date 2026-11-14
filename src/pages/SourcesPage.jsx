@@ -3,7 +3,7 @@ import {useNavigate} from 'react-router-dom';
 import {ExternalLink} from 'lucide-react';
 import allInvestigations from '../investigationsData.json';
 import reports from '../reportsData.json';
-import {RESOURCES, CREDIT} from '../missionContext.js';
+import {RESOURCES, CREDIT, SI_NOTE} from '../missionContext.js';
 import './SourcesPage.css';
 
 /* Real route: /sources. Every NASA source Flamme cites, in one place —
@@ -61,5 +61,6 @@ export default function SourcesPage() {
       </ul>
     </section>)}
     <p className="sp-lede">{CREDIT}</p>
+    <p className="sp-lede">{SI_NOTE}</p>
   </div>;
 }

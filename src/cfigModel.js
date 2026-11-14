@@ -1,3 +1,4 @@
+// SI disclosure: written with Claude (Anthropic); coefficients come from ML/build_cfig_model.py.
 import model from './cfigModel.json' with {type: 'json'};
 
 /* Second trained model (ML/build_cfig_model.py): probability that a gaseous-fuel

@@ -1,3 +1,4 @@
+# SI disclosure: written with Claude (Anthropic); the column choices are curated by the team.
 """Curated: which table columns are test CONDITIONS (set by the experimenters) for each
 PSI investigation. (column_key, label, unit, options). Options: scale, mode
 (auto|text|count|planned|extract), cap, cut (regex), sub [(regex, repl)]."""

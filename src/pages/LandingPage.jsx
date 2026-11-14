@@ -4,7 +4,7 @@ import {ArrowRight, ArrowUpRight, Atom, BookOpen, Flame, Microscope, Satellite} 
 import MicroFlame from '../components/MicroFlame.jsx';
 import FlameOrb from '../components/FlameOrb.jsx';
 import HeroGrid from '../components/HeroGrid.jsx';
-import {INCIDENTS, SPINOFFS, CREDIT} from '../missionContext.js';
+import {INCIDENTS, SPINOFFS, CREDIT, SI_NOTE} from '../missionContext.js';
 
 const SOURCES = [
   {name: 'NASA PSI', icon: Satellite},
@@ -104,6 +104,7 @@ export default function LandingPage() {
           <div><b>Sources</b><a href="https://psi.nasa.gov" target="_blank" rel="noreferrer">NASA PSI</a><a href="https://github.com/farhanlabibahan/flamme" target="_blank" rel="noreferrer">GitHub</a></div>
         </div>
         <p className="l-credit">{CREDIT}</p>
+        <p className="l-credit">{SI_NOTE}</p>
       </div>
     </section>
   </div>;

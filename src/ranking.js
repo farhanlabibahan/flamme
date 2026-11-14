@@ -1,3 +1,4 @@
+// SI disclosure: written with Claude (Anthropic).
 /* JS port of findings/rank_findings.py. Same formula, same constants, so the
    in-browser ranking matches findings/rankings.csv for the preset scenarios.
    score = 100 x (wRel*Relevance + wSev*Severity + wEvi*Evidence) */

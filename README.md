@@ -242,6 +242,16 @@ npm run preview
 Python tooling (data pipelines, `ML/`) needs Python 3 with `pandas`, `numpy`,
 `scikit-learn` (`pip install pandas numpy scikit-learn jupyter nbformat`).
 
+## SI (Super Intelligence) use disclosure
+
+Per the NASA Space Apps SI-use rules, here is where SI tools were used:
+
+- **Code:** Claude (Anthropic) helped write and edit the React app, the SI endpoint (`api/ask.js`), the ranking and model code in `src/`, and the Python pipelines in `ML/` and `findings/`. Key files carry an "SI disclosure" header.
+- **Data:** Claude helped write the scripts that clean, reshape and summarise the NASA PSI tables (`findings/build_variation.py`, `ML/build_cfig_model.py`, the findings build). Which columns count as test conditions (`findings/variation_config.py`) was curated by the team. Generated files (`src/variationData.json`, `src/cfigModel.json`) are produced by those scripts.
+- **Text:** Claude helped draft the README, in-app copy and the video script. The team reviewed it.
+- **SI inside the product:** the Ask page's "Interpret with SI" feature calls a language model (`openai/gpt-oss-120b` via Groq) at runtime. It only summarises the top-ranked findings it is given and cites them; ranking, data and numbers are deterministic.
+- **Images, video, audio:** no SI-generated images, video or audio are included. No NASA logos, flags or mission identifiers are used; NASA is credited as a data source in text only.
+
 ## Limitations and responsible-use boundaries
 
 - SI answers are only as good as the five findings they are given, and the language model can still

@@ -5,7 +5,7 @@
   "PSI-159_Experimental table_CFI-G_Normal Flames.csv",
   "PSI-159_Experimental table_CFI-G_Inverse Flames.csv"
  ],
- "generated_by": "ML/build_cfig_model.py",
+ "generated_by": "ML/build_cfig_model.py (written with Claude, Anthropic)",
  "scope_note": "Gaseous-fuel (propane/ethane/butane blends) flames on a spherical burner in microgravity. Not a solid-material flammability model; use as nearest-evidence comparison for high-oxygen conditions. Fuel dilution percentage is not modelled. Inverse-flame O2 is the oxidiser-stream concentration, so predictions are only given within the tested range of each flame configuration.",
  "target": "hot ignition (yes/no)",
  "features": [

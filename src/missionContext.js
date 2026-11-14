@@ -46,3 +46,5 @@ export const CREDIT = 'Data: NASA Physical Sciences Informatics (PSI) combustion
 
 // Used wherever the detector-response evidence gap (GAP-DETECTOR-RESPONSE) is shown.
 export const DETECTOR_SPINOFF = SPINOFFS.find(x => x.name === 'Fire detector');
+
+export const SI_NOTE = "SI disclosure: this project was built with SI assistance. Claude (Anthropic) helped write code, data-processing scripts and text; the Ask page's \u201cInterpret with SI\u201d feature calls a language model (openai/gpt-oss-120b via Groq) at runtime. Rankings, data and numbers come from deterministic code and NASA PSI/NTRS records, not from the model.";

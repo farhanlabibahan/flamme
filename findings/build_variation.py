@@ -1,3 +1,4 @@
+# SI disclosure: written with Claude (Anthropic).
 """Builds src/variationData.json: for each PSI investigation, which test conditions
 VARIED across its test-matrix rows and which were HELD CONSTANT, computed directly
 from flame_in_freefall_data/cleaned/cleaned_values.csv (no model, no guessing).

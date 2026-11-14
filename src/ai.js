@@ -1,3 +1,4 @@
+// SI disclosure: written with Claude (Anthropic). Calls the SI endpoint in api/ask.js.
 // Client for the SI layer (api/ask.js). Every function rejects on failure so
 // callers can fall back to the deterministic path.
 import {rankFindings, gapsFor} from './ranking.js';

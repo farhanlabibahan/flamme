@@ -1,3 +1,4 @@
+// SI disclosure: written with Claude (Anthropic); at runtime this endpoint calls a Groq-hosted language model.
 // Vercel serverless function: the SI layer. Two modes, both stateless.
 //   {mode:'parse', question}              -> structured scenario fields
 //   {mode:'interpret', question, rows, gaps} -> summary grounded ONLY in rows

@@ -1,3 +1,4 @@
+# SI disclosure: written with Claude (Anthropic).
 """
 CFI-G (PSI-159, ACME) ignition model -- second trained model, numpy only.
 
@@ -104,7 +105,7 @@ mean, scale = X.mean(0), X.std(0); scale[scale == 0] = 1
 b, w = fit((X - mean) / scale, y)
 export = {
     'source': f'NASA PSI PSI-159 (ACME CFI-G), {len(d)} tests ({int((d.inverse == 0).sum())} normal-flame + {int(d.inverse.sum())} inverse-flame), from {SRC_N.name} and {SRC_I.name}',
-    'source_url': URL, 'source_files': [SRC_N.name, SRC_I.name], 'generated_by': 'ML/build_cfig_model.py',
+    'source_url': URL, 'source_files': [SRC_N.name, SRC_I.name], 'generated_by': 'ML/build_cfig_model.py (written with Claude, Anthropic)',
     'scope_note': 'Gaseous-fuel (propane/ethane/butane blends) flames on a spherical burner in microgravity. Not a solid-material flammability model; use as nearest-evidence comparison for high-oxygen conditions. Fuel dilution percentage is not modelled. Inverse-flame O2 is the oxidiser-stream concentration, so predictions are only given within the tested range of each flame configuration.',
     'target': 'hot ignition (yes/no)', 'features': FEATURES,
     'training_range': {f: [round(float(d[f].min()), 3), round(float(d[f].max()), 3)] for f in ('o2_pct', 'p_bar')},
